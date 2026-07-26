@@ -1,0 +1,2947 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PRIMORA — Quiet Luxury For Her</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Jost:wght@200;300;400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--ivory:#F5F0E8;--cream:#FAF7F2;--sage:#8A9B8E;--gold:#B8A882;--warm-gray:#9A9187;--black:#1A1A18;--black-s:#2C2C2A}
+html{scroll-behavior:smooth}
+body{font-family:'Jost',sans-serif;font-weight:300;background:var(--cream);color:var(--black);-webkit-font-smoothing:antialiased}
+
+/* ── ANNOUNCEMENT ── */
+.announcement{background:#fff;color:var(--black);border-bottom:1px solid rgba(0,0,0,.1);text-align:center;padding:11px 20px;font-size:11px;letter-spacing:2.5px;text-transform:uppercase;display:flex;align-items:center;justify-content:center;gap:18px}
+.announcement a{background:var(--black);color:#fff;text-decoration:none;font-size:10px;letter-spacing:2.5px;padding:5px 14px}
+
+/* ── NAV ── */
+nav{background:var(--cream);border-bottom:1px solid rgba(0,0,0,.08);padding:0 24px;height:62px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200}
+.nav-left,.nav-right{display:flex;align-items:center;gap:18px}
+.nav-icon{background:none;border:none;cursor:pointer;color:var(--black);padding:5px;display:flex;align-items:center;opacity:.75;transition:opacity .2s}
+.nav-icon:hover{opacity:1}
+.nav-logo{font-family:'Cormorant Garamond',serif;font-size:21px;font-weight:400;letter-spacing:7px;text-transform:uppercase;color:var(--black);text-decoration:none;position:absolute;left:50%;transform:translateX(-50%);cursor:pointer;user-select:none}
+
+/* ── COLLECTION HEADER ── */
+.col-header{padding:44px 24px 20px;border-bottom:1px solid rgba(0,0,0,.08)}
+.col-title{font-family:'Cormorant Garamond',serif;font-size:40px;font-weight:300;margin-bottom:6px}
+.col-sub{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--warm-gray)}
+.filter-row{padding:14px 24px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(0,0,0,.06)}
+.filter-label{font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:var(--black-s);display:flex;align-items:center;gap:7px;opacity:.7}
+.grid-toggles{display:flex;gap:8px}
+.gtoggle{background:none;border:1px solid rgba(0,0,0,.15);padding:5px 7px;cursor:pointer;display:flex;align-items:center}
+.gtoggle.active{border-color:var(--black)}
+.g4{display:grid;grid-template-columns:1fr 1fr;gap:2px;width:13px;height:13px}
+.g4 span{background:var(--black);display:block}
+.g1{width:13px;height:13px;border:1.5px solid var(--black)}
+
+/* ── PRODUCT GRID ── */
+.product-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(0,0,0,.07)}
+@media(min-width:900px){.product-grid{grid-template-columns:1fr 1fr 1fr}}
+.p-card{background:var(--cream);cursor:pointer;position:relative;overflow:hidden}
+.p-img{width:100%;aspect-ratio:3/4;overflow:hidden;position:relative;background:var(--cream)}
+.p-real-img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease;display:block}
+.p-card:hover .p-real-img{transform:scale(1.04)}
+.p-ph{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:24px;transition:transform .5s ease;position:relative}
+.p-card:hover .p-ph{transform:scale(1.03)}
+.p-ph::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(135deg,transparent,transparent 3px,rgba(255,255,255,.04) 3px,rgba(255,255,255,.04) 4px)}
+.ph-name{font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:300;letter-spacing:3px;text-transform:uppercase;color:white;text-align:center;opacity:0;transform:translateY(8px);transition:all .3s ease;position:relative}
+.p-card:hover .ph-name{opacity:1;transform:translateY(0)}
+.ph-1{background:linear-gradient(160deg,#E8E0D0,#C8BBA0,#B0A388)}
+.ph-2{background:linear-gradient(160deg,#8A9B8E,#6B8070,#4A6356)}
+.ph-3{background:linear-gradient(160deg,#D4C8B0,#BBA888,#A08C6E)}
+.ph-4{background:linear-gradient(160deg,#C8C0B4,#A09888,#787068)}
+.ph-5{background:linear-gradient(160deg,#D8C8A8,#C0A880,#A88860)}
+.ph-6{background:linear-gradient(160deg,#D4B8B8,#C09898,#A87878)}
+.ph-7{background:linear-gradient(160deg,#C8A890,#B08870,#987060)}
+.ph-8{background:linear-gradient(160deg,#6A7A6E,#506058,#384840)}
+.ph-9{background:linear-gradient(160deg,#B0B4BC,#909498,#707478)}
+.ph-10{background:linear-gradient(160deg,#C8B880,#B0A060,#988848)}
+.new-badge{position:absolute;top:14px;left:14px;background:var(--black);color:var(--ivory);font-size:9px;letter-spacing:2.5px;text-transform:uppercase;padding:4px 10px;z-index:2}
+.stock-badge{position:absolute;top:14px;left:14px;font-size:9px;letter-spacing:2px;text-transform:uppercase;padding:4px 10px;z-index:3}
+.stock-badge.low{background:#B8860B;color:#fff}
+.stock-badge.sold{background:#7a1f1f;color:#fff}
+.p-card.is-sold .p-img{filter:grayscale(.5);opacity:.7}
+.p-card.is-sold .add-bag-btn{background:#9a9187;cursor:not-allowed}
+.p-card.is-sold .add-bag-btn:hover{background:#9a9187}
+.modal-stock-badge{display:inline-block;font-size:10px;letter-spacing:2px;text-transform:uppercase;padding:4px 12px;margin-bottom:10px}
+.modal-stock-badge.low{background:#fff3d6;color:#B8860B}
+.modal-stock-badge.sold{background:#fbe6e6;color:#7a1f1f}
+.cat-tabs{display:flex;gap:6px;padding:0 24px 16px;flex-wrap:wrap}
+.cat-tab{background:none;border:1px solid rgba(0,0,0,.15);padding:7px 18px;font-family:'Jost',sans-serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;color:var(--black);transition:all .2s}
+.cat-tab:hover{border-color:var(--black)}
+.cat-tab.active{background:var(--black);color:#fff;border-color:var(--black)}
+.img-count-badge{position:absolute;top:14px;right:14px;background:rgba(0,0,0,.5);color:#fff;font-size:9px;letter-spacing:1px;padding:3px 8px;z-index:2;display:flex;align-items:center;gap:4px}
+.p-info{padding:15px 15px 8px}
+.p-name{font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:400;margin-bottom:4px}
+.p-desc{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--warm-gray);margin-bottom:9px}
+.p-price{font-size:13px;color:var(--black-s)}
+.p-actions{padding:8px 15px 16px;display:flex;flex-direction:column;gap:7px;opacity:0;transform:translateY(6px);transition:all .3s ease}
+.p-card:hover .p-actions{opacity:1;transform:translateY(0)}
+.size-row{display:flex;gap:5px;flex-wrap:wrap}
+.sz{border:1px solid rgba(0,0,0,.18);background:none;padding:4px 9px;font-family:'Jost',sans-serif;font-size:10px;cursor:pointer;color:var(--black);transition:all .2s}
+.sz:hover,.sz.active{background:var(--black);color:#fff;border-color:var(--black)}
+.add-bag-btn{background:var(--black);color:var(--ivory);border:none;padding:12px;font-family:'Jost',sans-serif;font-weight:300;font-size:10px;letter-spacing:3px;text-transform:uppercase;cursor:pointer;width:100%;transition:background .2s}
+.add-bag-btn.added{background:var(--sage)}
+
+/* ── PRODUCT MODAL ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:500;display:none;align-items:center;justify-content:center;padding:16px}
+.modal-overlay.open{display:flex}
+.modal{background:var(--cream);max-width:860px;width:100%;max-height:92vh;overflow-y:auto;display:grid;grid-template-columns:1fr 1fr;position:relative}
+@media(max-width:600px){.modal{grid-template-columns:1fr}}
+/* Image carousel in modal */
+.modal-gallery{display:flex;flex-direction:column;position:relative;background:#f0ece4}
+.modal-main-img{aspect-ratio:3/4;overflow:hidden;position:relative;background:#e8e0d0}
+.modal-main-img img{width:100%;height:100%;object-fit:cover;display:block}
+.modal-main-img .ph-fallback{width:100%;height:100%}
+.gal-arrow{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.85);border:none;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;z-index:10;opacity:0;transition:opacity .2s}
+.modal-gallery:hover .gal-arrow{opacity:1}
+.gal-arrow.left{left:10px}
+.gal-arrow.right{right:10px}
+.modal-thumbs{display:flex;gap:6px;padding:10px;overflow-x:auto;background:rgba(0,0,0,.04)}
+.modal-thumbs::-webkit-scrollbar{height:3px}
+.modal-thumbs::-webkit-scrollbar-thumb{background:var(--warm-gray)}
+.m-thumb{width:52px;height:64px;flex-shrink:0;cursor:pointer;overflow:hidden;border:2px solid transparent;transition:border-color .2s}
+.m-thumb.active{border-color:var(--black)}
+.m-thumb img{width:100%;height:100%;object-fit:cover}
+.m-thumb .ph-mini{width:100%;height:100%}
+.modal-body{padding:36px 30px;display:flex;flex-direction:column;overflow-y:auto}
+.modal-close{position:absolute;top:12px;right:16px;background:rgba(255,255,255,.9);border:none;font-size:18px;cursor:pointer;color:var(--black);opacity:.7;z-index:20;width:32px;height:32px;display:flex;align-items:center;justify-content:center}
+.modal-tag{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--sage);margin-bottom:8px}
+.modal-name{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300;margin-bottom:5px}
+.modal-price{font-size:16px;color:var(--black-s);margin-bottom:20px}
+.modal-desc{font-size:12px;line-height:1.9;color:var(--warm-gray);margin-bottom:22px}
+.modal-label{font-size:10px;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:9px}
+.modal-sizes{display:flex;gap:7px;margin-bottom:20px;flex-wrap:wrap}
+.modal-sz{border:1px solid rgba(0,0,0,.18);background:none;padding:8px 15px;font-family:'Jost',sans-serif;font-size:11px;cursor:pointer;color:var(--black);transition:all .2s}
+.modal-sz:hover,.modal-sz.sel{background:var(--black);color:#fff;border-color:var(--black)}
+.modal-qty{display:flex;align-items:center;gap:14px;margin-bottom:20px}
+.qty-btn{background:none;border:1px solid rgba(0,0,0,.2);width:34px;height:34px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;transition:all .2s}
+.qty-btn:hover{background:var(--black);color:#fff}
+.qty-num{font-size:15px;min-width:24px;text-align:center}
+.modal-add-btn{background:var(--black);color:var(--ivory);border:none;padding:15px;font-family:'Jost',sans-serif;font-weight:300;font-size:11px;letter-spacing:3px;text-transform:uppercase;cursor:pointer;width:100%;margin-bottom:9px;transition:background .2s}
+.modal-add-btn.added{background:var(--sage)}
+.modal-wa-btn{background:none;border:1px solid rgba(0,0,0,.18);color:var(--black);padding:13px;font-family:'Jost',sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;width:100%;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .2s}
+.modal-wa-btn:hover{background:#25D366;color:#fff;border-color:#25D366}
+.modal-details{margin-top:20px;border-top:1px solid rgba(0,0,0,.08);padding-top:18px}
+.detail-row{display:flex;justify-content:space-between;font-size:11px;padding:6px 0;border-bottom:1px solid rgba(0,0,0,.05);color:var(--warm-gray)}
+.detail-row span:first-child{color:var(--black);font-weight:400}
+
+/* ── CART ── */
+.cart-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:600;display:none}
+.cart-overlay.open{display:block}
+.cart-drawer{position:fixed;top:0;right:-420px;width:100%;max-width:420px;height:100vh;background:var(--cream);z-index:700;display:flex;flex-direction:column;transition:right .35s ease;box-shadow:-4px 0 30px rgba(0,0,0,.12)}
+.cart-drawer.open{right:0}
+.cart-head{padding:20px 22px;border-bottom:1px solid rgba(0,0,0,.08);display:flex;align-items:center;justify-content:space-between}
+.cart-head-title{font-family:'Cormorant Garamond',serif;font-size:22px;letter-spacing:2px}
+.cart-close-btn{background:none;border:none;font-size:20px;cursor:pointer;opacity:.5}
+.cart-items{flex:1;overflow-y:auto;padding:18px 22px}
+.cart-empty{text-align:center;padding:56px 20px;color:var(--warm-gray);font-size:13px}
+.cart-empty-icon{font-size:30px;margin-bottom:12px;opacity:.35}
+.cart-item{display:flex;gap:13px;padding:14px 0;border-bottom:1px solid rgba(0,0,0,.06)}
+.cart-item-img{width:70px;height:88px;flex-shrink:0;overflow:hidden;background:var(--cream)}
+.cart-item-img img,.cart-item-img .p-ph{width:100%;height:100%;object-fit:cover}
+.cart-item-info{flex:1}
+.ci-name{font-family:'Cormorant Garamond',serif;font-size:15px;margin-bottom:3px}
+.ci-meta{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--warm-gray);margin-bottom:8px}
+.ci-row{display:flex;align-items:center;justify-content:space-between}
+.ci-qty{display:flex;align-items:center;gap:9px}
+.cq-btn{background:none;border:1px solid rgba(0,0,0,.15);width:23px;height:23px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px}
+.ci-price{font-size:13px}
+.ci-remove{background:none;border:none;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--warm-gray);cursor:pointer;margin-top:7px;text-decoration:underline}
+.cart-foot{padding:18px 22px;border-top:1px solid rgba(0,0,0,.08)}
+.cart-subtotal{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
+.cart-subtotal-label{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--warm-gray)}
+.cart-subtotal-val{font-family:'Cormorant Garamond',serif;font-size:22px}
+.cart-note{font-size:10px;color:var(--warm-gray);text-align:center;margin-bottom:14px}
+.checkout-btn{display:block;width:100%;background:var(--black);color:var(--ivory);border:none;padding:15px;font-family:'Jost',sans-serif;font-size:11px;letter-spacing:3px;text-transform:uppercase;cursor:pointer;margin-bottom:9px}
+.wa-checkout-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;background:none;border:1px solid rgba(0,0,0,.15);padding:13px;font-family:'Jost',sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all .2s}
+.wa-checkout-btn:hover{background:#25D366;color:#fff;border-color:#25D366}
+
+/* ── MARQUEE ── */
+.marquee-wrap{overflow:hidden;border-top:1px solid rgba(0,0,0,.08);border-bottom:1px solid rgba(0,0,0,.08);padding:13px 0;background:var(--ivory)}
+.marquee-track{display:flex;animation:marquee 22s linear infinite;white-space:nowrap}
+.m-item{font-family:'Cormorant Garamond',serif;font-size:13px;font-style:italic;letter-spacing:2px;color:var(--warm-gray);padding:0 36px}
+.m-dot{color:var(--sage)}
+@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ── EDITORIAL ── */
+.editorial{background:var(--black);color:var(--ivory);padding:70px 28px;text-align:center}
+.editorial .ey{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:18px}
+.editorial h2{font-family:'Cormorant Garamond',serif;font-size:clamp(26px,5vw,50px);font-weight:300;font-style:italic;line-height:1.35;max-width:620px;margin:0 auto 26px}
+.editorial p{font-size:11px;letter-spacing:2px;color:rgba(255,255,255,.45);text-transform:uppercase;max-width:340px;margin:0 auto;line-height:2}
+
+/* ── PHILOSOPHY ── */
+.philosophy{display:grid;grid-template-columns:1fr;border-top:1px solid rgba(0,0,0,.08)}
+@media(min-width:768px){.philosophy{grid-template-columns:repeat(4,1fr)}}
+.phil{padding:38px 26px;border-bottom:1px solid rgba(0,0,0,.08);border-right:1px solid rgba(0,0,0,.08)}
+.phil-n{font-family:'Cormorant Garamond',serif;font-size:34px;color:var(--sage);font-style:italic;margin-bottom:12px}
+.phil-t{font-size:11px;letter-spacing:2.5px;text-transform:uppercase;font-weight:400;margin-bottom:9px}
+.phil-d{font-size:12px;color:var(--warm-gray);line-height:1.8}
+
+/* ── NEWSLETTER ── */
+.newsletter{padding:72px 28px;text-align:center}
+.newsletter .ey{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--sage);margin-bottom:16px}
+.newsletter h3{font-family:'Cormorant Garamond',serif;font-size:clamp(24px,4vw,38px);font-weight:300;margin-bottom:8px}
+.newsletter p{font-size:11px;letter-spacing:1.5px;color:var(--warm-gray);margin-bottom:30px}
+.email-form{display:flex;max-width:400px;margin:0 auto;border:1px solid rgba(0,0,0,.18)}
+.email-form input{flex:1;border:none;background:transparent;padding:13px 16px;font-family:'Jost',sans-serif;font-weight:300;font-size:12px;color:var(--black);outline:none}
+.email-form input::placeholder{color:var(--warm-gray)}
+.email-form button{background:var(--black);color:var(--ivory);border:none;padding:13px 20px;font-family:'Jost',sans-serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;cursor:pointer}
+
+/* ── FOOTER ── */
+footer{background:var(--black);color:rgba(255,255,255,.45);padding:56px 28px 28px}
+.ft{display:grid;grid-template-columns:1fr;gap:36px;margin-bottom:44px}
+@media(min-width:768px){.ft{grid-template-columns:2fr 1fr 1fr}}
+.ft-brand{font-family:'Cormorant Garamond',serif;font-size:26px;letter-spacing:7px;text-transform:uppercase;color:var(--ivory);margin-bottom:10px}
+.ft-tag{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+.ft-desc{font-size:12px;line-height:1.9;max-width:260px}
+.ft-col h4{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--ivory);margin-bottom:18px;font-weight:300}
+.ft-col a{display:block;color:rgba(255,255,255,.4);text-decoration:none;font-size:12px;margin-bottom:11px}
+.ft-bot{border-top:1px solid rgba(255,255,255,.1);padding-top:22px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+.ft-bot span{font-size:10px}
+.ft-social{display:flex;gap:20px}
+.ft-social a{color:rgba(255,255,255,.35);text-decoration:none;font-size:10px;letter-spacing:2.5px;text-transform:uppercase}
+
+/* ── MISC ── */
+.float-bag{position:fixed;bottom:22px;right:22px;background:var(--black);color:var(--ivory);border:none;width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:400;box-shadow:0 4px 20px rgba(0,0,0,.25)}
+.bag-count{position:absolute;top:-3px;right:-3px;background:var(--sage);color:white;width:18px;height:18px;border-radius:50%;font-size:10px;display:flex;align-items:center;justify-content:center}
+.toast{position:fixed;bottom:85px;right:22px;background:var(--black);color:var(--ivory);padding:12px 20px;font-size:11px;letter-spacing:2px;text-transform:uppercase;z-index:800;opacity:0;transform:translateY(10px);transition:all .3s ease;pointer-events:none}
+.toast.show{opacity:1;transform:translateY(0)}
+
+/* ── NEW ORDER ALERT ── */
+.order-alert{position:fixed;top:20px;right:20px;background:var(--black);color:#fff;padding:18px 20px;z-index:6000;max-width:320px;box-shadow:0 10px 40px rgba(0,0,0,.35);display:none;animation:slideIn .3s ease}
+.order-alert.show{display:block}
+@keyframes slideIn{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:translateY(0)}}
+.order-alert-label{font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.order-alert-dot{width:7px;height:7px;border-radius:50%;background:#3fae7a;display:inline-block;animation:pulse 1.4s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.order-alert-text{font-size:13px;line-height:1.7;margin-bottom:12px;color:rgba(255,255,255,.9)}
+.order-alert-btns{display:flex;gap:8px}
+.oa-btn{border:none;padding:8px 14px;font-family:'Jost',sans-serif;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;flex:1}
+.oa-btn.primary{background:var(--gold);color:var(--black)}
+.oa-btn.secondary{background:none;border:1px solid rgba(255,255,255,.3);color:#fff}
+.oa-btn.wa{background:#25D366;color:#fff}
+.checkout-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:900;display:none;align-items:center;justify-content:center;padding:20px}
+.checkout-overlay.open{display:flex}
+.checkout-box{background:var(--cream);max-width:540px;width:100%;max-height:90vh;overflow-y:auto;padding:40px 36px;position:relative}
+.co-close{position:absolute;top:16px;right:20px;background:none;border:none;font-size:20px;cursor:pointer;opacity:.5}
+.co-title{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300;margin-bottom:6px}
+.co-sub{font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:var(--warm-gray);margin-bottom:28px}
+.co-order-list{margin-bottom:24px}
+.co-order-item{display:flex;justify-content:space-between;font-size:13px;padding:8px 0;border-bottom:1px solid rgba(0,0,0,.06)}
+.co-order-item span:first-child{font-family:'Cormorant Garamond',serif;font-size:15px}
+.co-total{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px;padding-top:12px}
+.co-total-label{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--warm-gray)}
+.co-total-val{font-family:'Cormorant Garamond',serif;font-size:26px}
+.co-field-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-bottom:7px;margin-top:14px;display:block}
+.co-input{width:100%;border:1px solid rgba(0,0,0,.15);background:transparent;padding:12px 14px;font-family:'Jost',sans-serif;font-size:13px;font-weight:300;color:var(--black);outline:none}
+.co-input:focus{border-color:var(--black)}
+.co-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.co-submit{margin-top:26px;width:100%;background:var(--black);color:var(--ivory);border:none;padding:16px;font-family:'Jost',sans-serif;font-size:11px;letter-spacing:3px;text-transform:uppercase;cursor:pointer}
+.co-wa{margin-top:10px;width:100%;background:none;border:1px solid rgba(0,0,0,.15);color:var(--black);padding:14px;font-family:'Jost',sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .2s}
+.co-wa:hover{background:#25D366;color:#fff;border-color:#25D366}
+.success-screen{text-align:center;padding:40px 20px;display:none}
+.success-screen.show{display:block}
+.success-icon{font-size:44px;margin-bottom:18px}
+.success-title{font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:300;margin-bottom:10px}
+.success-msg{font-size:12px;color:var(--warm-gray);line-height:1.9}
+
+/* ══════════════════════════════════════
+   ADMIN
+══════════════════════════════════════ */
+.admin-login{position:fixed;inset:0;background:var(--black);z-index:3000;display:none;align-items:center;justify-content:center;flex-direction:column;gap:20px}
+.admin-login.open{display:flex}
+.alog-logo{font-family:'Cormorant Garamond',serif;font-size:28px;letter-spacing:8px;color:var(--ivory);text-transform:uppercase;text-align:center}
+.alog-sub{font-size:10px;letter-spacing:3px;color:var(--gold);text-transform:uppercase;margin-bottom:16px}
+.alog-input{background:transparent;border:1px solid rgba(255,255,255,.2);color:#fff;padding:14px 20px;font-family:'Jost',sans-serif;font-size:14px;letter-spacing:2px;outline:none;width:260px;text-align:center}
+.alog-input:focus{border-color:var(--gold)}
+.alog-btn{background:var(--gold);color:var(--black);border:none;padding:13px 0;font-family:'Jost',sans-serif;font-size:11px;letter-spacing:3px;text-transform:uppercase;cursor:pointer;width:260px}
+.alog-err{color:#ff6b6b;font-size:11px;display:none}
+.alog-hint{font-size:10px;color:rgba(255,255,255,.2);text-align:center;line-height:1.9}
+.admin-shell{position:fixed;inset:0;background:#EDEBE4;z-index:2999;display:none;flex-direction:column}
+.admin-shell.open{display:flex}
+.admin-topbar{height:54px;background:var(--black);display:flex;align-items:center;justify-content:space-between;padding:0 24px;flex-shrink:0}
+.atb-left{display:flex;align-items:center;gap:12px}
+.atb-brand{font-family:'Cormorant Garamond',serif;font-size:18px;letter-spacing:5px;color:var(--ivory);text-transform:uppercase}
+.atb-badge{background:var(--sage);color:#fff;font-size:9px;letter-spacing:2px;text-transform:uppercase;padding:3px 10px;border-radius:2px}
+.atb-close{background:none;border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.7);padding:7px 18px;font-family:'Jost',sans-serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;cursor:pointer}
+.atb-close:hover{background:rgba(255,255,255,.1);color:#fff}
+.admin-body{display:flex;flex:1;overflow:hidden}
+.admin-sidebar{width:210px;background:var(--black-s);flex-shrink:0;overflow-y:auto;padding:16px 0}
+.asb-section{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.25);padding:14px 20px 6px}
+.asb-item{display:flex;align-items:center;gap:10px;padding:12px 20px;cursor:pointer;color:rgba(255,255,255,.5);font-size:11px;letter-spacing:2px;text-transform:uppercase;border-left:3px solid transparent;transition:all .2s}
+.asb-item:hover{background:rgba(255,255,255,.05);color:rgba(255,255,255,.8)}
+.asb-item.active{background:rgba(255,255,255,.08);color:#fff;border-left-color:var(--gold)}
+.asb-badge{margin-left:auto;background:var(--gold);color:var(--black);font-size:9px;padding:2px 7px;border-radius:10px}
+.asb-divider{height:1px;background:rgba(255,255,255,.08);margin:8px 20px}
+.admin-content{flex:1;overflow-y:auto;padding:28px 32px}
+.a-panel{display:none}
+.a-panel.active{display:block}
+.a-page-title{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:300;margin-bottom:4px}
+.a-page-sub{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--warm-gray);margin-bottom:28px}
+.dash-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:14px;margin-bottom:26px}
+.dcard{background:#fff;padding:20px 22px;border:1px solid rgba(0,0,0,.06)}
+.dcard-val{font-family:'Cormorant Garamond',serif;font-size:34px;margin-bottom:4px}
+.dcard-label{font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:var(--warm-gray)}
+.dcard-hint{font-size:11px;color:var(--sage);margin-top:5px}
+.a-section{background:#fff;border:1px solid rgba(0,0,0,.07);margin-bottom:18px}
+.a-section-head{padding:15px 20px;border-bottom:1px solid rgba(0,0,0,.06);display:flex;align-items:center;justify-content:space-between}
+.a-section-title{font-size:11px;letter-spacing:2.5px;text-transform:uppercase;font-weight:400}
+.a-section-body{padding:20px}
+.af-group{margin-bottom:15px}
+.af-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--black-s);display:block;margin-bottom:6px}
+.af-input{width:100%;border:1px solid rgba(0,0,0,.14);background:transparent;padding:10px 13px;font-family:'Jost',sans-serif;font-size:13px;font-weight:300;color:var(--black);outline:none;resize:vertical}
+.af-input:focus{border-color:var(--black)}
+.af-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.btn-save{background:var(--black);color:#fff;border:none;padding:10px 22px;font-family:'Jost',sans-serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;cursor:pointer;transition:background .2s}
+.btn-save.ok{background:var(--sage)}
+.btn-outline{background:none;border:1px solid rgba(0,0,0,.2);color:var(--black);padding:9px 18px;font-family:'Jost',sans-serif;font-size:10px;letter-spacing:2.5px;text-transform:uppercase;cursor:pointer}
+.btn-outline:hover{background:var(--black);color:#fff}
+.btn-danger{background:none;border:1px solid #e05555;color:#e05555;padding:7px 13px;font-family:'Jost',sans-serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;cursor:pointer}
+.btn-danger:hover{background:#e05555;color:#fff}
+.a-toggle{display:flex;align-items:center;gap:10px}
+.tog-sw{position:relative;width:38px;height:20px;cursor:pointer;flex-shrink:0}
+.tog-sw input{opacity:0;width:0;height:0}
+.tog-sl{position:absolute;inset:0;background:rgba(0,0,0,.15);transition:.3s;border-radius:20px}
+.tog-sl::before{content:'';position:absolute;height:14px;width:14px;left:3px;bottom:3px;background:#fff;transition:.3s;border-radius:50%}
+.tog-sw input:checked+.tog-sl{background:var(--sage)}
+.tog-sw input:checked+.tog-sl::before{transform:translateX(18px)}
+.saved-tag{display:inline-flex;align-items:center;gap:5px;background:#e8f4f0;color:#2e7d5e;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;padding:5px 12px;margin-left:10px;opacity:0;transition:opacity .3s}
+.saved-tag.show{opacity:1}
+
+/* ── ADMIN PRODUCT LIST ── */
+.apc-list{display:flex;flex-direction:column;gap:11px}
+.apc{display:grid;grid-template-columns:36px 72px 1fr auto;gap:14px;align-items:center;background:#fff;border:1px solid rgba(0,0,0,.07);padding:13px 16px}
+.apc-reorder{display:flex;flex-direction:column;gap:2px;align-items:center}
+.reorder-btn{background:none;border:1px solid rgba(0,0,0,.15);width:28px;height:24px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:11px;color:var(--black);transition:all .2s}
+.reorder-btn:hover{background:var(--black);color:#fff}
+.reorder-btn:disabled{opacity:.25;cursor:not-allowed;pointer-events:none}
+.apc:hover{border-color:rgba(0,0,0,.2)}
+.apc-thumb{width:72px;height:88px;overflow:hidden;background:#f0ece4}
+.apc-thumb img,.apc-thumb .p-ph{width:100%;height:100%;object-fit:cover}
+.apc-n{font-family:'Cormorant Garamond',serif;font-size:16px;margin-bottom:3px}
+.apc-d{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--warm-gray);margin-bottom:4px}
+.apc-p{font-size:12px;color:var(--black-s)}
+.apc-btns{display:flex;flex-direction:column;gap:7px;align-items:flex-end}
+.vis-tag{font-size:9px;letter-spacing:2px;text-transform:uppercase;padding:4px 10px;border:1px solid rgba(0,0,0,.15);cursor:pointer;background:none;white-space:nowrap}
+.vis-tag.off{color:var(--warm-gray);border-color:rgba(0,0,0,.1)}
+
+/* ── ADMIN PRODUCT EDIT PANEL ── */
+.apanel-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:4000;display:none;align-items:flex-start;justify-content:center;padding:20px;overflow-y:auto}
+.apanel-overlay.open{display:flex}
+.apanel-box{background:#fff;max-width:640px;width:100%;padding:32px;position:relative;margin:auto}
+.apanel-title{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:300;margin-bottom:22px}
+.apanel-close{position:absolute;top:14px;right:16px;background:none;border:none;font-size:20px;cursor:pointer;opacity:.4}
+.apanel-close:hover{opacity:1}
+
+/* ── IMAGE UPLOAD SECTION ── */
+.img-upload-section{margin-bottom:20px}
+.img-upload-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--black-s);display:block;margin-bottom:10px}
+.img-upload-hint{font-size:11px;color:var(--warm-gray);margin-bottom:12px;line-height:1.7}
+.img-slots{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;margin-bottom:12px}
+@media(max-width:480px){.img-slots{grid-template-columns:repeat(4,1fr)}}
+.img-slot{aspect-ratio:3/4;border:1.5px dashed rgba(0,0,0,.2);position:relative;overflow:hidden;background:#f8f5f0;cursor:pointer;transition:border-color .2s}
+.img-slot:hover{border-color:var(--black)}
+.img-slot.has-img{border-style:solid;border-color:rgba(0,0,0,.12)}
+.img-slot img{width:100%;height:100%;object-fit:cover;display:block}
+.img-slot-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:6px}
+.img-slot-empty-icon{font-size:20px;opacity:.3}
+.img-slot-empty-text{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--warm-gray);text-align:center}
+.img-slot-del{position:absolute;top:4px;right:4px;background:rgba(0,0,0,.65);color:#fff;border:none;width:22px;height:22px;border-radius:50%;cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s}
+.img-slot:hover .img-slot-del{opacity:1}
+.img-slot-num{position:absolute;bottom:4px;left:4px;background:rgba(0,0,0,.5);color:#fff;font-size:9px;padding:2px 6px;letter-spacing:1px}
+.img-upload-btn{display:flex;align-items:center;gap:8px;background:none;border:1px solid rgba(0,0,0,.2);padding:9px 18px;font-family:'Jost',sans-serif;font-size:10px;letter-spacing:2.5px;text-transform:uppercase;cursor:pointer;color:var(--black);transition:all .2s}
+.img-upload-btn:hover{background:var(--black);color:#fff}
+
+/* ── ORDERS TABLE ── */
+.orders-table{width:100%;border-collapse:collapse}
+.orders-table th{font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--warm-gray);text-align:left;padding:10px 12px;border-bottom:2px solid rgba(0,0,0,.08)}
+.orders-table td{font-size:12px;padding:11px 12px;border-bottom:1px solid rgba(0,0,0,.05);vertical-align:top}
+.os{display:inline-block;padding:3px 9px;font-size:9px;letter-spacing:2px;text-transform:uppercase}
+.os.pending{background:#fff8e6;color:#b8860b}
+.os.confirmed{background:#e8f4f0;color:#2e7d5e}
+.os.shipped{background:#e8eef8;color:#1a3a6e}
+.no-items{text-align:center;padding:44px;color:var(--warm-gray);font-size:13px}
+.admin-trigger{position:fixed;bottom:0;left:0;width:50px;height:50px;cursor:pointer;z-index:300;opacity:0}
+
+/* ── MENU DRAWER (brand story + suggestions) ── */
+.menu-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:600;display:none}
+.menu-overlay.open{display:block}
+.menu-drawer{position:fixed;top:0;left:-420px;width:100%;max-width:420px;height:100vh;background:var(--cream);z-index:700;display:flex;flex-direction:column;transition:left .35s ease;box-shadow:4px 0 30px rgba(0,0,0,.12)}
+.menu-drawer.open{left:0}
+.menu-head{padding:26px 26px 20px;border-bottom:1px solid rgba(0,0,0,.08);display:flex;align-items:flex-start;justify-content:space-between}
+.menu-head-brand{font-family:'Cormorant Garamond',serif;font-size:24px;letter-spacing:6px;text-transform:uppercase}
+.menu-head-tag{font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold);margin-top:6px}
+.menu-close-btn{background:none;border:none;font-size:20px;cursor:pointer;opacity:.5}
+.menu-body{flex:1;overflow-y:auto;padding:24px 26px}
+.menu-section-label{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--sage);margin-bottom:14px}
+.menu-phil-item{display:flex;gap:14px;margin-bottom:20px}
+.menu-phil-num{font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--sage);font-style:italic;flex-shrink:0;width:26px}
+.menu-phil-title{font-size:11px;letter-spacing:2px;text-transform:uppercase;margin-bottom:5px}
+.menu-phil-text{font-size:12px;color:var(--warm-gray);line-height:1.7}
+.menu-divider{height:1px;background:rgba(0,0,0,.08);margin:24px 0}
+.suggest-textarea{width:100%;border:1px solid rgba(0,0,0,.15);background:transparent;padding:12px 14px;font-family:'Jost',sans-serif;font-size:13px;font-weight:300;color:var(--black);outline:none;resize:vertical;min-height:80px;margin-bottom:10px}
+.suggest-textarea:focus{border-color:var(--black)}
+.suggest-input{width:100%;border:1px solid rgba(0,0,0,.15);background:transparent;padding:11px 14px;font-family:'Jost',sans-serif;font-size:13px;font-weight:300;color:var(--black);outline:none;margin-bottom:10px}
+.suggest-send-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;background:var(--black);color:var(--ivory);border:none;padding:14px;font-family:'Jost',sans-serif;font-size:11px;letter-spacing:2.5px;text-transform:uppercase;cursor:pointer;transition:background .2s}
+.suggest-send-btn:hover{background:var(--black-s)}
+
+/* ── SEARCH OVERLAY ── */
+.search-overlay{position:fixed;inset:0;background:var(--cream);z-index:800;display:none;flex-direction:column}
+.search-overlay.open{display:flex}
+.search-top{padding:20px 24px;border-bottom:1px solid rgba(0,0,0,.08);display:flex;align-items:center;gap:14px}
+.search-input-wrap{flex:1;display:flex;align-items:center;gap:10px;border-bottom:1.5px solid var(--black);padding-bottom:8px}
+.search-input{flex:1;border:none;background:transparent;outline:none;font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:300;color:var(--black)}
+.search-input::placeholder{color:var(--warm-gray);font-style:italic}
+.search-close-btn{background:none;border:none;font-size:22px;cursor:pointer;opacity:.5;flex-shrink:0}
+.search-cats{display:flex;gap:8px;padding:16px 24px;flex-wrap:wrap;border-bottom:1px solid rgba(0,0,0,.06)}
+.search-body{flex:1;overflow-y:auto;padding:20px 24px}
+.search-hint{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--warm-gray);text-align:center;padding:40px 20px}
+.search-results{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(0,0,0,.06)}
+@media(min-width:700px){.search-results{grid-template-columns:1fr 1fr 1fr}}
+.sr-card{background:var(--cream);cursor:pointer;display:flex;flex-direction:column}
+.sr-img{aspect-ratio:3/4;overflow:hidden}
+.sr-img img,.sr-img .p-ph{width:100%;height:100%;object-fit:cover}
+.sr-info{padding:10px 4px}
+.sr-name{font-family:'Cormorant Garamond',serif;font-size:14px;margin-bottom:3px}
+.sr-price{font-size:11px;color:var(--warm-gray)}
+
+/* ── FAQ ACCORDION ── */
+.faq-item{border-bottom:1px solid rgba(0,0,0,.08);padding:14px 0}
+.faq-item summary{cursor:pointer;font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:400;color:var(--black);list-style:none;display:flex;justify-content:space-between;align-items:center}
+.faq-item summary::-webkit-details-marker{display:none}
+.faq-item summary::after{content:'+';font-size:18px;color:var(--sage);flex-shrink:0;margin-left:10px}
+.faq-item[open] summary::after{content:'−'}
+.faq-item p{font-size:12px;color:var(--warm-gray);line-height:1.8;margin-top:10px}
+
+/* ── HAPPY CUSTOMERS STAT ── */
+.happy-stat{text-align:center;padding:52px 24px;border-top:1px solid rgba(0,0,0,.08);border-bottom:1px solid rgba(0,0,0,.08);background:var(--ivory)}
+.happy-num{font-family:'Cormorant Garamond',serif;font-size:clamp(42px,7vw,64px);font-weight:300;color:var(--black);line-height:1}
+.happy-label{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--warm-gray);margin-top:10px}
+
+/* ── COLOR VARIANTS ── */
+.color-swatches{display:flex;gap:10px;flex-wrap:wrap}
+.color-swatch{width:30px;height:30px;border-radius:50%;cursor:pointer;border:2px solid transparent;box-shadow:0 0 0 1px rgba(0,0,0,.15);transition:all .2s}
+.color-swatch:hover{transform:scale(1.08)}
+.color-swatch.sel{border-color:var(--black);box-shadow:0 0 0 1px var(--black)}
+.color-block{border:1px solid rgba(0,0,0,.1);padding:16px;margin-bottom:14px;background:#fbfaf7}
+.color-block-head{display:flex;gap:10px;align-items:center;margin-bottom:12px;flex-wrap:wrap}
+.color-hex-input{width:44px;height:36px;border:1px solid rgba(0,0,0,.15);cursor:pointer;padding:2px;background:#fff}
+.color-name-input{flex:1;min-width:120px}
+.color-stock-select{width:170px}
+
+/* ── ACCOUNT / AUTH ── */
+.auth-tabs{display:flex;gap:0;margin-bottom:24px;border-bottom:1px solid rgba(0,0,0,.1)}
+.auth-tab{flex:1;background:none;border:none;padding:12px;font-family:'Jost',sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;color:var(--warm-gray);border-bottom:2px solid transparent;transition:all .2s}
+.auth-tab.active{color:var(--black);border-bottom-color:var(--black)}
+.auth-err{color:#c94141;font-size:11px;margin-top:-4px;margin-bottom:10px;display:none}
+.auth-msg{color:var(--sage);font-size:12px;line-height:1.8;padding:16px;background:var(--ivory);margin-bottom:14px}
+.account-row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid rgba(0,0,0,.06)}
+.account-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--warm-gray)}
+.account-val{font-family:'Cormorant Garamond',serif;font-size:15px;color:var(--black)}
+.order-hist-item{border-bottom:1px solid rgba(0,0,0,.08);padding:14px 0}
+.order-hist-id{font-family:'Cormorant Garamond',serif;font-size:15px}
+.order-hist-meta{font-size:11px;color:var(--warm-gray);margin:4px 0 8px}
+.order-hist-items{font-size:12px;color:var(--black-s);line-height:1.7}
+.order-hist-total{font-size:13px;margin-top:8px;color:var(--black-s)}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+</head>
+<body>
+
+<div class="marquee-wrap"><div class="marquee-track" id="marqueeTrack"></div></div>
+
+<div class="announcement" id="annBar">
+  <span id="annText">Summer Collection is Now Live</span>
+  <a href="#collection" id="annCta">Shop Now</a>
+</div>
+
+<nav>
+  <div class="nav-left">
+    <button class="nav-icon" onclick="openMenu()" aria-label="Menu"><svg width="20" height="14" viewBox="0 0 20 14" fill="none"><line x1="0" y1="1" x2="20" y2="1" stroke="currentColor" stroke-width="1.2"/><line x1="0" y1="7" x2="14" y2="7" stroke="currentColor" stroke-width="1.2"/><line x1="0" y1="13" x2="20" y2="13" stroke="currentColor" stroke-width="1.2"/></svg></button>
+    <button class="nav-icon" onclick="openSearch()" aria-label="Search"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="7.5" cy="7.5" r="6" stroke="currentColor" stroke-width="1.2"/><line x1="12" y1="12" x2="17" y2="17" stroke="currentColor" stroke-width="1.2"/></svg></button>
+  </div>
+  <a href="#" class="nav-logo" id="navLogo" onclick="logoClick(event)">PRIMORA</a>
+  <div class="nav-right">
+    <button class="nav-icon" id="accountIconBtn" onclick="openAccount()" style="position:relative"><svg width="18" height="20" viewBox="0 0 18 20" fill="none"><circle cx="9" cy="6" r="4.5" stroke="currentColor" stroke-width="1.2"/><path d="M1 19c0-4.418 3.582-8 8-8s8 3.582 8 8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg><span id="accountDot" style="display:none;position:absolute;top:2px;right:2px;width:7px;height:7px;border-radius:50%;background:var(--sage)"></span></button>
+    <button class="nav-icon" onclick="openCart()"><svg width="18" height="20" viewBox="0 0 18 20" fill="none"><rect x="1" y="6" width="16" height="13" rx="1" stroke="currentColor" stroke-width="1.2"/><path d="M6 9V5a3 3 0 016 0v4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></button>
+  </div>
+</nav>
+
+<div class="col-header" id="collection">
+  <div class="col-title" id="colTitle">Summer Collection</div>
+  <div class="col-sub" id="colSub">10 Signature Pieces · Quiet Luxury · Limited Edition</div>
+</div>
+<div class="filter-row">
+  <div class="filter-label">
+    <svg width="14" height="12" viewBox="0 0 14 12" fill="none"><line x1="0" y1="2" x2="14" y2="2" stroke="currentColor" stroke-width="1"/><line x1="3" y1="6" x2="11" y2="6" stroke="currentColor" stroke-width="1"/><line x1="5" y1="10" x2="9" y2="10" stroke="currentColor" stroke-width="1"/></svg>
+    Filter
+  </div>
+  <div class="grid-toggles">
+    <button class="gtoggle active" onclick="setGrid(this)"><div class="g4"><span></span><span></span><span></span><span></span></div></button>
+    <button class="gtoggle" onclick="setGrid(this)"><div class="g1"></div></button>
+  </div>
+</div>
+<div class="cat-tabs" id="catTabs"></div>
+
+<div class="product-grid" id="productGrid"></div>
+
+<div class="happy-stat" id="happyStat">
+  <div class="happy-num" id="happyNum">500+</div>
+  <div class="happy-label" id="happyLabelText">Happy Customers</div>
+</div>
+
+<div class="editorial">
+  <div class="ey">The PRIMORA Story</div>
+  <h2 id="editQuote">"From survival to adaptation.<br>From connection to creativity.<br>From necessity to identity."</h2>
+  <p id="editSub">Four stages of human clothing history. One brand born from all of them.</p>
+</div>
+
+<div class="philosophy" id="philosophyContainer"></div>
+
+<div class="newsletter">
+  <div class="ey">Join PRIMORA</div>
+  <h3>Be The First to Know</h3>
+  <p>Early access · New arrivals · Exclusive drops</p>
+  <div class="email-form" id="newsletterForm">
+    <input type="email" id="newsletterEmail" placeholder="Your email address" onkeydown="if(event.key==='Enter')subscribeNewsletter()">
+    <button onclick="subscribeNewsletter()">Join</button>
+  </div>
+  <div id="newsletterMsg" style="display:none;font-size:12px;letter-spacing:1.5px;color:var(--sage);margin-top:16px"></div>
+</div>
+
+<footer>
+  <div class="ft">
+    <div><div class="ft-brand">PRIMORA</div><div class="ft-tag">Quiet Luxury For Her</div><div class="ft-desc">A fashion brand born from four stages of human history. Minimal, intentional, timeless.</div></div>
+    <div class="ft-col"><h4>Explore</h4><a href="#collection">Collection</a><a href="#philosophy">Our Story</a><a href="javascript:void(0)" onclick="openInfoPage('sizeGuide')">Size Guide</a><a href="javascript:void(0)" onclick="openInfoPage('careGuide')">Care Guide</a></div>
+    <div class="ft-col"><h4>Support</h4><a href="javascript:void(0)" onclick="openInfoPage('shipping')">Shipping</a><a href="javascript:void(0)" onclick="openInfoPage('returns')">Returns</a><a href="javascript:void(0)" onclick="openInfoPage('contact')">Contact</a><a href="javascript:void(0)" onclick="openFaqPage()">FAQ</a></div>
+  </div>
+  <div class="ft-bot">
+    <span>© 2025 PRIMORA. All rights reserved.</span>
+    <div class="ft-social" id="ftSocialList"></div>
+  </div>
+</footer>
+
+<button class="float-bag" onclick="openCart()">
+  <svg width="18" height="20" viewBox="0 0 18 20" fill="none"><rect x="1" y="6" width="16" height="13" rx="1" stroke="white" stroke-width="1.4"/><path d="M6 9V5a3 3 0 016 0v4" stroke="white" stroke-width="1.4" stroke-linecap="round"/></svg>
+  <span class="bag-count" id="bagCount">0</span>
+</button>
+<div class="toast" id="toast">Added to bag</div>
+
+<!-- NEW ORDER ALERT (admin) -->
+<div class="order-alert" id="orderAlert">
+  <div class="order-alert-label"><span class="order-alert-dot"></span> New Order Received</div>
+  <div class="order-alert-text" id="orderAlertText"></div>
+  <div class="order-alert-btns">
+    <button class="oa-btn primary" onclick="viewNewOrderFromAlert()">View</button>
+    <button class="oa-btn wa" onclick="forwardOrderAlertToWhatsApp()">WhatsApp</button>
+    <button class="oa-btn secondary" onclick="dismissOrderAlert()">✕</button>
+  </div>
+</div>
+<div class="admin-trigger" id="adminTrigger"></div>
+<div id="connBanner" style="display:none;position:fixed;top:0;left:0;right:0;background:#e05555;color:#fff;text-align:center;padding:10px 16px;font-size:11px;letter-spacing:1.5px;z-index:5000;align-items:center;justify-content:center;gap:10px">
+  ⚠ Can't reach the backend — check your internet connection. Changes won't be saved until reconnected.
+</div>
+<input type="file" id="imgFileInput" accept="image/*" style="display:none" onchange="handleImgUpload(event)">
+
+<!-- MENU DRAWER — Brand Story + Suggestions -->
+<div class="menu-overlay" id="menuOverlay" onclick="closeMenu()"></div>
+<div class="menu-drawer" id="menuDrawer">
+  <div class="menu-head">
+    <div>
+      <div class="menu-head-brand">PRIMORA</div>
+      <div class="menu-head-tag">Quiet Luxury For Her</div>
+    </div>
+    <button class="menu-close-btn" onclick="closeMenu()">✕</button>
+  </div>
+  <div class="menu-body">
+    <div class="menu-section-label">Our Story</div>
+    <div id="menuPhilList"></div>
+    <div class="menu-divider"></div>
+    <div class="menu-section-label">Have a Suggestion?</div>
+    <textarea class="suggest-textarea" id="suggestText" placeholder="Tell us what you'd love to see from PRIMORA…"></textarea>
+    <input class="suggest-input" id="suggestName" placeholder="Your name (optional)">
+    <button class="suggest-send-btn" onclick="sendSuggestion()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="#25D366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.124.558 4.118 1.532 5.847L.057 23.882l6.196-1.626A11.936 11.936 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.81 9.81 0 01-5.032-1.385l-.36-.214-3.736.98.997-3.648-.235-.374A9.818 9.818 0 012.182 12C2.182 6.57 6.57 2.182 12 2.182S21.818 6.57 21.818 12 17.43 21.818 12 21.818z"/></svg>
+      Send via WhatsApp
+    </button>
+  </div>
+</div>
+
+<!-- SEARCH OVERLAY -->
+<div class="search-overlay" id="searchOverlay">
+  <div class="search-top">
+    <div class="search-input-wrap">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="7.5" cy="7.5" r="6" stroke="currentColor" stroke-width="1.2"/><line x1="12" y1="12" x2="17" y2="17" stroke="currentColor" stroke-width="1.2"/></svg>
+      <input class="search-input" id="searchInput" placeholder="Search products…" oninput="doSearch(this.value)">
+    </div>
+    <button class="search-close-btn" onclick="closeSearch()">✕</button>
+  </div>
+  <div class="search-cats" id="searchCats"></div>
+  <div class="search-body" id="searchBody">
+    <div class="search-hint">Start typing a product name, or browse by category above.</div>
+  </div>
+</div>
+
+<!-- INFO PAGE MODAL — Size Guide / Care Guide / Shipping / Returns / Contact -->
+<div class="checkout-overlay" id="infoOverlay" onclick="if(event.target===this)closeInfoPage()">
+  <div class="checkout-box">
+    <button class="co-close" onclick="closeInfoPage()">✕</button>
+    <div class="co-title" id="infoTitle"></div>
+    <div class="co-sub" id="infoSub" style="margin-bottom:20px">PRIMORA</div>
+    <div id="infoContent" style="font-size:13px;line-height:2;color:var(--black-s);white-space:pre-wrap"></div>
+  </div>
+</div>
+
+<!-- FAQ MODAL -->
+<div class="checkout-overlay" id="faqOverlay" onclick="if(event.target===this)closeFaqPage()">
+  <div class="checkout-box">
+    <button class="co-close" onclick="closeFaqPage()">✕</button>
+    <div class="co-title">Frequently Asked Questions</div>
+    <div class="co-sub" style="margin-bottom:20px">PRIMORA</div>
+    <div id="faqList"></div>
+  </div>
+</div>
+
+<!-- ACCOUNT MODAL — Sign In / Sign Up / My Account -->
+<div class="checkout-overlay" id="accountOverlay" onclick="if(event.target===this)closeAccount()">
+  <div class="checkout-box">
+    <button class="co-close" onclick="closeAccount()">✕</button>
+    <div id="accountContent"></div>
+  </div>
+</div>
+
+<!-- PRODUCT MODAL -->
+<div class="modal-overlay" id="productModal" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="modal-gallery" id="modalGallery">
+      <div class="modal-main-img" id="modalMainImg"></div>
+      <button class="gal-arrow left" id="galLeft" onclick="galNav(-1)">&#8249;</button>
+      <button class="gal-arrow right" id="galRight" onclick="galNav(1)">&#8250;</button>
+      <div class="modal-thumbs" id="modalThumbs"></div>
+    </div>
+    <div class="modal-body">
+      <button class="modal-close" onclick="closeModal()">✕</button>
+      <div class="modal-tag">Summer Collection</div>
+      <div id="modalStockBadge"></div>
+      <div class="modal-name" id="modalName"></div>
+      <div class="modal-price" id="modalPrice"></div>
+      <div class="modal-desc" id="modalDesc"></div>
+      <div id="modalOccasionsWrap" style="display:none;margin-bottom:20px">
+        <div class="modal-label">Perfect For</div>
+        <div id="modalOccasionsText" style="font-size:12px;color:var(--warm-gray);line-height:1.8"></div>
+      </div>
+      <div id="modalColorWrap" style="display:none"></div>
+      <div class="modal-label" style="display:flex;justify-content:space-between;align-items:center">
+        <span>Select Size</span>
+        <a href="javascript:void(0)" onclick="openProductSizeGuide()" style="font-size:10px;letter-spacing:1.5px;text-decoration:underline;color:var(--sage);text-transform:none;font-family:'Jost',sans-serif">Size Guide</a>
+      </div>
+      <div class="modal-sizes" id="modalSizes"></div>
+      <div class="modal-label">Quantity</div>
+      <div class="modal-qty">
+        <button class="qty-btn" onclick="changeQty(-1)">−</button>
+        <span class="qty-num" id="qtyNum">1</span>
+        <button class="qty-btn" onclick="changeQty(1)">+</button>
+      </div>
+      <button class="modal-add-btn" id="modalAddBtn" onclick="addFromModal()">Add to Bag</button>
+      <button class="modal-wa-btn" onclick="waProduct()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="#25D366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.124.558 4.118 1.532 5.847L.057 23.882l6.196-1.626A11.936 11.936 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.81 9.81 0 01-5.032-1.385l-.36-.214-3.736.98.997-3.648-.235-.374A9.818 9.818 0 012.182 12C2.182 6.57 6.57 2.182 12 2.182S21.818 6.57 21.818 12 17.43 21.818 12 21.818z"/></svg>
+        Order via WhatsApp
+      </button>
+      <div class="modal-details">
+        <div class="detail-row"><span>Material</span><span id="modalMat"></span></div>
+        <div class="detail-row"><span>Fit</span><span id="modalFit"></span></div>
+        <div class="detail-row"><span>Care</span><span>Hand wash cold</span></div>
+        <div class="detail-row"><span>Delivery</span><span id="modalDeliv">2–4 business days</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CART -->
+<div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
+<div class="cart-drawer" id="cartDrawer">
+  <div class="cart-head"><div class="cart-head-title">Your Bag</div><button class="cart-close-btn" onclick="closeCart()">✕</button></div>
+  <div class="cart-items" id="cartItems"><div class="cart-empty"><div class="cart-empty-icon">○</div><div>Your bag is empty</div></div></div>
+  <div class="cart-foot" id="cartFoot" style="display:none">
+    <div class="cart-subtotal"><div class="cart-subtotal-label">Subtotal</div><div class="cart-subtotal-val" id="cartTotal">LE 0</div></div>
+    <div class="cart-note">Shipping calculated at checkout</div>
+    <button class="checkout-btn" onclick="openCheckout()">Proceed to Checkout</button>
+    <button class="wa-checkout-btn" onclick="waOrder()">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="#25D366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.124.558 4.118 1.532 5.847L.057 23.882l6.196-1.626A11.936 11.936 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.81 9.81 0 01-5.032-1.385l-.36-.214-3.736.98.997-3.648-.235-.374A9.818 9.818 0 012.182 12C2.182 6.57 6.57 2.182 12 2.182S21.818 6.57 21.818 12 17.43 21.818 12 21.818z"/></svg>
+      Order via WhatsApp
+    </button>
+  </div>
+</div>
+
+<!-- CHECKOUT -->
+<div class="checkout-overlay" id="checkoutOverlay" onclick="if(event.target===this)closeCheckout()">
+  <div class="checkout-box">
+    <button class="co-close" onclick="closeCheckout()">✕</button>
+    <div id="checkoutForm">
+      <div class="co-title">Checkout</div>
+      <div class="co-sub">Summer Collection · PRIMORA</div>
+      <div class="co-order-list" id="coOrderList"></div>
+      <div class="co-total"><div class="co-total-label">Total</div><div class="co-total-val" id="coTotal"></div></div>
+      <label class="co-field-label">Full Name</label><input class="co-input" id="coName" placeholder="Your full name">
+      <label class="co-field-label">Phone Number</label><input class="co-input" id="coPhone" placeholder="+20 1XX XXX XXXX">
+      <label class="co-field-label">Email</label><input class="co-input" id="coEmail" placeholder="your@email.com">
+      <label class="co-field-label">Delivery Address</label><input class="co-input" id="coAddr" placeholder="Street, area">
+      <div class="co-row">
+        <div><label class="co-field-label">City</label><input class="co-input" id="coCity" placeholder="Cairo"></div>
+        <div><label class="co-field-label">Governorate</label><input class="co-input" id="coGov" placeholder="Cairo"></div>
+      </div>
+      <button class="co-submit" onclick="submitOrder()">Confirm Order</button>
+      <button class="co-wa" onclick="waOrder()">Order via WhatsApp instead</button>
+    </div>
+    <div class="success-screen" id="successScreen">
+      <div class="success-icon">✦</div>
+      <div class="success-title">Order Received</div>
+      <div class="success-msg">Thank you for choosing PRIMORA.<br>We'll confirm your order within 24 hours.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN LOGIN -->
+<div class="admin-login" id="adminLogin">
+  <div class="alog-logo">PRIMORA</div>
+  <div class="alog-sub">Admin Dashboard</div>
+  <input class="alog-input" type="email" id="adminEmail" placeholder="Admin email" onkeydown="if(event.key==='Enter')document.getElementById('adminPw').focus()">
+  <input class="alog-input" type="password" id="adminPw" placeholder="Password" onkeydown="if(event.key==='Enter')tryLogin()">
+  <button class="alog-btn" onclick="tryLogin()">Enter Dashboard</button>
+  <div class="alog-err" id="adminErr">Incorrect password</div>
+  <div class="alog-hint">Click PRIMORA logo 5× · or type "admin" on keyboard<br>Corner bottom-left 5× also works</div>
+</div>
+
+<!-- ADMIN SHELL -->
+<div class="admin-shell" id="adminShell">
+  <div class="admin-topbar">
+    <div class="atb-left"><div class="atb-brand">PRIMORA</div><div class="atb-badge">Admin</div></div>
+    <div style="display:flex;align-items:center;gap:8px;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.6)">
+      <span id="connDot" style="width:8px;height:8px;border-radius:50%;background:#B8860B;display:inline-block"></span>
+      <span id="connText">Connecting…</span>
+    </div>
+    <button class="atb-close" onclick="closeAdmin()">← Back to Store</button>
+  </div>
+  <div class="admin-body">
+    <div class="admin-sidebar">
+      <div class="asb-section">Overview</div>
+      <div class="asb-item active" onclick="showPanel('dashboard',this)">◈ Dashboard</div>
+      <div class="asb-item" onclick="showPanel('orders',this)">◻ Orders <span class="asb-badge" id="ordBadge">0</span></div>
+      <div class="asb-item" onclick="showPanel('subscribers',this)">✉ Subscribers <span class="asb-badge" id="subBadge">0</span></div>
+      <div class="asb-item" onclick="showPanel('customers',this)">◍ Customers <span class="asb-badge" id="custBadge">0</span></div>
+      <div class="asb-divider"></div>
+      <div class="asb-section">Store</div>
+      <div class="asb-item" onclick="showPanel('products',this)">◇ Products</div>
+      <div class="asb-item" onclick="showPanel('store',this)">◎ Settings</div>
+      <div class="asb-item" onclick="showPanel('content',this)">◈ Content</div>
+      <div class="asb-divider"></div>
+      <div class="asb-section">Account</div>
+      <div class="asb-item" onclick="showPanel('security',this)">◉ Security</div>
+    </div>
+    <div class="admin-content">
+
+      <!-- DASHBOARD -->
+      <div class="a-panel active" id="panel-dashboard">
+        <div class="a-page-title">Dashboard</div>
+        <div class="a-page-sub">PRIMORA · Live Store Overview</div>
+        <div class="dash-stats">
+          <div class="dcard"><div class="dcard-val" id="s-orders">0</div><div class="dcard-label">Total Orders</div><div class="dcard-hint">Since launch</div></div>
+          <div class="dcard"><div class="dcard-val" id="s-revenue">LE 0</div><div class="dcard-label">Revenue</div><div class="dcard-hint">Cash on delivery</div></div>
+          <div class="dcard"><div class="dcard-val" id="s-prods">10</div><div class="dcard-label">Active Products</div><div class="dcard-hint">Visible in store</div></div>
+          <div class="dcard"><div class="dcard-val" id="s-pending">0</div><div class="dcard-label">Pending</div><div class="dcard-hint">Need confirmation</div></div>
+          <div class="dcard"><div class="dcard-val" id="s-subsCount">0</div><div class="dcard-label">Subscribers</div><div class="dcard-hint">Newsletter</div></div>
+        </div>
+        <div class="a-section">
+          <div class="a-section-head"><div class="a-section-title">Backend Status</div></div>
+          <div class="a-section-body">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+              <span id="dashConnDot" style="width:10px;height:10px;border-radius:50%;background:#B8860B;display:inline-block"></span>
+              <span id="dashConnText" style="font-size:12px;letter-spacing:1px;text-transform:uppercase;color:var(--black-s)">Connecting…</span>
+            </div>
+            <div style="font-size:11px;color:var(--warm-gray);line-height:1.8">Live Supabase database — every product, order, and setting is saved to the cloud in real time and available from any device. Product photos are stored in Supabase Storage (1&nbsp;GB+ free).</div>
+          </div>
+        </div>
+        <div class="a-section">
+          <div class="a-section-head"><div class="a-section-title">Recent Orders</div></div>
+          <div class="a-section-body" id="dashRecent"><div class="no-items">No orders yet — store is live.</div></div>
+        </div>
+      </div>
+
+      <!-- ORDERS -->
+      <div class="a-panel" id="panel-orders">
+        <div class="a-page-title">Orders</div>
+        <div class="a-page-sub">All customer orders</div>
+        <div class="a-section">
+          <div class="a-section-head">
+            <div class="a-section-title">All Orders</div>
+            <div style="display:flex;gap:10px">
+              <button class="btn-outline" onclick="exportOrdersToExcel()">⬇ Export to Excel</button>
+              <button class="btn-danger" onclick="if(confirm('Clear all orders?'))clearOrders()">Clear All</button>
+            </div>
+          </div>
+          <div id="ordersWrap"><div class="no-items">No orders yet.</div></div>
+        </div>
+      </div>
+
+      <!-- SUBSCRIBERS -->
+      <div class="a-panel" id="panel-subscribers">
+        <div class="a-page-title">Newsletter Subscribers</div>
+        <div class="a-page-sub">Everyone who joined "Join PRIMORA" on the homepage</div>
+        <div class="a-section">
+          <div class="a-section-head">
+            <div class="a-section-title">All Subscribers</div>
+            <div style="display:flex;gap:10px">
+              <button class="btn-outline" onclick="exportSubscribersToExcel()">⬇ Export to Excel</button>
+              <button class="btn-danger" onclick="if(confirm('Clear all subscribers?'))clearSubscribers()">Clear All</button>
+            </div>
+          </div>
+          <div id="subscribersWrap"><div class="no-items">No subscribers yet.</div></div>
+        </div>
+      </div>
+
+      <!-- CUSTOMERS -->
+      <div class="a-panel" id="panel-customers">
+        <div class="a-page-title">Customers</div>
+        <div class="a-page-sub">Everyone with a PRIMORA account</div>
+        <div class="a-section">
+          <div class="a-section-head">
+            <div class="a-section-title">All Customers</div>
+            <button class="btn-outline" onclick="exportCustomersToExcel()">⬇ Export to Excel</button>
+          </div>
+          <div id="customersWrap"><div class="no-items">No customers yet.</div></div>
+        </div>
+      </div>
+
+      <!-- PRODUCTS -->
+      <div class="a-panel" id="panel-products">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap">
+          <div>
+            <div class="a-page-title">Products</div>
+            <div class="a-page-sub" style="margin-bottom:0">Edit name · price · images (up to 10 per product) · sizes · visibility</div>
+          </div>
+          <button class="btn-save" onclick="addNewProduct()" style="white-space:nowrap;margin-top:2px">+ Add New Product</button>
+        </div>
+        <div style="height:20px"></div>
+        <div class="apc-list" id="apcList"></div>
+      </div>
+
+      <!-- SETTINGS -->
+      <div class="a-panel" id="panel-store">
+        <div class="a-page-title">Store Settings</div>
+        <div class="a-page-sub">Announcement · Collection · WhatsApp · Shipping</div>
+        <div class="a-section">
+          <div class="a-section-head"><div class="a-section-title">Announcement Bar</div></div>
+          <div class="a-section-body">
+            <div class="af-row">
+              <div class="af-group"><label class="af-label">Text</label><input class="af-input" id="s-annText"></div>
+              <div class="af-group"><label class="af-label">Button Text</label><input class="af-input" id="s-annCta"></div>
+            </div>
+            <div class="af-group"><div class="a-toggle"><label class="tog-sw"><input type="checkbox" id="s-annVis" checked><span class="tog-sl"></span></label><span style="font-size:12px;color:var(--warm-gray)">Show announcement bar</span></div></div>
+            <button class="btn-save" id="bsave1" onclick="saveSettings('bsave1','st1')">Save</button>
+            <span class="saved-tag" id="st1">✓ Saved</span>
+          </div>
+        </div>
+        <div class="a-section">
+          <div class="a-section-head"><div class="a-section-title">Collection Header</div></div>
+          <div class="a-section-body">
+            <div class="af-group"><label class="af-label">Collection Name</label><input class="af-input" id="s-colTitle"></div>
+            <div class="af-group"><label class="af-label">Subtitle</label><input class="af-input" id="s-colSub"></div>
+            <button class="btn-save" id="bsave2" onclick="saveSettings('bsave2','st2')">Save</button>
+            <span class="saved-tag" id="st2">✓ Saved</span>
+          </div>
+        </div>
+        <div class="a-section">
+          <div class="a-section-head"><div class="a-section-title">WhatsApp Number</div></div>
+          <div class="a-section-body">
+            <div class="af-group"><label class="af-label">Number — with country code, no spaces or +</label><input class="af-input" id="s-wa" placeholder="201012345678"></div>
+            <button class="btn-save" id="bsave3" onclick="saveSettings('bsave3','st3')">Save</button>
+            <span class="saved-tag" id="st3">✓ Saved</span>
+          </div>
+        </div>
+        <div class="a-section">
+          <div class="a-section-head"><div class="a-section-title">Shipping</div></div>
+          <div class="a-section-body">
+            <div class="af-row">
+              <div class="af-group"><label class="af-label">Cost (LE · 0 = Free)</label><input class="af-input" type="number" id="s-ship"></div>
+              <div class="af-group"><label class="af-label">Delivery Time</label><input class="af-input" id="s-deliv"></div>
+            </div>
+            <button class="btn-save" id="bsave4" onclick="saveSettings('bsave4','st4')">Save</button>
+            <span class="saved-tag" id="st4">✓ Saved</span>
+          </div>
+        </div>
+        <div class="a-section">
+          <div class="a-section-head"><div class="a-section-title">Happy Customers Counter</div></div>
+          <div class="a-section-body">
+            <div style="font-size:11px;color:var(--warm-gray);margin-bottom:16px;line-height:1.7">Shown as a stat on the homepage below the collection.</div>
+            <div class="af-row">
+              <div class="af-group"><label class="af-label">Number</label><input class="af-input" type="number" id="s-happyCount"></div>
+              <div class="af-group"><label class="af-label">Label</label><input class="af-input" id="s-happyLabel" placeholder="Happy Customers"></div>
+            </div>
+            <button class="btn-save" id="bsave11" onclick="saveSettings('bsave11','st11')">Save</button>
+            <span class="saved-tag" id="st11">✓ Saved</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- CONTENT -->
+      <div class="a-panel" id="panel-content">
+        <div class="a-page-title">Content</div>
+        <div class="a-page-sub">Marquee · Editorial</div>
+        <div class="a-section">
+          <div class="a-section-head"><div class="a-section-title">Marquee Text</div></div>
+          <div class="a-section-body">
+            <div class="af-group"><label class="af-label">Items — one per line</label><textarea class="af-input" id="s-marquee" rows="5"></textarea></div>
+            <button class="btn-save" id="bsave5" onclick="saveContent('bsave5','st5')">Save</button>
+            <span class="saved-tag" id="st5">✓ Saved</span>
+          </div>
+        </div>
+        <div class="a-section">
+          <div class="a-section-head"><div class="a-section-title">Editorial Section</div></div>
+          <div class="a-section-body">
+            <div class="af-group"><label class="af-label">Quote</label><textarea class="af-input" id="s-editQuote" rows="4"></textarea></div>
+            <div class="af-group"><label class="af-label">Subtitle</label><input class="af-input" id="s-editSub"></div>
+            <button class="btn-save" id="bsave6" onclick="saveContent('bsave6','st6')">Save</button>
+            <span class="saved-tag" id="st6">✓ Saved</span>
+          </div>
+        </div>
+        <div class="a-section">
+          <div class="a-section-head"><div class="a-section-title">Brand Story — The Four Stages</div></div>
+          <div class="a-section-body">
+            <div style="font-size:11px;color:var(--warm-gray);margin-bottom:16px;line-height:1.7">Shown in the "Our Story" menu and on the homepage. Edit the title and text for each stage.</div>
+            <div id="philEditFields"></div>
+            <button class="btn-save" id="bsave7" onclick="savePhilosophy('bsave7','st7')">Save</button>
+            <span class="saved-tag" id="st7">✓ Saved</span>
+          </div>
+        </div>
+
+        <div class="a-section">
+          <div class="a-section-head"><div class="a-section-title">Footer Pages</div></div>
+          <div class="a-section-body">
+            <div style="font-size:11px;color:var(--warm-gray);margin-bottom:16px;line-height:1.7">Content shown when a customer clicks Size Guide, Care Guide, Shipping, Returns, or Contact in the footer.</div>
+            <div class="af-group"><label class="af-label">Size Guide</label><textarea class="af-input" id="fp-sizeGuide" rows="4"></textarea></div>
+            <div class="af-group"><label class="af-label">Care Guide</label><textarea class="af-input" id="fp-careGuide" rows="4"></textarea></div>
+            <div class="af-group"><label class="af-label">Shipping Info</label><textarea class="af-input" id="fp-shipping" rows="4"></textarea></div>
+            <div class="af-group"><label class="af-label">Returns Policy</label><textarea class="af-input" id="fp-returns" rows="4"></textarea></div>
+            <div class="af-group"><label class="af-label">Contact Us</label><textarea class="af-input" id="fp-contact" rows="4"></textarea></div>
+            <button class="btn-save" id="bsave8" onclick="saveFooterPages('bsave8','st8')">Save</button>
+            <span class="saved-tag" id="st8">✓ Saved</span>
+          </div>
+        </div>
+
+        <div class="a-section">
+          <div class="a-section-head">
+            <div class="a-section-title">FAQ</div>
+            <button class="btn-outline" onclick="addFaqItem()">+ Add Question</button>
+          </div>
+          <div class="a-section-body">
+            <div id="faqEditFields"></div>
+            <button class="btn-save" id="bsave9" onclick="saveFaq('bsave9','st9')">Save</button>
+            <span class="saved-tag" id="st9">✓ Saved</span>
+          </div>
+        </div>
+
+        <div class="a-section">
+          <div class="a-section-head">
+            <div class="a-section-title">Social Links — Follow Us</div>
+            <button class="btn-outline" onclick="addSocialItem()">+ Add Platform</button>
+          </div>
+          <div class="a-section-body">
+            <div style="font-size:11px;color:var(--warm-gray);margin-bottom:16px;line-height:1.7">Shown in the footer. Add any platform — Instagram, TikTok, Facebook, WhatsApp, etc.</div>
+            <div id="socialEditFields"></div>
+            <button class="btn-save" id="bsave10" onclick="saveSocials('bsave10','st10')">Save</button>
+            <span class="saved-tag" id="st10">✓ Saved</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECURITY -->
+      <div class="a-panel" id="panel-security">
+        <div class="a-page-title">Security</div>
+        <div class="a-page-sub">Change admin password</div>
+        <div class="a-section">
+          <div class="a-section-head"><div class="a-section-title">Change Password</div></div>
+          <div class="a-section-body">
+            <div class="af-group"><label class="af-label">Current Password</label><input class="af-input" type="password" id="sec-cur"></div>
+            <div class="af-group"><label class="af-label">New Password</label><input class="af-input" type="password" id="sec-new"></div>
+            <div class="af-group"><label class="af-label">Confirm</label><input class="af-input" type="password" id="sec-conf"></div>
+            <button class="btn-save" onclick="changePass()">Update Password</button>
+            <span class="saved-tag" id="st-sec">✓ Updated</span>
+            <div id="sec-err" style="color:#e05555;font-size:11px;margin-top:8px;display:none"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- PRODUCT EDIT PANEL -->
+<div class="apanel-overlay" id="apanelOverlay" onclick="if(event.target===this)closeApanel()">
+  <div class="apanel-box">
+    <button class="apanel-close" onclick="closeApanel()">✕</button>
+    <div class="apanel-title" id="apTitle">Edit Product</div>
+    <input type="hidden" id="ap-idx">
+
+    <!-- COLOR VARIANTS + IMAGES -->
+    <div class="img-upload-section">
+      <label class="img-upload-label">Colors &amp; Photos</label>
+      <div class="img-upload-hint">Add one or more colors for this piece. Each color has its own photos (up to 10) and its own stock status. If a piece only comes in one color, just keep the single default color below.</div>
+      <div id="colorsEditor"></div>
+      <button class="btn-outline" onclick="addColorVariant()">+ Add Color</button>
+    </div>
+
+    <div class="af-group"><label class="af-label">Product Name</label><input class="af-input" id="ap-name"></div>
+    <div class="af-row">
+      <div class="af-group"><label class="af-label">Price (LE)</label><input class="af-input" type="number" id="ap-price"></div>
+      <div class="af-group"><label class="af-label">Subtitle</label><input class="af-input" id="ap-desc"></div>
+    </div>
+    <div class="af-row">
+      <div class="af-group"><label class="af-label">Material</label><input class="af-input" id="ap-mat"></div>
+      <div class="af-group"><label class="af-label">Fit</label><input class="af-input" id="ap-fit"></div>
+    </div>
+    <div class="af-group"><label class="af-label">Sizes (comma separated)</label><input class="af-input" id="ap-sizes" placeholder="XS, S, M, L, XL"></div>
+    <div class="af-group"><label class="af-label">Search Keywords <span style="text-transform:none;font-weight:400;color:var(--warm-gray)">— common/alternate names customers might search, comma separated</span></label><input class="af-input" id="ap-keywords" placeholder="e.g. abaya, coat, jacket"></div>
+    <div class="af-group"><label class="af-label">Occasions <span style="text-transform:none;font-weight:400;color:var(--warm-gray)">— when this piece is perfect to wear</span></label><textarea class="af-input" id="ap-occasions" rows="3" placeholder="e.g. Weddings, brunches, evening outings, Eid celebrations…"></textarea></div>
+    <div class="af-group"><label class="af-label">Size Guide for This Piece <span style="text-transform:none;font-weight:400;color:var(--warm-gray)">— leave blank to use the general Size Guide</span></label><textarea class="af-input" id="ap-sizeGuide" rows="4" placeholder="e.g. This piece runs true to size. For an oversized look, size up."></textarea></div>
+    <div class="af-row">
+      <div class="af-group">
+        <label class="af-label">Stock Status</label>
+        <select class="af-input" id="ap-stock">
+          <option value="in_stock">In Stock</option>
+          <option value="low_stock">Almost Sold Out</option>
+          <option value="sold_out">Sold Out</option>
+        </select>
+      </div>
+      <div class="af-group">
+        <label class="af-label">Category</label>
+        <select class="af-input" id="ap-category">
+          <option value="Ladies">Ladies</option>
+          <option value="Men">Men</option>
+        </select>
+      </div>
+    </div>
+    <div class="af-group">
+      <div class="a-toggle">
+        <label class="tog-sw"><input type="checkbox" id="ap-vis" checked><span class="tog-sl"></span></label>
+        <span style="font-size:12px;color:var(--warm-gray)">Visible in store</span>
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:20px;flex-wrap:wrap">
+      <button class="btn-save" id="ap-savebtn" onclick="saveProduct()">Save Product</button>
+      <button class="btn-outline" onclick="closeApanel()">Cancel</button>
+    </div>
+    <span class="saved-tag" id="ap-saved">✓ Product Saved</span>
+  </div>
+</div>
+
+<script>
+/* ════════════════════════════════
+   STATE
+════════════════════════════════ */
+const S = {
+  settings:{
+    annText:'Summer Collection is Now Live',annCta:'Shop Now',annVis:true,
+    colTitle:'Summer Collection',colSub:'10 Signature Pieces · Quiet Luxury · Limited Edition',
+    wa:'201000000000',ship:0,deliv:'2–4 business days',
+    marquee:['Quiet Luxury For Her','Summer Collection','From Egypt, For The World','Minimal. Intentional. Timeless.','PRIMORA'],
+    editQuote:'"From survival to adaptation.\nFrom connection to creativity.\nFrom necessity to identity."',
+    editSub:'Four stages of human clothing history. One brand born from all of them.',
+    philosophy:[
+      {roman:'I',   title:'Primitive',   text:'The origin. Clothing as pure necessity.'},
+      {roman:'II',  title:'Adaptation',  text:"Evolution of form. Humanity shaped cloth around the body's needs."},
+      {roman:'III', title:'Connection',  text:'The Silk Road era. Fabric became a language that traveled continents.'},
+      {roman:'IV',  title:'Visionaries', text:'Creativity unleashed. Clothing became a statement of identity.'}
+    ],
+    footerPages:{
+      sizeGuide:{title:'Size Guide', content:'XS — Bust 78–82cm, Waist 60–64cm\nS — Bust 83–87cm, Waist 65–69cm\nM — Bust 88–92cm, Waist 70–74cm\nL — Bust 93–98cm, Waist 75–80cm\n\nAll pieces are cut for a relaxed, effortless fit. If you prefer a closer fit, we recommend sizing down.'},
+      careGuide:{title:'Care Guide', content:'Hand wash cold or gentle machine cycle.\nDo not bleach.\nDry flat in shade — avoid direct sunlight.\nIron on low heat if needed.\nStore folded to preserve shape.'},
+      shipping:{title:'Shipping Info', content:'We deliver across Egypt within 2–4 business days.\nCash on delivery is available everywhere.\nYou will receive a confirmation call before dispatch.'},
+      returns:{title:'Returns Policy', content:'Items may be returned within 3 days of delivery if unworn, unwashed, and with tags attached.\nMessage us on WhatsApp to arrange a pickup.\nRefunds are processed after the item is inspected.'},
+      contact:{title:'Contact Us', content:'WhatsApp: +20 100 000 0000\nEmail: hello@primora.com\n\nWe usually respond within a few hours.'}
+    },
+    faq:[
+      {q:'Do you ship across all of Egypt?', a:'Yes — we deliver nationwide within 2–4 business days.'},
+      {q:'Is cash on delivery available?', a:'Yes, COD is available on every order, everywhere in Egypt.'},
+      {q:'Can I exchange a size?', a:'Yes, just message us on WhatsApp within 3 days of delivery.'}
+    ],
+    socials:[
+      {label:'Instagram', url:'https://instagram.com/primora'},
+      {label:'TikTok', url:'https://tiktok.com/@primora'}
+    ],
+    happyCount:500,
+    happyLabel:'Happy Customers'
+  },
+  products:[
+    {name:'The Ivory Shift',  desc:'Linen Blend · Relaxed Fit',   price:1250,mat:'100% Linen',       fit:'Relaxed, oversized',   sizes:['XS','S','M','L'],vis:true, stock:'in_stock', category:'Ladies', keywords:'', occasions:'', sizeGuide:'', colors:[{name:'Ivory',hex:'#C8BBA0',images:[],stock:'in_stock'}]},
+    {name:'The Sage Drape',   desc:'Fluid Fabric · Editorial',    price:1450,mat:'Viscose Blend',    fit:'Draped, fluid',        sizes:['XS','S','M','L'],vis:true, stock:'in_stock', category:'Ladies', keywords:'', occasions:'', sizeGuide:'', colors:[{name:'Sage',hex:'#6B8070',images:[],stock:'in_stock'}]},
+    {name:'The Bone Coat',    desc:'Structured · Long Silhouette',price:1850,mat:'Wool Blend',       fit:'Structured, tailored', sizes:['XS','S','M','L'],vis:true, stock:'in_stock', category:'Ladies', keywords:'', occasions:'', sizeGuide:'', colors:[{name:'Bone',hex:'#BBA888',images:[],stock:'in_stock'}]},
+    {name:'The Muted Column', desc:'Minimal Cut · Column Dress',  price:1350,mat:'Cotton Blend',    fit:'Column, minimal',      sizes:['XS','S','M','L'],vis:true, stock:'in_stock', category:'Ladies', keywords:'', occasions:'', sizeGuide:'', colors:[{name:'Stone',hex:'#A09888',images:[],stock:'in_stock'}]},
+    {name:'The Sand Layer',   desc:'Co-ord Set · Linen',          price:1650,mat:'100% Linen',      fit:'Relaxed matching set', sizes:['XS','S','M','L'],vis:true, stock:'in_stock', category:'Ladies', keywords:'', occasions:'', sizeGuide:'', colors:[{name:'Sand',hex:'#C0A880',images:[],stock:'in_stock'}]},
+    {name:'The Rose Slip',    desc:'Satin · Midi Length',         price:1550,mat:'Satin Blend',     fit:'Slip, relaxed',        sizes:['XS','S','M','L'],vis:true, stock:'in_stock', category:'Ladies', keywords:'', occasions:'', sizeGuide:'', colors:[{name:'Dusty Rose',hex:'#C09898',images:[],stock:'in_stock'}]},
+    {name:'The Terracotta Set',desc:'Cotton Co-ord · Warm Tone',  price:1750,mat:'Premium Cotton',  fit:'Relaxed matching set', sizes:['XS','S','M','L'],vis:true, stock:'in_stock', category:'Ladies', keywords:'', occasions:'', sizeGuide:'', colors:[{name:'Terracotta',hex:'#B08870',images:[],stock:'in_stock'}]},
+    {name:'The Dark Sage Coat',desc:'Oversized · Editorial',      price:2100,mat:'Wool Blend',      fit:'Oversized, structured',sizes:['XS','S','M','L'],vis:true, stock:'in_stock', category:'Ladies', keywords:'', occasions:'', sizeGuide:'', colors:[{name:'Dark Sage',hex:'#506058',images:[],stock:'in_stock'}]},
+    {name:'The Slate Column', desc:'Minimal Dress · Slate Grey',  price:1400,mat:'Viscose Modal',   fit:'Column, minimal',      sizes:['XS','S','M','L'],vis:true, stock:'in_stock', category:'Ladies', keywords:'', occasions:'', sizeGuide:'', colors:[{name:'Slate',hex:'#909498',images:[],stock:'in_stock'}]},
+    {name:'The Gold Drape',   desc:'Fluid · Warm Gold Tone',      price:1900,mat:'Satin Crepe',   fit:'Draped, asymmetric',   sizes:['XS','S','M','L'],vis:true, stock:'in_stock', category:'Ladies', keywords:'', occasions:'', sizeGuide:'', colors:[{name:'Gold',hex:'#B0A060',images:[],stock:'in_stock'}]},
+  ],
+  orders:[],
+  subscribers:[],
+  customers:[]
+};
+
+let activeCategory = 'All'; // current storefront filter
+
+/* ═══════════════════════════════════════════════
+   SUPABASE BACKEND — real database + 1GB+ image storage
+   Every admin action writes straight to the database.
+   Data is shared across every device/browser that opens
+   the site — this is a real, persistent backend.
+═══════════════════════════════════════════════ */
+const SUPABASE_URL = 'https://xwbxbxjgopjyhrvvjesq.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_CbyM83N3C1yLnC1GIAIjDg_qOoAaUkQ';
+const IMG_SLOTS_MAX = 10;
+const IMAGE_BUCKET = 'product-images';
+
+let sbClient = null;
+let backendReady = false;
+try{
+  sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+}catch(e){ console.warn('Supabase init failed', e); }
+
+function phForIndex(i){ return 'ph-'+((i%10)+1); }
+
+/* ════════════════════════════════
+   CUSTOMER ACCOUNTS — real Supabase Auth
+   Passwords are handled entirely by Supabase's
+   secure auth system — never stored in our own
+   database or visible to the app.
+════════════════════════════════ */
+let currentUser=null; // {id, email, username, profileId}
+let authMode='signin'; // 'signin' | 'signup'
+
+async function initAuth(){
+  if(!sbClient)return;
+  try{
+    const {data:{session}} = await sbClient.auth.getSession();
+    if(session && session.user){ await loadCurrentUserProfile(session.user); }
+  }catch(e){ console.warn('Auth init error',e); }
+  updateAccountIcon();
+}
+
+async function loadCurrentUserProfile(user){
+  try{
+    let {data} = await sbClient.from('profiles').select('*').eq('auth_user_id',user.id).maybeSingle();
+    if(!data){
+      // The profile row wasn't created at sign-up time (this happens when
+      // email confirmation is required — there's no session yet at that
+      // point, so the database correctly blocks the insert). Now that we
+      // have a real logged-in session, create the missing row here.
+      const fallbackUsername = user.email ? user.email.split('@')[0] : 'Customer';
+      const {data:created,error:createErr} = await sbClient.from('profiles')
+        .insert({auth_user_id:user.id, email:user.email, username:fallbackUsername})
+        .select().maybeSingle();
+      if(createErr) console.warn('Profile self-heal failed',createErr);
+      data = created;
+    }
+    currentUser = { id:user.id, email:user.email, username:(data&&data.username)||user.email.split('@')[0], profileId:data?data.id:null };
+  }catch(e){
+    console.warn('loadCurrentUserProfile error',e);
+    currentUser = { id:user.id, email:user.email, username:user.email.split('@')[0], profileId:null };
+  }
+}
+
+function updateAccountIcon(){
+  const dot=document.getElementById('accountDot');
+  if(dot) dot.style.display = currentUser ? 'block' : 'none';
+}
+
+function openAccount(){
+  authMode='signin';
+  renderAccountContent();
+  document.getElementById('accountOverlay').classList.add('open');
+}
+function closeAccount(){ document.getElementById('accountOverlay').classList.remove('open'); }
+
+function switchAuthMode(mode){ authMode=mode; renderAccountContent(); }
+
+function renderAccountContent(){
+  const el=document.getElementById('accountContent');
+  if(currentUser){
+    el.innerHTML=`
+      <div class="co-title">My Account</div>
+      <div class="co-sub" style="margin-bottom:18px">PRIMORA</div>
+      <div class="account-row"><span class="account-label">Username</span><span class="account-val">${currentUser.username}</span></div>
+      <div class="account-row"><span class="account-label">Email</span><span class="account-val" style="font-size:13px">${currentUser.email}</span></div>
+      <div class="menu-section-label" style="margin-top:24px;margin-bottom:12px">My Orders</div>
+      <div id="myOrdersList">${myOrdersHtml()}</div>
+      <button class="btn-outline" style="width:100%;margin-top:20px" onclick="doSignOut()">Sign Out</button>
+    `;
+    return;
+  }
+  el.innerHTML=`
+    <div class="co-title">Welcome to PRIMORA</div>
+    <div class="co-sub" style="margin-bottom:6px">Sign in to save and track your orders</div>
+    <div class="auth-tabs">
+      <button class="auth-tab ${authMode==='signin'?'active':''}" onclick="switchAuthMode('signin')">Sign In</button>
+      <button class="auth-tab ${authMode==='signup'?'active':''}" onclick="switchAuthMode('signup')">Sign Up</button>
+    </div>
+    <div id="authMsg" class="auth-msg" style="display:none"></div>
+    ${authMode==='signin' ? signInFormHtml() : signUpFormHtml()}
+  `;
+}
+
+function signInFormHtml(){
+  return `
+    <label class="co-field-label">Email</label>
+    <input class="co-input" id="si-email" type="email" placeholder="your@email.com">
+    <label class="co-field-label">Password</label>
+    <input class="co-input" id="si-pw" type="password" placeholder="Your password">
+    <div class="auth-err" id="si-err"></div>
+    <button class="co-submit" onclick="doSignIn()">Sign In</button>
+  `;
+}
+function signUpFormHtml(){
+  return `
+    <label class="co-field-label">Username</label>
+    <input class="co-input" id="su-username" placeholder="How should we call you?">
+    <label class="co-field-label">Email</label>
+    <input class="co-input" id="su-email" type="email" placeholder="your@email.com">
+    <label class="co-field-label">Password</label>
+    <input class="co-input" id="su-pw" type="password" placeholder="At least 6 characters">
+    <label class="co-field-label">Confirm Password</label>
+    <input class="co-input" id="su-pw2" type="password" placeholder="Repeat password">
+    <div class="auth-err" id="su-err"></div>
+    <button class="co-submit" onclick="doSignUp()">Create Account</button>
+  `;
+}
+
+function myOrdersHtml(){
+  const mine = S.orders.filter(o=>o.userId===currentUser.id);
+  if(!mine.length) return '<div class="no-items" style="padding:24px 0">No past orders yet.</div>';
+  return mine.map(o=>`
+    <div class="order-hist-item">
+      <div class="order-hist-id">${escapeAttr(o.id)}</div>
+      <div class="order-hist-meta">${escapeAttr(o.date)} · <span class="os ${o.status}">${o.status}</span></div>
+      <div class="order-hist-items">${o.items.map(it=>`${escapeAttr(it.name)} (${it.color?escapeAttr(it.color)+', ':''}${escapeAttr(it.size)}) ×${Number(it.qty)||0}`).join('<br>')}</div>
+      <div class="order-hist-total">LE ${o.total.toLocaleString()}</div>
+    </div>`).join('');
+}
+
+async function doSignIn(){
+  const email=document.getElementById('si-email').value.trim();
+  const pw=document.getElementById('si-pw').value;
+  const errEl=document.getElementById('si-err');
+  errEl.style.display='none';
+  if(!email||!pw){ errEl.textContent='Please fill in both fields.'; errEl.style.display='block'; return; }
+  const btn=document.querySelector('#accountContent .co-submit');
+  const orig=btn.textContent; btn.textContent='Signing in…'; btn.disabled=true;
+  const {data,error} = await sbClient.auth.signInWithPassword({email,password:pw});
+  btn.textContent=orig; btn.disabled=false;
+  if(error){ errEl.textContent=error.message||'Incorrect email or password.'; errEl.style.display='block'; return; }
+  await loadCurrentUserProfile(data.user);
+  updateAccountIcon();
+  // Ensure we have this customer's own orders loaded (in case the store hasn't fetched them yet)
+  await refreshOrdersForCurrentUser();
+  renderAccountContent();
+}
+
+async function doSignUp(){
+  const username=document.getElementById('su-username').value.trim();
+  const email=document.getElementById('su-email').value.trim();
+  const pw=document.getElementById('su-pw').value;
+  const pw2=document.getElementById('su-pw2').value;
+  const errEl=document.getElementById('su-err');
+  errEl.style.display='none';
+  if(!username||!email||!pw){ errEl.textContent='Please fill in all fields.'; errEl.style.display='block'; return; }
+  if(pw.length<6){ errEl.textContent='Password must be at least 6 characters.'; errEl.style.display='block'; return; }
+  if(pw!==pw2){ errEl.textContent='Passwords do not match.'; errEl.style.display='block'; return; }
+  const btn=document.querySelector('#accountContent .co-submit');
+  const orig=btn.textContent; btn.textContent='Creating account…'; btn.disabled=true;
+  const {data,error} = await sbClient.auth.signUp({email,password:pw});
+  if(error){
+    btn.textContent=orig; btn.disabled=false;
+    errEl.textContent=error.message||"Couldn't create account."; errEl.style.display='block';
+    return;
+  }
+  if(data.user){
+    const {error:profErr} = await sbClient.from('profiles').insert({auth_user_id:data.user.id, email, username});
+    if(profErr) console.warn('Profile creation at signup deferred (will self-heal on next login):', profErr);
+  }
+  btn.textContent=orig; btn.disabled=false;
+
+  if(data.session){
+    await loadCurrentUserProfile(data.user);
+    updateAccountIcon();
+    renderAccountContent();
+  } else {
+    const msg=document.getElementById('authMsg');
+    msg.style.display='block';
+    msg.textContent='Account created! Please check your email to confirm, then sign in.';
+    authMode='signin';
+    setTimeout(()=>{ renderAccountContent(); document.getElementById('authMsg').style.display='block'; document.getElementById('authMsg').textContent='Account created! Please check your email to confirm, then sign in.'; },50);
+  }
+}
+
+async function doSignOut(){
+  if(sbClient) await sbClient.auth.signOut();
+  currentUser=null;
+  isAdminSession=false;
+  updateAccountIcon();
+  closeAccount();
+  if(document.getElementById('adminShell').classList.contains('open')){
+    document.getElementById('adminShell').classList.remove('open');
+    renderStore();
+  }
+}
+
+async function refreshOrdersForCurrentUser(){
+  if(!sbClient||!currentUser)return;
+  try{
+    const {data,error}=await sbClient.from('orders').select('*').eq('user_id',currentUser.id).order('created_at',{ascending:false});
+    if(!error && data){
+      const mine = data.map(o=>({
+        dbId:o.id, id:o.order_ref, date:o.order_date, customer:o.customer_name, phone:o.phone,
+        email:o.email, address:o.address, items:o.items||[], total:Number(o.total)||0, status:o.status, userId:o.user_id
+      }));
+      // Merge into S.orders without duplicating (admin view may already have loaded these)
+      mine.forEach(mo=>{
+        if(!S.orders.find(o=>o.dbId===mo.dbId)) S.orders.push(mo);
+      });
+    }
+  }catch(e){ console.warn('My orders load error',e); }
+}
+
+function setConnStatus(state){
+  // state: 'connecting' | 'connected' | 'error'
+  const dot=document.getElementById('connDot');
+  const txt=document.getElementById('connText');
+  const banner=document.getElementById('connBanner');
+  if(dot&&txt){
+    if(state==='connected'){ dot.style.background='#3fae7a'; txt.textContent='Connected'; }
+    else if(state==='error'){ dot.style.background='#e05555'; txt.textContent='Offline — changes not saved'; }
+    else { dot.style.background='#B8860B'; txt.textContent='Connecting…'; }
+  }
+  if(banner) banner.style.display = state==='error' ? 'flex' : 'none';
+  syncDashConnDisplay();
+}
+
+/* ── LOAD everything from Supabase on boot ── */
+async function loadPersisted(){
+  if(!sbClient){ setConnStatus('error'); return; }
+  setConnStatus('connecting');
+  try{
+    const [{data:setRow,error:e1},{data:prodRows,error:e2},{data:ordRows,error:e3}] = await Promise.all([
+      sbClient.from('settings').select('*').eq('id',1).maybeSingle(),
+      sbClient.from('products').select('*').order('sort_order',{ascending:true}),
+      sbClient.from('orders').select('*').order('created_at',{ascending:false})
+    ]);
+    if(e1||e2||e3) throw (e1||e2||e3);
+
+    if(setRow){
+      S.settings.annText  = setRow.ann_text ?? S.settings.annText;
+      S.settings.annCta   = setRow.ann_cta ?? S.settings.annCta;
+      S.settings.annVis   = setRow.ann_vis ?? S.settings.annVis;
+      S.settings.colTitle = setRow.col_title ?? S.settings.colTitle;
+      S.settings.colSub   = setRow.col_sub ?? S.settings.colSub;
+      S.settings.wa       = setRow.whatsapp ?? S.settings.wa;
+      S.settings.ship     = setRow.shipping ?? S.settings.ship;
+      S.settings.deliv    = setRow.delivery_time ?? S.settings.deliv;
+      S.settings.marquee  = setRow.marquee ?? S.settings.marquee;
+      S.settings.editQuote= setRow.edit_quote ?? S.settings.editQuote;
+      S.settings.editSub  = setRow.edit_sub ?? S.settings.editSub;
+      S.settings.philosophy = (setRow.philosophy && setRow.philosophy.length) ? setRow.philosophy : S.settings.philosophy;
+      S.settings.footerPages = setRow.footer_pages ?? S.settings.footerPages;
+      S.settings.faq = (setRow.faq && setRow.faq.length) ? setRow.faq : S.settings.faq;
+      S.settings.socials = (setRow.socials && setRow.socials.length) ? setRow.socials : S.settings.socials;
+      S.settings.happyCount = setRow.happy_count ?? S.settings.happyCount;
+      S.settings.happyLabel = setRow.happy_label ?? S.settings.happyLabel;
+    }
+
+    if(prodRows && prodRows.length){
+      S.products = prodRows.map((r,i)=>{
+        const ph = phForIndex(r.sort_order??i);
+        let colors = (r.colors && r.colors.length) ? r.colors : null;
+        if(!colors){
+          // Migrate legacy single-image products into the new colors system
+          colors = [{name:'Original', hex:'#B0A388', images:r.images||[], stock:r.stock_status||'in_stock'}];
+        }
+        return {
+          id:r.id, name:r.name, desc:r.description||'', price:Number(r.price)||0,
+          mat:r.material||'', fit:r.fit||'', sizes:r.sizes||['XS','S','M','L'],
+          vis:r.visible, sort:r.sort_order??i, ph,
+          stock:r.stock_status||'in_stock', category:r.category||'Ladies', keywords:r.keywords||'',
+          occasions:r.occasions||'', sizeGuide:r.size_guide||'', colors
+        };
+      });
+    } else {
+      await seedDefaultProducts();
+    }
+
+    if(ordRows){
+      S.orders = ordRows.map(o=>({
+        dbId:o.id, id:o.order_ref, date:o.order_date, customer:o.customer_name, phone:o.phone,
+        email:o.email, address:o.address, items:o.items||[], total:Number(o.total)||0, status:o.status, userId:o.user_id
+      }));
+    }
+    setConnStatus('connected'); backendReady=true;
+  }catch(e){
+    console.warn('Supabase load error', e);
+    setConnStatus('error');
+  }
+}
+
+async function loadSubscribers(){
+  if(!sbClient)return;
+  try{
+    const {data,error}=await sbClient.from('subscribers').select('*').order('created_at',{ascending:false});
+    if(!error && data) S.subscribers=data;
+  }catch(e){ console.warn('Subscribers load error',e); }
+}
+
+async function seedDefaultProducts(){
+  if(!sbClient)return;
+  const rows = S.products.map((p,i)=>({
+    name:p.name, description:p.desc, price:p.price, material:p.mat, fit:p.fit,
+    sizes:p.sizes, images:[], visible:true, sort_order:i, stock_status:p.stock||'in_stock', category:p.category||'Ladies', keywords:p.keywords||'',
+    occasions:p.occasions||'', size_guide:p.sizeGuide||'', colors:p.colors||[]
+  }));
+  const {data,error} = await sbClient.from('products').insert(rows).select();
+  if(!error && data){
+    S.products = data.map((r,i)=>({
+      id:r.id, name:r.name, desc:r.description, price:Number(r.price), mat:r.material, fit:r.fit,
+      sizes:r.sizes, vis:r.visible, sort:r.sort_order, ph:phForIndex(r.sort_order),
+      stock:r.stock_status||'in_stock', category:r.category||'Ladies', keywords:r.keywords||'',
+      occasions:r.occasions||'', sizeGuide:r.size_guide||'',
+      colors:(r.colors&&r.colors.length)?r.colors:[{name:'Original',hex:'#B0A388',images:[],stock:'in_stock'}]
+    }));
+  }
+}
+
+/* ── SETTINGS persist ── */
+async function persistSettings(){
+  if(!sbClient)return false;
+  const {error} = await sbClient.from('settings').update({
+    ann_text:S.settings.annText, ann_cta:S.settings.annCta, ann_vis:S.settings.annVis,
+    col_title:S.settings.colTitle, col_sub:S.settings.colSub, whatsapp:S.settings.wa,
+    shipping:S.settings.ship, delivery_time:S.settings.deliv, marquee:S.settings.marquee,
+    edit_quote:S.settings.editQuote, edit_sub:S.settings.editSub, philosophy:S.settings.philosophy,
+    footer_pages:S.settings.footerPages, faq:S.settings.faq, socials:S.settings.socials,
+    happy_count:S.settings.happyCount, happy_label:S.settings.happyLabel
+  }).eq('id',1);
+  if(error){ console.warn('Settings save error',error); setConnStatus('error'); return false; }
+  setConnStatus('connected');
+  return true;
+}
+
+/* ── PRODUCT persist (create or update) ── */
+async function persistProduct(idx){
+  if(!sbClient)return false;
+  const p=S.products[idx];
+  const payload={name:p.name, description:p.desc, price:p.price, material:p.mat, fit:p.fit, sizes:p.sizes, visible:p.vis, stock_status:p.stock||'in_stock', category:p.category||'Ladies', keywords:p.keywords||'', occasions:p.occasions||'', size_guide:p.sizeGuide||'', colors:p.colors||[], sort_order: typeof p.sort==='number'?p.sort:idx};
+  if(p.id){
+    const {error}=await sbClient.from('products').update(payload).eq('id',p.id);
+    if(error){ console.warn(error); setConnStatus('error'); return false; }
+  } else {
+    const {data,error}=await sbClient.from('products').insert(payload).select().single();
+    if(error){ console.warn(error); setConnStatus('error'); return false; }
+    p.id=data.id;
+  }
+  setConnStatus('connected');
+  return true;
+}
+async function deleteProductDB(idx){
+  const p=S.products[idx];
+  if(p.id && sbClient){
+    const {error}=await sbClient.from('products').delete().eq('id',p.id);
+    if(error){ console.warn(error); setConnStatus('error'); return false; }
+  }
+  return true;
+}
+
+/* ── ORDERS — secure server-side placement ──
+   The browser NEVER sends price, total, or shipping.
+   It only sends product_id + color + size + qty; the
+   database looks up the real price and validates stock
+   itself, inside the place_order() function. ── */
+async function placeOrderSecurely(cartItems, customerName, phone, email, address){
+  if(!sbClient) return {ok:false, error:"Can't reach the server."};
+  const items = cartItems.map(it=>({product_id:it.productId, color:it.color, size:it.size, qty:it.qty}));
+  const {data,error} = await sbClient.rpc('place_order', {
+    p_items: items,
+    p_customer_name: customerName,
+    p_phone: phone,
+    p_email: email,
+    p_address: address
+  });
+  if(error){ console.warn('place_order error',error); return {ok:false, error:error.message||"Couldn't place the order."}; }
+  return {ok:true, data};
+}
+
+/* ════════════════════════════════
+   NEW ORDER NOTIFICATIONS — real-time
+   Fires the instant a new order lands in the
+   database, whether it came from this browser
+   or any customer anywhere.
+════════════════════════════════ */
+let lastAlertOrder=null;
+
+function subscribeToNewOrders(){
+  if(!sbClient)return;
+  try{
+    sbClient.channel('orders-live')
+      .on('postgres_changes', {event:'INSERT', schema:'public', table:'orders'}, payload=>{
+        handleNewOrderRealtime(payload.new);
+      })
+      .subscribe();
+  }catch(e){ console.warn('Realtime subscribe error',e); }
+}
+
+function handleNewOrderRealtime(row){
+  // Critical: only the logged-in admin in this browser tab should ever
+  // see order alerts or have order data pulled into memory. Regular
+  // customers must never receive notifications about anyone's orders.
+  if(!isAdminSession)return;
+
+  const mapped={
+    dbId:row.id, id:row.order_ref, date:row.order_date, customer:row.customer_name, phone:row.phone,
+    email:row.email, address:row.address, items:row.items||[], total:Number(row.total)||0, status:row.status, userId:row.user_id
+  };
+  if(!S.orders.find(o=>o.dbId===mapped.dbId)){
+    S.orders.unshift(mapped);
+    if(document.getElementById('adminShell').classList.contains('open')){
+      renderOrders(); refreshDash();
+    }
+  }
+  lastAlertOrder=mapped;
+  showOrderAlert(mapped);
+  playNotificationSound();
+  sendBrowserNotification(mapped);
+}
+
+function showOrderAlert(o){
+  const el=document.getElementById('orderAlert');
+  document.getElementById('orderAlertText').innerHTML=
+    `<strong style="font-family:'Cormorant Garamond',serif;font-size:15px">${escapeAttr(o.id)}</strong><br>${escapeAttr(o.customer)} · LE ${o.total.toLocaleString()}`;
+  el.classList.add('show');
+  clearTimeout(el._hideTimer);
+  el._hideTimer=setTimeout(()=>dismissOrderAlert(),15000);
+}
+function dismissOrderAlert(){
+  document.getElementById('orderAlert').classList.remove('show');
+}
+function viewNewOrderFromAlert(){
+  dismissOrderAlert();
+  if(!document.getElementById('adminShell').classList.contains('open')){
+    openLogin(); // require password if not already in admin
+    return;
+  }
+  document.querySelectorAll('.a-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.asb-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('panel-orders').classList.add('active');
+  document.querySelectorAll('.asb-item')[1].classList.add('active');
+  renderOrders();
+}
+function forwardOrderAlertToWhatsApp(){
+  if(!lastAlertOrder)return;
+  const o=lastAlertOrder;
+  const lines=o.items.map(it=>`• ${it.name} (${it.color?it.color+', ':''}${it.size}) ×${it.qty}`).join('\n');
+  const msg=encodeURIComponent(`🛍️ New PRIMORA order — ${o.id}\n${o.customer} · ${o.phone}\n\n${lines}\n\nTotal: LE ${o.total.toLocaleString()}`);
+  window.open(`https://wa.me/${S.settings.wa}?text=${msg}`,'_blank');
+  dismissOrderAlert();
+}
+
+function playNotificationSound(){
+  try{
+    const Ctx=window.AudioContext||window.webkitAudioContext;
+    if(!Ctx)return;
+    const ctx=new Ctx();
+    const o=ctx.createOscillator(), g=ctx.createGain();
+    o.connect(g); g.connect(ctx.destination);
+    o.type='sine'; o.frequency.setValueAtTime(880,ctx.currentTime);
+    o.frequency.exponentialRampToValueAtTime(660,ctx.currentTime+0.18);
+    g.gain.setValueAtTime(0.16,ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.45);
+    o.start(); o.stop(ctx.currentTime+0.45);
+  }catch(e){}
+}
+
+function requestNotifyPermission(){
+  if('Notification' in window && Notification.permission==='default'){
+    Notification.requestPermission();
+  }
+}
+function sendBrowserNotification(o){
+  if(!('Notification' in window) || Notification.permission!=='granted')return;
+  try{
+    new Notification('PRIMORA — New Order', { body:`${o.customer} · LE ${o.total.toLocaleString()}` });
+  }catch(e){}
+}
+async function updateOrderStatusDB(dbId,status){
+  if(!sbClient||!dbId)return;
+  const {error}=await sbClient.from('orders').update({status}).eq('id',dbId);
+  if(error) setConnStatus('error'); else setConnStatus('connected');
+}
+async function deleteOrderDB(dbId){
+  if(!sbClient||!dbId)return;
+  await sbClient.from('orders').delete().eq('id',dbId);
+}
+async function clearOrdersDB(){
+  if(!sbClient)return;
+  await sbClient.from('orders').delete().neq('id',0);
+}
+
+/* ── IMAGE UPLOAD to Supabase Storage (1GB+ free tier) ── */
+async function uploadImageToStorage(productId, colorIdx, slotIdx, blob){
+  if(!sbClient) return null;
+  const path=`product-${productId}/color-${colorIdx}/slot-${slotIdx}-${Date.now()}.jpg`;
+  const {error}=await sbClient.storage.from(IMAGE_BUCKET).upload(path, blob, {upsert:true, contentType:'image/jpeg'});
+  if(error){ console.warn('Upload error',error); return null; }
+  const {data}=sbClient.storage.from(IMAGE_BUCKET).getPublicUrl(path);
+  return data.publicUrl;
+}
+
+/* ════════════════════════════════
+   STORE RENDER
+════════════════════════════════ */
+function renderStore(){
+  const st=S.settings;
+  document.getElementById('annBar').style.display=st.annVis?'':'none';
+  document.getElementById('annText').textContent=st.annText;
+  document.getElementById('annCta').textContent=st.annCta;
+  document.getElementById('colTitle').textContent=st.colTitle;
+  document.getElementById('colSub').textContent=st.colSub;
+  const items=[...st.marquee,...st.marquee];
+  document.getElementById('marqueeTrack').innerHTML=items.map(t=>`<span class="m-item">${t} <span class="m-dot">·</span></span>`).join('');
+  document.getElementById('editQuote').innerHTML=st.editQuote.replace(/\n/g,'<br>');
+  document.getElementById('editSub').textContent=st.editSub;
+  renderPhilosophy();
+  renderFooterSocials();
+  renderHappyStat();
+  renderProducts();
+}
+
+function renderPhilosophy(){
+  const el=document.getElementById('philosophyContainer');
+  if(!el)return;
+  el.innerHTML=S.settings.philosophy.map(ph=>
+    `<div class="phil"><div class="phil-n">${ph.roman}</div><div class="phil-t">${ph.title}</div><div class="phil-d">${ph.text}</div></div>`
+  ).join('');
+  // Also refresh the menu drawer's copy if it exists
+  const menuEl=document.getElementById('menuPhilList');
+  if(menuEl){
+    menuEl.innerHTML=S.settings.philosophy.map(ph=>
+      `<div class="menu-phil-item"><div class="menu-phil-num">${ph.roman}</div><div><div class="menu-phil-title">${ph.title}</div><div class="menu-phil-text">${ph.text}</div></div></div>`
+    ).join('');
+  }
+}
+
+/* ════════════════════════════════
+   HAPPY CUSTOMERS STAT
+════════════════════════════════ */
+function renderHappyStat(){
+  const numEl=document.getElementById('happyNum');
+  const labelEl=document.getElementById('happyLabelText');
+  if(numEl) numEl.textContent = `${Number(S.settings.happyCount||0).toLocaleString()}+`;
+  if(labelEl) labelEl.textContent = S.settings.happyLabel||'Happy Customers';
+}
+
+/* ════════════════════════════════
+   NEWSLETTER — real email capture
+════════════════════════════════ */
+async function subscribeNewsletter(){
+  const input=document.getElementById('newsletterEmail');
+  const email=input.value.trim();
+  const emailRegex=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if(!emailRegex.test(email)){ alert('Please enter a valid email address.'); return; }
+  if(!sbClient){ alert("Couldn't reach the server. Please check your connection and try again."); return; }
+  const btn=document.querySelector('#newsletterForm button');
+  const orig=btn.textContent; btn.textContent='Joining…'; btn.disabled=true;
+  const {error} = await sbClient.from('subscribers').insert({email});
+  btn.textContent=orig; btn.disabled=false;
+  if(error){
+    if(error.code==='23505'){
+      showNewsletterMsg("You're already on the list — thank you!");
+    } else {
+      console.warn(error);
+      alert("Couldn't join right now. Please check your connection and try again.");
+    }
+    return;
+  }
+  document.getElementById('newsletterForm').style.display='none';
+  showNewsletterMsg('Thank you for joining PRIMORA. Watch your inbox for early access.');
+}
+function showNewsletterMsg(text){
+  const el=document.getElementById('newsletterMsg');
+  el.textContent=text;
+  el.style.display='block';
+}
+
+/* ════════════════════════════════
+   FOOTER — social links + info pages + FAQ
+════════════════════════════════ */
+function renderFooterSocials(){
+  const el=document.getElementById('ftSocialList');
+  if(!el)return;
+  el.innerHTML=(S.settings.socials||[]).map(s=>
+    `<a href="${s.url}" target="_blank" rel="noopener">${s.label}</a>`
+  ).join('');
+}
+
+function openInfoPage(key){
+  const page=S.settings.footerPages[key];
+  if(!page)return;
+  document.getElementById('infoTitle').textContent=page.title;
+  document.getElementById('infoContent').textContent=page.content;
+  document.getElementById('infoOverlay').classList.add('open');
+}
+function closeInfoPage(){document.getElementById('infoOverlay').classList.remove('open');}
+
+function openProductSizeGuide(){
+  const p=S.products[curProd];
+  if(!p)return;
+  const hasOwn = p.sizeGuide && p.sizeGuide.trim();
+  const content = hasOwn ? p.sizeGuide : (S.settings.footerPages.sizeGuide ? S.settings.footerPages.sizeGuide.content : '');
+  document.getElementById('infoTitle').textContent = `Size Guide — ${p.name}`;
+  document.getElementById('infoContent').textContent = content;
+  document.getElementById('infoOverlay').classList.add('open');
+}
+
+function openFaqPage(){
+  const list=document.getElementById('faqList');
+  list.innerHTML=(S.settings.faq||[]).map(item=>
+    `<details class="faq-item"><summary>${item.q}</summary><p>${item.a}</p></details>`
+  ).join('') || '<div class="no-items">No questions yet.</div>';
+  document.getElementById('faqOverlay').classList.add('open');
+}
+function closeFaqPage(){document.getElementById('faqOverlay').classList.remove('open');}
+
+/* ════════════════════════════════
+   MENU DRAWER — story + suggestions
+════════════════════════════════ */
+
+function openMenu(){
+  renderPhilosophy();
+  document.getElementById('menuDrawer').classList.add('open');
+  document.getElementById('menuOverlay').classList.add('open');
+}
+function closeMenu(){
+  document.getElementById('menuDrawer').classList.remove('open');
+  document.getElementById('menuOverlay').classList.remove('open');
+}
+function sendSuggestion(){
+  const text=document.getElementById('suggestText').value.trim();
+  if(!text){ alert('Please write your suggestion first.'); return; }
+  const name=document.getElementById('suggestName').value.trim();
+  const msg=encodeURIComponent(`Hello PRIMORA 👋\nI have a suggestion:\n\n"${text}"${name?`\n\n— ${name}`:''}`);
+  window.open(`https://wa.me/${S.settings.wa}?text=${msg}`,'_blank');
+  document.getElementById('suggestText').value='';
+  document.getElementById('suggestName').value='';
+}
+
+/* ════════════════════════════════
+   SEARCH — by name, category, or keywords
+════════════════════════════════ */
+function openSearch(){
+  document.getElementById('searchOverlay').classList.add('open');
+  document.getElementById('searchInput').value='';
+  document.getElementById('searchBody').innerHTML='<div class="search-hint">Start typing a product name, or browse by category above.</div>';
+  renderSearchCats();
+  setTimeout(()=>document.getElementById('searchInput').focus(),150);
+}
+function closeSearch(){
+  document.getElementById('searchOverlay').classList.remove('open');
+}
+function renderSearchCats(){
+  const cats=Array.from(new Set(S.products.map(p=>p.category||'Ladies')));
+  document.getElementById('searchCats').innerHTML=cats.map(c=>
+    `<button class="cat-tab" onclick="doSearch('',this,'${c}')">${c}</button>`
+  ).join('');
+}
+function doSearch(query, catBtn, catValue){
+  const body=document.getElementById('searchBody');
+  const q=(query||'').trim().toLowerCase();
+
+  if(catBtn){
+    document.querySelectorAll('#searchCats .cat-tab').forEach(b=>b.classList.remove('active'));
+    catBtn.classList.add('active');
+    document.getElementById('searchInput').value='';
+  }
+
+  let results;
+  if(catValue){
+    results = S.products.filter(p=>p.vis && (p.category||'Ladies')===catValue);
+  } else if(q){
+    results = S.products.filter(p=>{
+      if(!p.vis)return false;
+      const hay=[p.name,p.desc,p.category,p.keywords||''].join(' ').toLowerCase();
+      return hay.includes(q);
+    });
+    document.querySelectorAll('#searchCats .cat-tab').forEach(b=>b.classList.remove('active'));
+  } else {
+    body.innerHTML='<div class="search-hint">Start typing a product name, or browse by category above.</div>';
+    return;
+  }
+
+  if(!results.length){
+    body.innerHTML='<div class="search-hint">No pieces found. Try a different word.</div>';
+    return;
+  }
+
+  body.innerHTML=`<div class="search-results">${results.map(p=>{
+    const idx=S.products.indexOf(p);
+    const c0=firstColor(p);
+    const hasImg=c0.images&&c0.images[0];
+    const img=hasImg?`<img src="${c0.images[0]}" alt="${p.name}">`:`<div class="p-ph ${p.ph}"></div>`;
+    return `<div class="sr-card" onclick="closeSearch();openModal(${idx})">
+      <div class="sr-img">${img}</div>
+      <div class="sr-info"><div class="sr-name">${p.name}</div><div class="sr-price">LE ${p.price.toLocaleString()}</div></div>
+    </div>`;
+  }).join('')}</div>`;
+}
+
+function renderCatTabs(){
+  const cats = ['All', ...Array.from(new Set(S.products.map(p=>p.category||'Ladies')))];
+  const wrap=document.getElementById('catTabs');
+  if(cats.length<=2){ wrap.innerHTML=''; return; } // no point showing tabs for a single category
+  wrap.innerHTML = cats.map(c=>
+    `<button class="cat-tab ${c===activeCategory?'active':''}" onclick="setCategory('${c}')">${c}</button>`
+  ).join('');
+}
+function setCategory(c){
+  activeCategory=c;
+  renderCatTabs();
+  renderProducts();
+}
+
+function firstColor(p){ return (p.colors && p.colors[0]) ? p.colors[0] : {name:'',hex:'#B0A388',images:[],stock:'in_stock'}; }
+function allColorsSoldOut(p){ return p.colors && p.colors.length && p.colors.every(c=>c.stock==='sold_out'); }
+function productOverallStock(p){
+  if(!p.colors || !p.colors.length) return p.stock||'in_stock';
+  if(allColorsSoldOut(p)) return 'sold_out';
+  if(p.colors.some(c=>c.stock==='low_stock')) return 'low_stock';
+  return 'in_stock';
+}
+
+function renderProducts(){
+  const grid=document.getElementById('productGrid');
+  let visible=S.products.filter(p=>p.vis);
+  if(activeCategory!=='All') visible=visible.filter(p=>(p.category||'Ladies')===activeCategory);
+  renderCatTabs();
+  grid.innerHTML=visible.map(p=>{
+    const idx=S.products.indexOf(p);
+    const c0=firstColor(p);
+    const hasImg=c0.images&&c0.images.length>0;
+    const imgHTML=hasImg
+      ? `<img class="p-real-img" src="${c0.images[0]}" alt="${p.name}" loading="lazy">`
+      : `<div class="p-ph ${p.ph}"><span class="ph-name">${p.name}</span></div>`;
+    const countBadge=hasImg&&c0.images.length>1
+      ? `<div class="img-count-badge">⬡ ${c0.images.length}</div>`:'';
+    const stock=productOverallStock(p);
+    const isSold = stock==='sold_out';
+    let stockBadge='';
+    if(stock==='low_stock') stockBadge='<div class="stock-badge low">Almost Sold Out</div>';
+    else if(stock==='sold_out') stockBadge='<div class="stock-badge sold">Sold Out</div>';
+    const topBadge = stockBadge || '<div class="new-badge">New</div>';
+    const addBtn = isSold
+      ? `<button class="add-bag-btn" disabled>Sold Out</button>`
+      : `<button class="add-bag-btn" onclick="quickAdd(this,${idx})">Add to Bag</button>`;
+    const colorCount = p.colors && p.colors.length>1 ? `<div class="p-desc" style="margin-top:-4px">${p.colors.length} Colors</div>` : '';
+    return `<div class="p-card ${isSold?'is-sold':''}" onclick="openModal(${idx})">
+      <div class="p-img">${imgHTML}${countBadge}${topBadge}</div>
+      <div class="p-info">
+        <div class="p-name">${p.name}</div>
+        <div class="p-desc">${p.desc}</div>
+        ${colorCount}
+        <div class="p-price">LE ${p.price.toLocaleString()}</div>
+      </div>
+      <div class="p-actions" onclick="event.stopPropagation()">
+        <div class="size-row">${p.sizes.map(s=>`<button class="sz" onclick="selectSize(this)">${s}</button>`).join('')}</div>
+        ${addBtn}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+/* ════════════════════════════════
+   MODAL + GALLERY
+════════════════════════════════ */
+let curProd=null,curQty=1,curSize=null,galIdx=0,curColorIdx=0;
+
+function openModal(idx){
+  const p=S.products[idx];
+  curProd=idx; curQty=1; curSize=null; galIdx=0; curColorIdx=0;
+  document.getElementById('modalName').textContent=p.name;
+  document.getElementById('modalPrice').textContent=`LE ${p.price.toLocaleString()}`;
+  document.getElementById('modalDesc').textContent=`A signature piece from PRIMORA. ${p.desc}.`;
+  document.getElementById('modalMat').textContent=p.mat;
+  document.getElementById('modalFit').textContent=p.fit;
+  document.getElementById('modalDeliv').textContent=S.settings.deliv;
+  document.getElementById('qtyNum').textContent=1;
+  document.getElementById('modalSizes').innerHTML=p.sizes.map(s=>`<button class="modal-sz" onclick="selSz(this,'${s}')">${s}</button>`).join('');
+
+  const occWrap=document.getElementById('modalOccasionsWrap');
+  if(p.occasions && p.occasions.trim()){
+    occWrap.style.display='block';
+    document.getElementById('modalOccasionsText').textContent=p.occasions;
+  } else {
+    occWrap.style.display='none';
+  }
+
+  renderColorSwatches(p);
+  applyColorState(p, curColorIdx);
+  buildGallery(p);
+  document.getElementById('productModal').classList.add('open');
+}
+
+function renderColorSwatches(p){
+  const wrap=document.getElementById('modalColorWrap');
+  if(!p.colors || p.colors.length<=1){ wrap.style.display='none'; wrap.innerHTML=''; return; }
+  wrap.style.display='block';
+  wrap.innerHTML=`
+    <div class="modal-label" style="margin-bottom:8px">Color — <span id="modalColorName" style="text-transform:none;font-weight:400;color:var(--warm-gray)">${p.colors[0].name}</span></div>
+    <div class="color-swatches" style="margin-top:0;margin-bottom:20px">
+      ${p.colors.map((c,i)=>`<div class="color-swatch ${i===0?'sel':''}" data-ci="${i}" style="background:${c.hex}${c.stock==='sold_out'?';opacity:.35':''}" title="${c.name}${c.stock==='sold_out'?' — Sold Out':''}" onclick="selectModalColor(${i})"></div>`).join('')}
+    </div>`;
+}
+
+function selectModalColor(ci){
+  const p=S.products[curProd];
+  curColorIdx=ci; galIdx=0;
+  document.querySelectorAll('#modalColorWrap .color-swatch').forEach((el,i)=>el.classList.toggle('sel',i===ci));
+  const nameEl=document.getElementById('modalColorName');
+  if(nameEl) nameEl.textContent=p.colors[ci].name;
+  applyColorState(p, ci);
+  buildGallery(p);
+}
+
+function applyColorState(p, ci){
+  const col=(p.colors && p.colors[ci]) ? p.colors[ci] : firstColor(p);
+  const stock=col.stock||'in_stock';
+  const badgeEl=document.getElementById('modalStockBadge');
+  const addBtn=document.getElementById('modalAddBtn');
+  const waBtn=document.querySelector('.modal-wa-btn');
+  if(stock==='sold_out'){
+    badgeEl.innerHTML='<span class="modal-stock-badge sold">Sold Out</span>';
+    addBtn.textContent='Sold Out'; addBtn.disabled=true; addBtn.classList.remove('added');
+    if(waBtn){ waBtn.style.display='none'; }
+  } else if(stock==='low_stock'){
+    badgeEl.innerHTML='<span class="modal-stock-badge low">Almost Sold Out</span>';
+    addBtn.textContent='Add to Bag'; addBtn.disabled=false; addBtn.classList.remove('added');
+    if(waBtn){ waBtn.style.display=''; }
+  } else {
+    badgeEl.innerHTML='';
+    addBtn.textContent='Add to Bag'; addBtn.disabled=false; addBtn.classList.remove('added');
+    if(waBtn){ waBtn.style.display=''; }
+  }
+}
+
+function buildGallery(p){
+  const col=(p.colors && p.colors[curColorIdx]) ? p.colors[curColorIdx] : firstColor(p);
+  const imgs=col.images||[];
+  const mainEl=document.getElementById('modalMainImg');
+  const thumbsEl=document.getElementById('modalThumbs');
+  const lBtn=document.getElementById('galLeft');
+  const rBtn=document.getElementById('galRight');
+
+  function setMain(i){
+    galIdx=i;
+    if(imgs.length>0){
+      mainEl.innerHTML=`<img src="${imgs[i]}" alt="Product" style="width:100%;height:100%;object-fit:cover">`;
+    } else {
+      mainEl.innerHTML=`<div class="ph-fallback p-ph ${p.ph}" style="height:100%"></div>`;
+    }
+    thumbsEl.querySelectorAll('.m-thumb').forEach((t,j)=>t.classList.toggle('active',j===i));
+  }
+
+  if(imgs.length>0){
+    thumbsEl.innerHTML=imgs.map((src,i)=>
+      `<div class="m-thumb ${i===0?'active':''}" onclick="setGalImg(${i})">
+        <img src="${src}" alt="">
+      </div>`
+    ).join('');
+    lBtn.style.display=imgs.length>1?'flex':'none';
+    rBtn.style.display=imgs.length>1?'flex':'none';
+  } else {
+    thumbsEl.innerHTML='';
+    lBtn.style.display='none';
+    rBtn.style.display='none';
+  }
+  setMain(0);
+  window._galSetMain=setMain;
+}
+
+function setGalImg(i){ if(window._galSetMain) window._galSetMain(i); }
+function galNav(dir){
+  const p=S.products[curProd];
+  const col=(p.colors && p.colors[curColorIdx]) ? p.colors[curColorIdx] : firstColor(p);
+  const total=Math.max(1,(col.images||[]).length);
+  const next=(galIdx+dir+total)%total;
+  setGalImg(next);
+}
+
+function selSz(btn,s){document.querySelectorAll('.modal-sz').forEach(b=>b.classList.remove('sel'));btn.classList.add('sel');curSize=s;}
+function closeModal(){document.getElementById('productModal').classList.remove('open');}
+function changeQty(d){curQty=Math.max(1,curQty+d);document.getElementById('qtyNum').textContent=curQty;}
+function addFromModal(){
+  addToCart(curProd,curSize||'M',curQty,curColorIdx);
+  const btn=document.getElementById('modalAddBtn');btn.textContent='Added ✓';btn.classList.add('added');
+  setTimeout(()=>{btn.textContent='Add to Bag';btn.classList.remove('added');closeModal();openCart();},1000);
+}
+function waProduct(){
+  const p=S.products[curProd];
+  const col=(p.colors && p.colors[curColorIdx]) ? p.colors[curColorIdx] : firstColor(p);
+  const colorTxt = col.name ? ` — ${col.name}` : '';
+  const msg=encodeURIComponent(`Hello PRIMORA 👋\nOrder:\n• ${p.name}${colorTxt} — Size ${curSize||'M'} × ${curQty}\n  Price: LE ${(p.price*curQty).toLocaleString()}`);
+  window.open(`https://wa.me/${S.settings.wa}?text=${msg}`,'_blank');
+}
+
+/* ════════════════════════════════
+   CART
+════════════════════════════════ */
+let cart=[];
+function selectSize(btn){btn.closest('.size-row').querySelectorAll('.sz').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
+function quickAdd(btn,idx){
+  const sel=btn.closest('.p-actions').querySelector('.sz.active');
+  addToCart(idx,sel?sel.textContent:'M',1,0);
+  btn.textContent='Added ✓';btn.classList.add('added');
+  setTimeout(()=>{btn.textContent='Add to Bag';btn.classList.remove('added');},1800);
+}
+function addToCart(idx,size,qty,colorIdx){
+  const p=S.products[idx];
+  colorIdx = colorIdx||0;
+  const col=(p.colors&&p.colors[colorIdx])?p.colors[colorIdx]:firstColor(p);
+  const ex=cart.find(i=>i.idx===idx&&i.size===size&&i.color===col.name);
+  if(ex)ex.qty+=qty;else cart.push({idx,productId:p.id,name:p.name,price:p.price,size,qty,color:col.name,ph:p.ph,img:(col.images&&col.images[0])||null});
+  updateCartUI();showToast();
+}
+function updateCartUI(){
+  const total=cart.reduce((s,i)=>s+i.price*i.qty,0);
+  document.getElementById('bagCount').textContent=cart.reduce((s,i)=>s+i.qty,0);
+  document.getElementById('cartTotal').textContent=`LE ${total.toLocaleString()}`;
+  const el=document.getElementById('cartItems'),ft=document.getElementById('cartFoot');
+  if(!cart.length){el.innerHTML='<div class="cart-empty"><div class="cart-empty-icon">○</div><div>Your bag is empty</div></div>';ft.style.display='none';return;}
+  ft.style.display='block';
+  el.innerHTML=cart.map((it,i)=>`
+    <div class="cart-item">
+      <div class="cart-item-img">${it.img?`<img src="${it.img}" alt="" style="width:100%;height:100%;object-fit:cover">`:`<div class="p-ph ${it.ph}" style="width:100%;height:100%"></div>`}</div>
+      <div class="cart-item-info">
+        <div class="ci-name">${it.name}</div>
+        <div class="ci-meta">${it.color?it.color+' · ':''}Size ${it.size}</div>
+        <div class="ci-row">
+          <div class="ci-qty"><button class="cq-btn" onclick="cqty(${i},-1)">−</button><span>${it.qty}</span><button class="cq-btn" onclick="cqty(${i},1)">+</button></div>
+          <div class="ci-price">LE ${(it.price*it.qty).toLocaleString()}</div>
+        </div>
+        <button class="ci-remove" onclick="cremove(${i})">Remove</button>
+      </div>
+    </div>`).join('');
+}
+function cqty(i,d){cart[i].qty+=d;if(cart[i].qty<=0)cart.splice(i,1);updateCartUI();}
+function cremove(i){cart.splice(i,1);updateCartUI();}
+function openCart(){document.getElementById('cartDrawer').classList.add('open');document.getElementById('cartOverlay').classList.add('open');}
+function closeCart(){document.getElementById('cartDrawer').classList.remove('open');document.getElementById('cartOverlay').classList.remove('open');}
+function showToast(){const t=document.getElementById('toast');t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200);}
+
+/* ════════════════════════════════
+   CHECKOUT
+════════════════════════════════ */
+function openCheckout(){
+  closeCart();
+  const total=cart.reduce((s,i)=>s+i.price*i.qty,0)+(S.settings.ship||0);
+  document.getElementById('coOrderList').innerHTML=cart.map(i=>`<div class="co-order-item"><span>${i.name} (${i.color?i.color+', ':''}${i.size}) ×${i.qty}</span><span>LE ${(i.price*i.qty).toLocaleString()}</span></div>`).join('');
+  document.getElementById('coTotal').textContent=`LE ${total.toLocaleString()}`;
+  if(currentUser){
+    document.getElementById('coName').value=currentUser.username||'';
+    document.getElementById('coEmail').value=currentUser.email||'';
+  }
+  document.getElementById('checkoutForm').style.display='block';
+  document.getElementById('successScreen').classList.remove('show');
+  document.getElementById('checkoutOverlay').classList.add('open');
+}
+function closeCheckout(){document.getElementById('checkoutOverlay').classList.remove('open');}
+async function submitOrder(){
+  const name=document.getElementById('coName').value.trim(),phone=document.getElementById('coPhone').value.trim();
+  if(!name||!phone){alert('Please fill in name and phone number.');return;}
+  if(!cart.length){alert('Your bag is empty.');return;}
+  const submitBtn=document.querySelector('.co-submit');
+  const originalText=submitBtn.textContent;
+  submitBtn.textContent='Placing order…'; submitBtn.disabled=true;
+
+  const email=document.getElementById('coEmail').value.trim();
+  const address=`${document.getElementById('coAddr').value}, ${document.getElementById('coCity').value}, ${document.getElementById('coGov').value}`;
+
+  const result = await placeOrderSecurely(cart, name, phone, email, address);
+  submitBtn.textContent=originalText; submitBtn.disabled=false;
+
+  if(!result.ok){
+    alert(result.error+" You can also order via WhatsApp instead.");
+    return;
+  }
+
+  const order={
+    dbId:result.data.order_id, id:result.data.order_ref,
+    date:new Date().toLocaleDateString('en-GB'), customer:name, phone, email, address,
+    items:[...cart], total:result.data.total, status:'pending',
+    userId: currentUser?currentUser.id:null
+  };
+  S.orders.unshift(order);
+  document.getElementById('checkoutForm').style.display='none';
+  document.getElementById('successScreen').classList.add('show');
+  cart=[];updateCartUI();
+}
+function waOrder(){
+  const total=cart.reduce((s,i)=>s+i.price*i.qty,0);
+  const lines=cart.map(i=>`• ${i.name} (${i.color?i.color+', ':''}${i.size}) ×${i.qty} — LE ${(i.price*i.qty).toLocaleString()}`).join('\n');
+  window.open(`https://wa.me/${S.settings.wa}?text=${encodeURIComponent(`Hello PRIMORA 👋\nOrder:\n${lines}\nTotal: LE ${total.toLocaleString()}`)}`,'_blank');
+}
+
+/* ════════════════════════════════
+   IMAGE UPLOAD — real files uploaded to
+   Supabase Storage (1GB+ free), per color variant
+════════════════════════════════ */
+let uploadTargetSlot=-1;   // which slot index to fill (-1 = next available)
+let uploadTargetColorIdx=0; // which color variant this upload belongs to
+
+function compressImage(file, maxW=1200, quality=0.85){
+  return new Promise(resolve=>{
+    const reader=new FileReader();
+    reader.onload=e=>{
+      const img=new Image();
+      img.onload=()=>{
+        const canvas=document.createElement('canvas');
+        let w=img.width, h=img.height;
+        if(w>maxW){h=Math.round(h*maxW/w);w=maxW;}
+        canvas.width=w; canvas.height=h;
+        canvas.getContext('2d').drawImage(img,0,0,w,h);
+        canvas.toBlob(blob=>resolve(blob),'image/jpeg',quality);
+      };
+      img.src=e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+function triggerUpload(slotIdx=-1, colorIdx=0){
+  uploadTargetSlot=slotIdx;
+  uploadTargetColorIdx=colorIdx;
+  document.getElementById('imgFileInput').click();
+}
+
+async function handleImgUpload(e){
+  const file=e.target.files[0];
+  if(!file)return;
+  e.target.value='';
+  const idx=parseInt(document.getElementById('ap-idx').value);
+  if(isNaN(idx))return;
+  const p=S.products[idx];
+  const ci=uploadTargetColorIdx||0;
+  if(!p.colors || !p.colors[ci])return;
+
+  // Ensure product exists in the DB before uploading its images
+  if(!p.id){ const ok=await persistProduct(idx); if(!ok){ alert('Could not reach the backend. Please check your connection and try again.'); return; } }
+
+  const col=p.colors[ci];
+  const slot = (uploadTargetSlot>=0 && uploadTargetSlot<IMG_SLOTS_MAX) ? uploadTargetSlot : (col.images.length);
+  markSlotUploading(ci, slot, true);
+
+  const blob = await compressImage(file);
+  const url = await uploadImageToStorage(p.id, ci, slot, blob);
+
+  markSlotUploading(ci, slot, false);
+
+  if(!url){ alert('Image upload failed. Please check your connection and try again.'); return; }
+
+  const imgs=col.images||[];
+  imgs[slot]=url;
+  col.images=imgs.filter(Boolean);
+
+  const {error}=await sbClient.from('products').update({colors:p.colors}).eq('id',p.id);
+  if(error){ console.warn(error); setConnStatus('error'); }
+  else setConnStatus('connected');
+
+  renderImgSlots(idx, ci);
+  renderProducts();
+}
+
+function markSlotUploading(colorIdx, slot, on){
+  const container=document.getElementById('imgSlots-'+colorIdx);
+  if(!container)return;
+  const el=container.children[slot];
+  if(!el)return;
+  if(on){ el.style.opacity='.4'; el.style.pointerEvents='none'; }
+  else { el.style.opacity=''; el.style.pointerEvents=''; }
+}
+
+function renderImgSlots(idx, colorIdx){
+  const col=S.products[idx].colors[colorIdx];
+  const imgs=col.images||[];
+  const container=document.getElementById('imgSlots-'+colorIdx);
+  if(!container)return;
+  let html='';
+  for(let j=0;j<IMG_SLOTS_MAX;j++){
+    if(imgs[j]){
+      html+=`<div class="img-slot has-img" onclick="triggerUpload(${j},${colorIdx})">
+        <img src="${imgs[j]}" alt="Image ${j+1}" loading="lazy">
+        <button class="img-slot-del" onclick="event.stopPropagation();deleteImg(${j},${colorIdx})" title="Delete">✕</button>
+        <div class="img-slot-num">${j+1}</div>
+      </div>`;
+    } else {
+      html+=`<div class="img-slot" onclick="triggerUpload(${j},${colorIdx})">
+        <div class="img-slot-empty">
+          <div class="img-slot-empty-icon">+</div>
+          <div class="img-slot-empty-text">Photo ${j+1}</div>
+        </div>
+        <div class="img-slot-num">${j+1}</div>
+      </div>`;
+    }
+  }
+  container.innerHTML=html;
+}
+
+async function deleteImg(slotIdx, colorIdx){
+  const idx=parseInt(document.getElementById('ap-idx').value);
+  if(isNaN(idx))return;
+  const p=S.products[idx];
+  const col=p.colors[colorIdx];
+  const imgs=col.images||[];
+  imgs.splice(slotIdx,1);
+  col.images=imgs;
+  if(p.id && sbClient){
+    const {error}=await sbClient.from('products').update({colors:p.colors}).eq('id',p.id);
+    if(error) setConnStatus('error'); else setConnStatus('connected');
+  }
+  renderImgSlots(idx, colorIdx);
+  renderProducts();
+}
+
+/* ════════════════════════════════
+   ADMIN ACCESS
+════════════════════════════════ */
+let clicks=0,clickTimer=null;
+function countClick(){
+  clicks++;clearTimeout(clickTimer);
+  clickTimer=setTimeout(()=>clicks=0,2000);
+  if(clicks>=5){clicks=0;openLogin();}
+}
+function logoClick(e){e.preventDefault();countClick();}
+document.getElementById('adminTrigger').addEventListener('click',countClick);
+let kseq='',ktimer=null;
+document.addEventListener('keydown',e=>{
+  if(['INPUT','TEXTAREA'].includes(document.activeElement.tagName))return;
+  kseq+=e.key.toLowerCase();clearTimeout(ktimer);
+  ktimer=setTimeout(()=>kseq='',1500);
+  if(kseq.endsWith('admin')){kseq='';openLogin();}
+});
+function openLogin(){
+  document.getElementById('adminLogin').classList.add('open');
+  document.getElementById('adminEmail').value='';
+  document.getElementById('adminPw').value='';
+  document.getElementById('adminErr').style.display='none';
+  setTimeout(()=>document.getElementById('adminEmail').focus(),150);
+}
+let isAdminSession=false; // true only after a verified admin-role Supabase Auth session in this tab
+
+async function tryLogin(){
+  const email=document.getElementById('adminEmail').value.trim();
+  const pw=document.getElementById('adminPw').value;
+  const errEl=document.getElementById('adminErr');
+  errEl.style.display='none';
+  if(!sbClient){ errEl.textContent='Cannot reach the server. Check your connection.'; errEl.style.display='block'; return; }
+  if(!email||!pw){ errEl.textContent='Enter your email and password.'; errEl.style.display='block'; return; }
+  const btn=document.querySelector('.alog-btn');
+  const orig=btn.textContent; btn.textContent='Signing in…'; btn.disabled=true;
+
+  const {data,error}=await sbClient.auth.signInWithPassword({email,password:pw});
+  if(error){
+    btn.textContent=orig; btn.disabled=false;
+    errEl.textContent='Incorrect email or password.'; errEl.style.display='block';
+    document.getElementById('adminPw').value='';
+    return;
+  }
+
+  const {data:prof}=await sbClient.from('profiles').select('role').eq('auth_user_id',data.user.id).maybeSingle();
+  btn.textContent=orig; btn.disabled=false;
+
+  if(!prof || prof.role!=='admin'){
+    await sbClient.auth.signOut();
+    errEl.textContent='This account does not have admin access.'; errEl.style.display='block';
+    document.getElementById('adminPw').value='';
+    return;
+  }
+
+  isAdminSession=true;
+  await loadCurrentUserProfile(data.user);
+  updateAccountIcon();
+  document.getElementById('adminLogin').classList.remove('open');
+  subscribeToNewOrders();
+  openAdmin();
+}
+async function openAdmin(){
+  document.getElementById('adminShell').classList.add('open');
+  loadAdminForms();renderAdminProducts();renderOrders();refreshDash();
+  await loadSubscribers();
+  renderSubscribers();
+  await loadCustomers();
+  renderCustomers();
+  requestNotifyPermission();
+}
+function closeAdmin(){
+  document.getElementById('adminShell').classList.remove('open');
+  renderStore();
+}
+
+/* ════════════════════════════════
+   ADMIN PANELS
+════════════════════════════════ */
+function showPanel(id,el){
+  document.querySelectorAll('.a-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.asb-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');
+  el.classList.add('active');
+}
+function syncDashConnDisplay(){
+  const dot=document.getElementById('dashConnDot');
+  const txt=document.getElementById('dashConnText');
+  const srcDot=document.getElementById('connDot');
+  const srcTxt=document.getElementById('connText');
+  if(dot&&srcDot){ dot.style.background=srcDot.style.background; }
+  if(txt&&srcTxt){ txt.textContent=srcTxt.textContent; }
+}
+
+function refreshDash(){
+  document.getElementById('s-orders').textContent=S.orders.length;
+  document.getElementById('s-revenue').textContent=`LE ${S.orders.reduce((s,o)=>s+o.total,0).toLocaleString()}`;
+  document.getElementById('s-prods').textContent=S.products.filter(p=>p.vis).length;
+  document.getElementById('s-pending').textContent=S.orders.filter(o=>o.status==='pending').length;
+  document.getElementById('ordBadge').textContent=S.orders.length;
+  document.getElementById('subBadge').textContent=S.subscribers.length;
+  document.getElementById('s-subsCount').textContent=S.subscribers.length;
+  syncDashConnDisplay();
+  const dr=document.getElementById('dashRecent');
+  if(!S.orders.length){dr.innerHTML='<div class="no-items">No orders yet — store is live.</div>';return;}
+  dr.innerHTML=`<table class="orders-table"><thead><tr><th>ID</th><th>Customer</th><th>Total</th><th>Date</th><th>Status</th><th></th></tr></thead><tbody>
+    ${S.orders.slice(0,5).map(o=>`<tr><td style="font-family:'Cormorant Garamond',serif">${escapeAttr(o.id)}</td><td>${escapeAttr(o.customer)}<br><small style="color:var(--warm-gray)">${escapeAttr(o.phone)}</small></td><td>LE ${o.total.toLocaleString()}</td><td>${escapeAttr(o.date)}</td><td><span class="os ${o.status}">${o.status}</span></td><td><button class="btn-outline" onclick="generateInvoicePDF(${S.orders.indexOf(o)})">⬇ Invoice</button></td></tr>`).join('')}
+  </tbody></table>`;
+}
+
+/* ── SUBSCRIBERS ── */
+function renderSubscribers(){
+  const w=document.getElementById('subscribersWrap');
+  document.getElementById('subBadge').textContent=S.subscribers.length;
+  if(!S.subscribers.length){w.innerHTML='<div class="no-items">No subscribers yet.</div>';return;}
+  w.innerHTML=`<table class="orders-table"><thead><tr><th>Email</th><th>Joined</th><th></th></tr></thead><tbody>
+    ${S.subscribers.map((s,i)=>`<tr><td>${s.email}</td><td>${new Date(s.created_at).toLocaleDateString('en-GB')}</td><td><button class="btn-danger" onclick="deleteSubscriber(${i})">✕</button></td></tr>`).join('')}
+  </tbody></table>`;
+}
+async function deleteSubscriber(i){
+  if(!confirm('Remove this subscriber?'))return;
+  const s=S.subscribers[i];
+  if(s.id && sbClient) await sbClient.from('subscribers').delete().eq('id',s.id);
+  S.subscribers.splice(i,1);
+  renderSubscribers();
+}
+async function clearSubscribers(){
+  if(sbClient) await sbClient.from('subscribers').delete().neq('id',0);
+  S.subscribers=[];
+  renderSubscribers();
+}
+function exportSubscribersToExcel(){
+  if(!S.subscribers.length){ alert('No subscribers to export yet.'); return; }
+  if(!window.XLSX){ alert("Excel library didn't load — check your connection and try again."); return; }
+  const rows = S.subscribers.map(s=>({'Email':s.email,'Joined':new Date(s.created_at).toLocaleDateString('en-GB')}));
+  const ws = XLSX.utils.json_to_sheet(rows);
+  ws['!cols']=[{wch:32},{wch:14}];
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Subscribers');
+  XLSX.writeFile(wb, `PRIMORA-Subscribers-${new Date().toISOString().slice(0,10)}.xlsx`);
+}
+
+/* ── CUSTOMERS (registered accounts) ── */
+async function loadCustomers(){
+  if(!sbClient)return;
+  try{
+    const {data,error}=await sbClient.from('profiles').select('*').order('id',{ascending:true});
+    if(!error && data) S.customers=data;
+  }catch(e){ console.warn('Customers load error',e); }
+}
+function renderCustomers(){
+  const w=document.getElementById('customersWrap');
+  document.getElementById('custBadge').textContent=S.customers.length;
+  if(!S.customers.length){w.innerHTML='<div class="no-items">No customers yet.</div>';return;}
+  w.innerHTML=`<table class="orders-table"><thead><tr><th>ID</th><th>Username</th><th>Email</th><th>Joined</th></tr></thead><tbody>
+    ${S.customers.map(c=>`<tr>
+      <td style="font-family:'Cormorant Garamond',serif;font-size:15px">${c.id}</td>
+      <td>${c.username}</td>
+      <td>${c.email}</td>
+      <td>${new Date(c.created_at).toLocaleDateString('en-GB')}</td>
+    </tr>`).join('')}
+  </tbody></table>`;
+}
+function exportCustomersToExcel(){
+  if(!S.customers.length){ alert('No customers to export yet.'); return; }
+  if(!window.XLSX){ alert("Excel library didn't load — check your connection and try again."); return; }
+  const rows = S.customers.map(c=>({'ID':c.id,'Username':c.username,'Email':c.email,'Joined':new Date(c.created_at).toLocaleDateString('en-GB')}));
+  const ws = XLSX.utils.json_to_sheet(rows);
+  ws['!cols']=[{wch:8},{wch:22},{wch:30},{wch:14}];
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Customers');
+  XLSX.writeFile(wb, `PRIMORA-Customers-${new Date().toISOString().slice(0,10)}.xlsx`);
+}
+
+function exportOrdersToExcel(){
+  if(!S.orders.length){ alert('No orders to export yet.'); return; }
+  if(!window.XLSX){ alert("Excel library didn't load — check your connection and try again."); return; }
+  const rows = S.orders.map(o=>({
+    'Order ID': o.id,
+    'Date': o.date,
+    'Customer': o.customer,
+    'Phone': o.phone,
+    'Email': o.email||'',
+    'Address': o.address||'',
+    'Items': o.items.map(it=>`${it.name} (${it.color?it.color+', ':''}${it.size}) x${it.qty}`).join(' | '),
+    'Total (LE)': o.total,
+    'Status': o.status
+  }));
+  const ws = XLSX.utils.json_to_sheet(rows);
+  ws['!cols'] = [{wch:16},{wch:12},{wch:20},{wch:16},{wch:22},{wch:30},{wch:40},{wch:12},{wch:12}];
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Orders');
+  const stamp = new Date().toISOString().slice(0,10);
+  XLSX.writeFile(wb, `PRIMORA-Orders-${stamp}.xlsx`);
+}
+
+/* ── INVOICE PDF ── */
+function generateInvoicePDF(i){
+  if(!window.jspdf){ alert("PDF library didn't load — check your connection and try again."); return; }
+  const order = S.orders[i];
+  if(!order){ alert('Order not found.'); return; }
+
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({unit:'mm', format:'a4'});
+  const pageW = 210, marginX = 20;
+  const ink=[26,26,24], muted=[140,132,116], line=[214,207,190];
+  let y = 26;
+
+  // Brand header
+  doc.setFont('helvetica','normal');
+  doc.setFontSize(21);
+  doc.setTextColor(...ink);
+  doc.text('P R I M O R A', marginX, y);
+  doc.setFontSize(8.5);
+  doc.setTextColor(...muted);
+  doc.text('Q U I E T   L U X U R Y   F O R   H E R', marginX, y+6);
+
+  doc.setFontSize(15);
+  doc.setTextColor(...ink);
+  doc.text('INVOICE', pageW-marginX, y, {align:'right'});
+  doc.setFontSize(9.5);
+  doc.setTextColor(110,110,110);
+  doc.text(`Order  ${order.id}`, pageW-marginX, y+7, {align:'right'});
+  doc.text(`Date   ${order.date}`, pageW-marginX, y+13, {align:'right'});
+  doc.text(`Status ${(order.status||'pending').toUpperCase()}`, pageW-marginX, y+19, {align:'right'});
+
+  y += 30;
+  doc.setDrawColor(...line);
+  doc.line(marginX, y, pageW-marginX, y);
+  y += 10;
+
+  // Bill To
+  doc.setFontSize(8.5);
+  doc.setTextColor(...muted);
+  doc.text('BILL TO', marginX, y);
+  y += 6;
+  doc.setFontSize(11.5);
+  doc.setTextColor(...ink);
+  doc.text(order.customer||'-', marginX, y); y += 6;
+  doc.setFontSize(9.5);
+  doc.setTextColor(90,90,90);
+  if(order.phone){ doc.text(order.phone, marginX, y); y += 5.2; }
+  if(order.email){ doc.text(order.email, marginX, y); y += 5.2; }
+  if(order.address){
+    const addrLines = doc.splitTextToSize(order.address, 100);
+    doc.text(addrLines, marginX, y);
+    y += addrLines.length*5.2;
+  }
+
+  y += 6;
+  doc.setDrawColor(...line);
+  doc.line(marginX, y, pageW-marginX, y);
+  y += 9;
+
+  // Items table header
+  doc.setFontSize(8.5);
+  doc.setTextColor(...muted);
+  doc.text('ITEM', marginX, y);
+  doc.text('SIZE', 128, y);
+  doc.text('QTY', 150, y);
+  doc.text('AMOUNT', pageW-marginX, y, {align:'right'});
+  y += 3;
+  doc.setDrawColor(...ink);
+  doc.line(marginX, y, pageW-marginX, y);
+  y += 7.5;
+
+  doc.setFontSize(10);
+  order.items.forEach(it=>{
+    if(y > 265){ doc.addPage(); y = 26; }
+    const label = it.color ? `${it.name} — ${it.color}` : it.name;
+    const nameLines = doc.splitTextToSize(label, 100);
+    doc.setTextColor(...ink);
+    doc.text(nameLines, marginX, y);
+    doc.setTextColor(90,90,90);
+    doc.text(it.size||'-', 128, y);
+    doc.text(String(it.qty), 150, y);
+    doc.setTextColor(...ink);
+    doc.text(`LE ${(it.price*it.qty).toLocaleString()}`, pageW-marginX, y, {align:'right'});
+    y += Math.max(nameLines.length*5.4, 8);
+  });
+
+  y += 3;
+  doc.setDrawColor(...line);
+  doc.line(marginX, y, pageW-marginX, y);
+  y += 9;
+
+  const subtotal = order.items.reduce((s,it)=>s+it.price*it.qty,0);
+  const shipping = Math.max(0, (order.total||0) - subtotal);
+
+  doc.setFontSize(9.5);
+  doc.setTextColor(110,110,110);
+  doc.text('Subtotal', pageW-70, y);
+  doc.setTextColor(...ink);
+  doc.text(`LE ${subtotal.toLocaleString()}`, pageW-marginX, y, {align:'right'});
+  y += 6.5;
+
+  doc.setTextColor(110,110,110);
+  doc.text('Shipping', pageW-70, y);
+  doc.setTextColor(...ink);
+  doc.text(shipping>0?`LE ${shipping.toLocaleString()}`:'Free', pageW-marginX, y, {align:'right'});
+  y += 8;
+
+  doc.setDrawColor(...ink);
+  doc.line(pageW-76, y, pageW-marginX, y);
+  y += 8;
+
+  doc.setFontSize(13);
+  doc.setTextColor(...ink);
+  doc.text('Total', pageW-70, y);
+  doc.text(`LE ${(order.total||0).toLocaleString()}`, pageW-marginX, y, {align:'right'});
+
+  y += 24;
+  doc.setDrawColor(230,230,230);
+  doc.line(marginX, y, pageW-marginX, y);
+  y += 9;
+
+  doc.setFontSize(8.5);
+  doc.setTextColor(...muted);
+  doc.text('Thank you for choosing PRIMORA.', marginX, y); y += 5;
+  doc.text(`WhatsApp  +${S.settings.wa}`, marginX, y); y += 5;
+  doc.text('Cash on delivery · Egypt-wide shipping', marginX, y);
+
+  doc.save(`PRIMORA-Invoice-${order.id}.pdf`);
+}
+
+function renderOrders(){
+  const w=document.getElementById('ordersWrap');
+  if(!S.orders.length){w.innerHTML='<div class="no-items">No orders yet.</div>';return;}
+  w.innerHTML=`<table class="orders-table"><thead><tr><th>ID</th><th>Customer</th><th>Items</th><th>Total</th><th>Date</th><th>Status</th><th></th><th></th></tr></thead><tbody>
+    ${S.orders.map((o,i)=>`<tr>
+      <td style="font-family:'Cormorant Garamond',serif;font-size:12px">${escapeAttr(o.id)}</td>
+      <td>${escapeAttr(o.customer)}<br><small style="color:var(--warm-gray)">${escapeAttr(o.phone)}<br>${escapeAttr(o.address)}</small></td>
+      <td>${o.items.map(it=>`${escapeAttr(it.name)} (${it.color?escapeAttr(it.color)+', ':''}${escapeAttr(it.size)}) ×${Number(it.qty)||0}`).join('<br>')}</td>
+      <td>LE ${o.total.toLocaleString()}</td><td>${escapeAttr(o.date)}</td>
+      <td><select onchange="setOrdStatus(${i},this.value)" style="border:1px solid rgba(0,0,0,.15);padding:4px 8px;font-size:11px;background:transparent">
+        <option value="pending" ${o.status==='pending'?'selected':''}>Pending</option>
+        <option value="confirmed" ${o.status==='confirmed'?'selected':''}>Confirmed</option>
+        <option value="shipped" ${o.status==='shipped'?'selected':''}>Shipped</option>
+      </select></td>
+      <td><button class="btn-outline" onclick="generateInvoicePDF(${i})">⬇ Invoice</button></td>
+      <td><button class="btn-danger" onclick="delOrder(${i})">✕</button></td>
+    </tr>`).join('')}
+  </tbody></table>`;
+}
+async function setOrdStatus(i,v){S.orders[i].status=v;await updateOrderStatusDB(S.orders[i].dbId,v);refreshDash();}
+async function delOrder(i){if(confirm('Delete?')){await deleteOrderDB(S.orders[i].dbId);S.orders.splice(i,1);renderOrders();refreshDash();}}
+async function clearOrders(){await clearOrdersDB();S.orders=[];renderOrders();refreshDash();}
+
+/* ── ADMIN PRODUCTS ── */
+function renderAdminProducts(){
+  document.getElementById('apcList').innerHTML=S.products.map((p,i)=>{
+    const c0=firstColor(p);
+    const thumb=c0.images&&c0.images[0]
+      ?`<img src="${c0.images[0]}" alt="" style="width:100%;height:100%;object-fit:cover">`
+      :`<div class="p-ph ${p.ph}" style="width:100%;height:100%"></div>`;
+    const totalPhotos=(p.colors||[]).reduce((s,c)=>s+(c.images?c.images.length:0),0);
+    const colorsTxt = p.colors && p.colors.length>1 ? `${p.colors.length} colors` : (p.colors&&p.colors[0]?p.colors[0].name:'');
+    const overallStock=productOverallStock(p);
+    return `<div class="apc">
+      <div class="apc-reorder" onclick="event.stopPropagation()">
+        <button class="reorder-btn" onclick="moveProduct(${i},-1)" ${i===0?'disabled':''} title="Move up">▲</button>
+        <button class="reorder-btn" onclick="moveProduct(${i},1)" ${i===S.products.length-1?'disabled':''} title="Move down">▼</button>
+      </div>
+      <div class="apc-thumb">${thumb}</div>
+      <div>
+        <div class="apc-n">${p.name}</div>
+        <div class="apc-d">${p.desc}</div>
+        <div class="apc-p">LE ${p.price.toLocaleString()} · ${totalPhotos?totalPhotos+' photo(s)':'No photos'} · ${colorsTxt} · ${p.sizes.join(', ')} · ${p.category||'Ladies'} · <span style="color:${overallStock==='sold_out'?'#7a1f1f':overallStock==='low_stock'?'#B8860B':'var(--sage)'}">${overallStock==='sold_out'?'Sold Out':overallStock==='low_stock'?'Almost Sold Out':'In Stock'}</span></div>
+      </div>
+      <div class="apc-btns" onclick="event.stopPropagation()">
+        <button class="vis-tag ${p.vis?'':'off'}" onclick="toggleVis(${i})">${p.vis?'● Visible':'○ Hidden'}</button>
+        <button class="btn-outline" onclick="openApanel(${i})">Edit</button>
+        <button class="btn-danger" onclick="removeProduct(${i})">Delete</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+async function moveProduct(i, dir){
+  const j = i + dir;
+  if(j<0 || j>=S.products.length) return;
+  [S.products[i], S.products[j]] = [S.products[j], S.products[i]];
+  S.products.forEach((p,idx)=>{ p.sort = idx; });
+  renderAdminProducts();
+  renderProducts();
+  await Promise.all(S.products.map((p,idx)=>persistProduct(idx)));
+}
+async function toggleVis(i){
+  S.products[i].vis=!S.products[i].vis;
+  await persistProduct(i);
+  renderAdminProducts();renderProducts();
+}
+async function addNewProduct(){
+  S.products.push({name:'New Product',desc:'Description here',price:0,mat:'',fit:'',sizes:['XS','S','M','L'],vis:true,ph:phForIndex(S.products.length),stock:'in_stock',category:'Ladies', keywords:'', occasions:'', sizeGuide:'', colors:[{name:'Default',hex:'#B0A388',images:[],stock:'in_stock'}]});
+  const idx=S.products.length-1;
+  await persistProduct(idx);
+  renderAdminProducts();
+  openApanel(idx);
+}
+async function removeProduct(i){
+  if(!confirm(`Delete "${S.products[i].name}"? This cannot be undone.`))return;
+  await deleteProductDB(i);
+  S.products.splice(i,1);
+  renderAdminProducts();
+  renderProducts();
+}
+function openApanel(idx){
+  const p=S.products[idx];
+  document.getElementById('ap-idx').value=idx;
+  document.getElementById('apTitle').textContent=`Edit — ${p.name}`;
+  document.getElementById('ap-name').value=p.name;
+  document.getElementById('ap-price').value=p.price;
+  document.getElementById('ap-desc').value=p.desc;
+  document.getElementById('ap-mat').value=p.mat;
+  document.getElementById('ap-fit').value=p.fit;
+  document.getElementById('ap-sizes').value=p.sizes.join(', ');
+  document.getElementById('ap-keywords').value=p.keywords||'';
+  document.getElementById('ap-occasions').value=p.occasions||'';
+  document.getElementById('ap-sizeGuide').value=p.sizeGuide||'';
+  document.getElementById('ap-stock').value=p.stock||'in_stock';
+  document.getElementById('ap-category').value=p.category||'Ladies';
+  document.getElementById('ap-vis').checked=p.vis;
+  document.getElementById('ap-saved').classList.remove('show');
+  if(!p.colors || !p.colors.length) p.colors=[{name:'Default',hex:'#B0A388',images:[],stock:'in_stock'}];
+  renderColorsEditor(idx);
+  document.getElementById('apanelOverlay').classList.add('open');
+}
+function closeApanel(){document.getElementById('apanelOverlay').classList.remove('open');renderAdminProducts();}
+
+/* ── COLOR VARIANTS EDITOR ── */
+function renderColorsEditor(idx){
+  const p=S.products[idx];
+  const container=document.getElementById('colorsEditor');
+  container.innerHTML=p.colors.map((c,ci)=>`
+    <div class="color-block">
+      <div class="color-block-head">
+        <input type="color" class="color-hex-input" id="col-hex-${ci}" value="${c.hex||'#B0A388'}">
+        <input class="af-input color-name-input" id="col-name-${ci}" value="${escapeAttr(c.name)}" placeholder="Color name (e.g. Ivory)">
+        <select class="af-input color-stock-select" id="col-stock-${ci}">
+          <option value="in_stock" ${c.stock==='in_stock'?'selected':''}>In Stock</option>
+          <option value="low_stock" ${c.stock==='low_stock'?'selected':''}>Almost Sold Out</option>
+          <option value="sold_out" ${c.stock==='sold_out'?'selected':''}>Sold Out</option>
+        </select>
+        ${p.colors.length>1?`<button class="btn-danger" onclick="removeColorVariant(${ci})">Remove Color</button>`:''}
+      </div>
+      <div class="img-slots" id="imgSlots-${ci}"></div>
+      <button class="img-upload-btn" onclick="triggerUpload(-1,${ci})" style="margin-top:10px">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        Upload Photo
+      </button>
+    </div>`).join('');
+  p.colors.forEach((c,ci)=>renderImgSlots(idx,ci));
+}
+function addColorVariant(){
+  const idx=parseInt(document.getElementById('ap-idx').value);
+  const p=S.products[idx];
+  p.colors.push({name:'',hex:'#B0A388',images:[],stock:'in_stock'});
+  renderColorsEditor(idx);
+}
+function removeColorVariant(ci){
+  const idx=parseInt(document.getElementById('ap-idx').value);
+  const p=S.products[idx];
+  if(p.colors.length<=1)return;
+  if(!confirm('Remove this color? Its photos will be removed too.'))return;
+  p.colors.splice(ci,1);
+  renderColorsEditor(idx);
+}
+
+async function saveProduct(){
+  const i=parseInt(document.getElementById('ap-idx').value);
+  const p=S.products[i];
+  // Sync color name/hex/stock from the editor inputs (images are already live-saved on upload)
+  p.colors = p.colors.map((c,ci)=>({
+    ...c,
+    name: (document.getElementById(`col-name-${ci}`).value.trim()) || `Color ${ci+1}`,
+    hex: document.getElementById(`col-hex-${ci}`).value,
+    stock: document.getElementById(`col-stock-${ci}`).value
+  }));
+  S.products[i]={
+    ...p,
+    name:document.getElementById('ap-name').value,
+    price:parseInt(document.getElementById('ap-price').value)||0,
+    desc:document.getElementById('ap-desc').value,
+    mat:document.getElementById('ap-mat').value,
+    fit:document.getElementById('ap-fit').value,
+    sizes:document.getElementById('ap-sizes').value.split(',').map(s=>s.trim()).filter(Boolean),
+    keywords:document.getElementById('ap-keywords').value,
+    occasions:document.getElementById('ap-occasions').value,
+    sizeGuide:document.getElementById('ap-sizeGuide').value,
+    stock:document.getElementById('ap-stock').value,
+    category:document.getElementById('ap-category').value,
+    vis:document.getElementById('ap-vis').checked
+  };
+  const btn=document.getElementById('ap-savebtn');
+  btn.textContent='Saving…'; btn.disabled=true;
+  const ok = await persistProduct(i);
+  btn.textContent='Save Product'; btn.disabled=false;
+  if(!ok){ alert("Couldn't save — check your connection and try again."); return; }
+  renderAdminProducts();
+  renderProducts();
+  showSaved('ap-saved','ap-savebtn');
+}
+
+
+
+/* ── SETTINGS ── */
+function escapeAttr(str){
+  return String(str==null?'':str).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function loadAdminForms(){
+  const st=S.settings;
+  ['annText','annCta','colTitle','colSub','wa','deliv'].forEach(k=>{
+    const el=document.getElementById('s-'+k);if(el)el.value=st[k];
+  });
+  document.getElementById('s-annVis').checked=st.annVis;
+  document.getElementById('s-ship').value=st.ship||0;
+  document.getElementById('s-marquee').value=st.marquee.join('\n');
+  document.getElementById('s-editQuote').value=st.editQuote;
+  document.getElementById('s-editSub').value=st.editSub;
+  document.getElementById('s-happyCount').value=st.happyCount||0;
+  document.getElementById('s-happyLabel').value=st.happyLabel||'';
+  renderPhilEditFields();
+  renderFooterPageFields();
+  renderFaqEditFields();
+  renderSocialEditFields();
+}
+function renderPhilEditFields(){
+  const container=document.getElementById('philEditFields');
+  if(!container)return;
+  container.innerHTML=S.settings.philosophy.map((ph,i)=>`
+    <div style="border:1px solid rgba(0,0,0,.08);padding:14px;margin-bottom:12px">
+      <div class="af-row">
+        <div class="af-group" style="margin-bottom:8px"><label class="af-label">Numeral (I, II, III, IV)</label><input class="af-input" id="phil-roman-${i}" value="${ph.roman}"></div>
+        <div class="af-group" style="margin-bottom:8px"><label class="af-label">Title</label><input class="af-input" id="phil-title-${i}" value="${ph.title}"></div>
+      </div>
+      <label class="af-label">Text</label><textarea class="af-input" id="phil-text-${i}" rows="2">${ph.text}</textarea>
+    </div>`).join('');
+}
+async function savePhilosophy(btnId,pillId){
+  S.settings.philosophy = S.settings.philosophy.map((ph,i)=>({
+    roman: document.getElementById(`phil-roman-${i}`).value,
+    title: document.getElementById(`phil-title-${i}`).value,
+    text:  document.getElementById(`phil-text-${i}`).value
+  }));
+  const btn=document.getElementById(btnId);
+  const orig=btn.textContent; btn.textContent='Saving…'; btn.disabled=true;
+  const ok = await persistSettings();
+  btn.textContent=orig; btn.disabled=false;
+  if(!ok){ alert("Couldn't save — check your connection and try again."); return; }
+  renderPhilosophy();
+  showSaved(pillId,btnId);
+}
+
+/* ── FOOTER PAGES ── */
+function renderFooterPageFields(){
+  const fp=S.settings.footerPages;
+  const map={sizeGuide:'fp-sizeGuide',careGuide:'fp-careGuide',shipping:'fp-shipping',returns:'fp-returns',contact:'fp-contact'};
+  Object.keys(map).forEach(key=>{
+    const el=document.getElementById(map[key]);
+    if(el && fp[key]) el.value=fp[key].content;
+  });
+}
+async function saveFooterPages(btnId,pillId){
+  const fp=S.settings.footerPages;
+  fp.sizeGuide.content = document.getElementById('fp-sizeGuide').value;
+  fp.careGuide.content = document.getElementById('fp-careGuide').value;
+  fp.shipping.content  = document.getElementById('fp-shipping').value;
+  fp.returns.content   = document.getElementById('fp-returns').value;
+  fp.contact.content   = document.getElementById('fp-contact').value;
+  const btn=document.getElementById(btnId);
+  const orig=btn.textContent; btn.textContent='Saving…'; btn.disabled=true;
+  const ok = await persistSettings();
+  btn.textContent=orig; btn.disabled=false;
+  if(!ok){ alert("Couldn't save — check your connection and try again."); return; }
+  showSaved(pillId,btnId);
+}
+
+/* ── FAQ ── */
+function renderFaqEditFields(){
+  const container=document.getElementById('faqEditFields');
+  if(!container)return;
+  if(!S.settings.faq.length){ container.innerHTML='<div style="font-size:12px;color:var(--warm-gray)">No questions yet — click "+ Add Question" above.</div>'; return; }
+  container.innerHTML=S.settings.faq.map((item,i)=>`
+    <div style="border:1px solid rgba(0,0,0,.08);padding:14px;margin-bottom:12px;position:relative">
+      <button class="btn-danger" style="position:absolute;top:12px;right:12px" onclick="removeFaqItem(${i})">Remove</button>
+      <div class="af-group" style="margin-bottom:8px;padding-right:90px"><label class="af-label">Question</label><input class="af-input" id="faq-q-${i}" value="${escapeAttr(item.q)}"></div>
+      <label class="af-label">Answer</label><textarea class="af-input" id="faq-a-${i}" rows="2">${item.a||''}</textarea>
+    </div>`).join('');
+}
+function addFaqItem(){
+  S.settings.faq.push({q:'',a:''});
+  renderFaqEditFields();
+}
+function removeFaqItem(i){
+  S.settings.faq.splice(i,1);
+  renderFaqEditFields();
+}
+async function saveFaq(btnId,pillId){
+  S.settings.faq = S.settings.faq.map((_,i)=>({
+    q:document.getElementById(`faq-q-${i}`).value.trim(),
+    a:document.getElementById(`faq-a-${i}`).value.trim()
+  })).filter(item=>item.q||item.a);
+  const btn=document.getElementById(btnId);
+  const orig=btn.textContent; btn.textContent='Saving…'; btn.disabled=true;
+  const ok = await persistSettings();
+  btn.textContent=orig; btn.disabled=false;
+  if(!ok){ alert("Couldn't save — check your connection and try again."); return; }
+  renderFaqEditFields();
+  showSaved(pillId,btnId);
+}
+
+/* ── SOCIAL LINKS ── */
+function renderSocialEditFields(){
+  const container=document.getElementById('socialEditFields');
+  if(!container)return;
+  if(!S.settings.socials.length){ container.innerHTML='<div style="font-size:12px;color:var(--warm-gray)">No platforms yet — click "+ Add Platform" above.</div>'; return; }
+  container.innerHTML=S.settings.socials.map((s,i)=>`
+    <div class="af-row" style="margin-bottom:10px;align-items:flex-end">
+      <div class="af-group" style="margin-bottom:0"><label class="af-label">Platform Name</label><input class="af-input" id="soc-label-${i}" value="${escapeAttr(s.label)}" placeholder="Instagram"></div>
+      <div class="af-group" style="margin-bottom:0;display:flex;gap:8px;align-items:flex-end">
+        <div style="flex:1"><label class="af-label">Profile URL</label><input class="af-input" id="soc-url-${i}" value="${escapeAttr(s.url)}" placeholder="https://instagram.com/yourbrand"></div>
+        <button class="btn-danger" onclick="removeSocialItem(${i})">✕</button>
+      </div>
+    </div>`).join('');
+}
+function addSocialItem(){
+  S.settings.socials.push({label:'',url:''});
+  renderSocialEditFields();
+}
+function removeSocialItem(i){
+  S.settings.socials.splice(i,1);
+  renderSocialEditFields();
+}
+async function saveSocials(btnId,pillId){
+  S.settings.socials = S.settings.socials.map((_,i)=>({
+    label:document.getElementById(`soc-label-${i}`).value.trim(),
+    url:document.getElementById(`soc-url-${i}`).value.trim()
+  })).filter(s=>s.label && s.url);
+  const btn=document.getElementById(btnId);
+  const orig=btn.textContent; btn.textContent='Saving…'; btn.disabled=true;
+  const ok = await persistSettings();
+  btn.textContent=orig; btn.disabled=false;
+  if(!ok){ alert("Couldn't save — check your connection and try again."); return; }
+  renderSocialEditFields();
+  renderFooterSocials();
+  showSaved(pillId,btnId);
+}
+async function saveSettings(btnId,pillId){
+  const st=S.settings;
+  st.annText=document.getElementById('s-annText').value;
+  st.annCta=document.getElementById('s-annCta').value;
+  st.annVis=document.getElementById('s-annVis').checked;
+  st.colTitle=document.getElementById('s-colTitle').value;
+  st.colSub=document.getElementById('s-colSub').value;
+  st.wa=document.getElementById('s-wa').value;
+  st.ship=parseInt(document.getElementById('s-ship').value)||0;
+  st.deliv=document.getElementById('s-deliv').value;
+  st.happyCount=parseInt(document.getElementById('s-happyCount').value)||0;
+  st.happyLabel=document.getElementById('s-happyLabel').value;
+  const btn=document.getElementById(btnId);
+  const orig=btn.textContent; btn.textContent='Saving…'; btn.disabled=true;
+  const ok = await persistSettings();
+  btn.textContent=orig; btn.disabled=false;
+  if(!ok){ alert("Couldn't save — check your connection and try again."); return; }
+  document.getElementById('annBar').style.display=st.annVis?'':'none';
+  document.getElementById('annText').textContent=st.annText;
+  document.getElementById('annCta').textContent=st.annCta;
+  document.getElementById('colTitle').textContent=st.colTitle;
+  document.getElementById('colSub').textContent=st.colSub;
+  renderHappyStat();
+  showSaved(pillId,btnId);
+}
+async function saveContent(btnId,pillId){
+  S.settings.marquee=document.getElementById('s-marquee').value.split('\n').map(s=>s.trim()).filter(Boolean);
+  S.settings.editQuote=document.getElementById('s-editQuote').value;
+  S.settings.editSub=document.getElementById('s-editSub').value;
+  const btn=document.getElementById(btnId);
+  const orig=btn.textContent; btn.textContent='Saving…'; btn.disabled=true;
+  const ok = await persistSettings();
+  btn.textContent=orig; btn.disabled=false;
+  if(!ok){ alert("Couldn't save — check your connection and try again."); return; }
+  const items=[...S.settings.marquee,...S.settings.marquee];
+  document.getElementById('marqueeTrack').innerHTML=items.map(t=>`<span class="m-item">${t} <span class="m-dot">·</span></span>`).join('');
+  document.getElementById('editQuote').innerHTML=S.settings.editQuote.replace(/\n/g,'<br>');
+  document.getElementById('editSub').textContent=S.settings.editSub;
+  showSaved(pillId,btnId);
+}
+
+/* ── SECURITY ── */
+async function changePass(){
+  const cur=document.getElementById('sec-cur').value,nw=document.getElementById('sec-new').value,cf=document.getElementById('sec-conf').value;
+  const err=document.getElementById('sec-err');err.style.display='none';
+  if(!currentUser){ err.textContent='You must be signed in.'; err.style.display='block'; return; }
+  if(!cur){ err.textContent='Enter your current password.'; err.style.display='block'; return; }
+  if(nw.length<6){err.textContent='Min 6 characters.';err.style.display='block';return;}
+  if(nw!==cf){err.textContent='Passwords do not match.';err.style.display='block';return;}
+
+  // Re-verify identity with the current password before allowing the change
+  const {error:verifyErr} = await sbClient.auth.signInWithPassword({email:currentUser.email, password:cur});
+  if(verifyErr){ err.textContent='Current password is incorrect.'; err.style.display='block'; return; }
+
+  const {error} = await sbClient.auth.updateUser({password:nw});
+  if(error){ err.textContent=error.message||"Couldn't update password."; err.style.display='block'; return; }
+
+  ['sec-cur','sec-new','sec-conf'].forEach(id=>document.getElementById(id).value='');
+  showSaved('st-sec','');
+}
+
+/* ── HELPERS ── */
+function showSaved(pillId,btnId){
+  const pill=document.getElementById(pillId);
+  if(pill){pill.classList.add('show');setTimeout(()=>pill.classList.remove('show'),2500);}
+  if(btnId){const b=document.getElementById(btnId);if(b){b.classList.add('ok');setTimeout(()=>b.classList.remove('ok'),1500);}}
+}
+function setGrid(btn){document.querySelectorAll('.gtoggle').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
+
+/* ════════════════════════════════
+   BOOT
+════════════════════════════════ */
+(async()=>{
+  await loadPersisted();
+  renderStore();
+  await initAuth();
+  if(currentUser) await refreshOrdersForCurrentUser();
+})();
+</script>
+</body>
+</html>

@@ -93,8 +93,8 @@ nav{background:var(--cream);border-bottom:1px solid rgba(0,0,0,.08);padding:0 24
 @media(max-width:600px){.modal{grid-template-columns:1fr}}
 /* Image carousel in modal */
 .modal-gallery{display:flex;flex-direction:column;position:relative;background:#f0ece4}
-.modal-main-img{aspect-ratio:3/4;overflow:hidden;position:relative;background:#e8e0d0}
-.modal-main-img img{width:100%;height:100%;object-fit:cover;display:block}
+.modal-main-img{aspect-ratio:3/4;overflow:hidden;position:relative;background:#f0ece4;touch-action:manipulation}
+.modal-main-img img{width:100%;height:100%;object-fit:contain;background:#f0ece4;display:block}
 .modal-main-img .ph-fallback{width:100%;height:100%}
 .gal-arrow{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.85);border:none;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;z-index:10;opacity:0;transition:opacity .2s}
 .modal-gallery:hover .gal-arrow{opacity:1}
@@ -162,7 +162,7 @@ nav{background:var(--cream);border-bottom:1px solid rgba(0,0,0,.08);padding:0 24
 
 /* ── MARQUEE ── */
 .marquee-wrap{overflow:hidden;border-top:1px solid rgba(0,0,0,.08);border-bottom:1px solid rgba(0,0,0,.08);padding:13px 0;background:var(--ivory)}
-.marquee-track{display:flex;animation:marquee 22s linear infinite;white-space:nowrap}
+.marquee-track{display:flex;animation:marquee 13s linear infinite;white-space:nowrap}
 .m-item{font-family:'Cormorant Garamond',serif;font-size:13px;font-style:italic;letter-spacing:2px;color:var(--warm-gray);padding:0 36px}
 .m-dot{color:var(--sage)}
 @keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
@@ -366,6 +366,32 @@ footer{background:var(--black);color:rgba(255,255,255,.45);padding:56px 28px 28p
 .os.shipped{background:#e8eef8;color:#1a3a6e}
 .no-items{text-align:center;padding:44px;color:var(--warm-gray);font-size:13px}
 .admin-trigger{position:fixed;bottom:0;left:0;width:50px;height:50px;cursor:pointer;z-index:300;opacity:0}
+#ordersWrap,#subscribersWrap,#customersWrap{overflow-x:auto}
+
+/* ── ADMIN DASHBOARD — MOBILE RESPONSIVE ── */
+@media(max-width:760px){
+  .admin-topbar{flex-wrap:wrap;height:auto;min-height:54px;padding:10px 16px;gap:8px 10px}
+  .atb-left{gap:8px}
+  .admin-body{flex-direction:column;overflow-y:auto}
+  .admin-sidebar{width:100%;display:flex;flex-direction:row;overflow-x:auto;padding:8px 6px;gap:2px;-webkit-overflow-scrolling:touch}
+  .asb-section{display:none}
+  .asb-divider{display:none}
+  .asb-item{flex-shrink:0;white-space:nowrap;border-left:none;border-bottom:3px solid transparent;padding:10px 14px}
+  .asb-item.active{border-left:none;border-bottom-color:var(--gold)}
+  .admin-content{padding:20px 16px;overflow-y:visible}
+  .dash-stats{grid-template-columns:repeat(2,1fr)}
+  .af-row{grid-template-columns:1fr}
+  .apc{grid-template-columns:28px 56px 1fr;gap:8px;padding:12px}
+  .apc-btns{grid-column:1/-1;flex-direction:row;flex-wrap:wrap;gap:8px;justify-content:flex-start}
+  .reorder-btn{width:24px;height:20px;font-size:9px}
+  .a-section-head{flex-wrap:wrap;gap:8px}
+  .color-block-head{flex-wrap:wrap}
+  .color-name-input{min-width:100%;order:-1}
+  .color-stock-select{width:auto;flex:1}
+  .orders-table{font-size:11px}
+  .orders-table th,.orders-table td{padding:8px 6px;white-space:nowrap}
+  .apanel-box{padding:22px 18px}
+}
 
 /* ── MENU DRAWER (brand story + suggestions) ── */
 .menu-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:600;display:none}

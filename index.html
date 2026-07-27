@@ -9,7 +9,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Jost:wght@200;300;400&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{--ivory:#F5F0E8;--cream:#FAF7F2;--sage:#8A9B8E;--gold:#B8A882;--warm-gray:#9A9187;--black:#1A1A18;--black-s:#2C2C2A}
+:root{--ivory:#F5F0E8;--cream:#FAF7F2;--sage:#8A9B8E;--gold:#B8A882;--warm-gray:#9A9187;--black:#1A1A18;--black-s:#2C2C2A;--vh:1vh}
 html{scroll-behavior:smooth}
 body{font-family:'Jost',sans-serif;font-weight:300;background:var(--cream);color:var(--black);-webkit-font-smoothing:antialiased}
 
@@ -99,7 +99,10 @@ nav{background:var(--cream);border-bottom:1px solid rgba(0,0,0,.08);padding:0 24
    so every product looks identical regardless of how much data it has.
    Description area is intentionally given more space than the image. */
 .modal{background:var(--cream);max-width:860px;width:100%;height:min(680px,92vh);max-height:92vh;overflow:hidden;display:grid;grid-template-columns:0.85fr 1.15fr;position:relative}
-@media(max-width:600px){.modal{grid-template-columns:1fr;grid-template-rows:36vh 1fr;height:90vh;max-height:90vh;width:100%}}
+@media(max-width:600px){.modal{grid-template-columns:1fr;grid-template-rows:calc(var(--vh,1vh)*36) 1fr;height:calc(var(--vh,1vh)*90);max-height:calc(var(--vh,1vh)*90);width:100%}}
+@supports (height: 100dvh){
+  @media(max-width:600px){.modal{grid-template-rows:36dvh 1fr;height:90dvh;max-height:90dvh}}
+}
 /* Image carousel in modal */
 .modal-gallery{display:flex;flex-direction:column;position:relative;background:#f0ece4;height:100%;min-height:0;overflow:hidden}
 .modal-main-img{flex:1;min-height:0;overflow:hidden;position:relative;background:#f0ece4;touch-action:manipulation}
@@ -490,6 +493,26 @@ footer{background:var(--black);color:rgba(255,255,255,.45);padding:56px 28px 28p
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 </head>
 <body>
+<script>
+/* MOBILE VIEWPORT HEIGHT FIX: mobile browsers (Safari on iPhone, Chrome on
+   Android) calculate `vh` units against the tallest possible screen state
+   (as if the address bar were hidden), not the actual visible height at any
+   given moment. That mismatch is what made the product modal look right on
+   laptop but cut off / inconsistent on real phones. --vh is kept in sync
+   with the true visible height on load, resize, and orientation change, and
+   every mobile modal height calc(var(--vh,1vh)*N) uses it instead of raw vh. */
+(function(){
+  function setVH(){
+    document.documentElement.style.setProperty('--vh', (window.innerHeight*0.01)+'px');
+  }
+  setVH();
+  window.addEventListener('resize', setVH);
+  window.addEventListener('orientationchange', setVH);
+  if(window.visualViewport){
+    window.visualViewport.addEventListener('resize', setVH);
+  }
+})();
+</script>
 
 <div class="marquee-wrap"><div class="marquee-track" id="marqueeTrack"></div></div>
 

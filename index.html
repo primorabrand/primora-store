@@ -477,6 +477,7 @@ footer{background:var(--black);color:rgba(255,255,255,.45);padding:56px 28px 28p
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 </head>
 <body>
 
@@ -570,6 +571,63 @@ footer{background:var(--black);color:rgba(255,255,255,.45);padding:56px 28px 28p
   </div>
 </div>
 <div class="admin-trigger" id="adminTrigger"></div>
+
+<!-- HIDDEN INVOICE TEMPLATE — rendered by the browser itself (so Arabic
+     text always displays correctly), then captured as an image for the PDF -->
+<div id="invoiceTemplate" style="position:fixed;left:-9999px;top:0;width:794px;background:#FAF7F2;font-family:'Jost',sans-serif;padding:56px;box-sizing:border-box;color:#1A1A18;">
+  <div style="display:flex;justify-content:space-between;align-items:flex-start;border-bottom:1px solid #D6CFBE;padding-bottom:24px;margin-bottom:24px;">
+    <div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:30px;letter-spacing:6px;">PRIMORA</div>
+      <div style="font-size:11px;letter-spacing:3px;color:#B8A882;margin-top:6px;">QUIET LUXURY FOR HER</div>
+    </div>
+    <div style="text-align:right;">
+      <div style="font-family:'Cormorant Garamond',serif;font-size:22px;">INVOICE</div>
+      <div style="font-size:12px;color:#707070;margin-top:8px;">Order&nbsp; <span id="inv-id"></span></div>
+      <div style="font-size:12px;color:#707070;">Date&nbsp;&nbsp; <span id="inv-date"></span></div>
+      <div style="font-size:12px;color:#707070;">Status <span id="inv-status"></span></div>
+    </div>
+  </div>
+
+  <div style="font-size:11px;letter-spacing:2px;color:#8A9B8E;margin-bottom:8px;">BILL TO</div>
+  <div dir="auto" style="font-family:'Cormorant Garamond',serif;font-size:17px;margin-bottom:6px;" id="inv-customer"></div>
+  <div dir="auto" style="font-size:13px;color:#5a5a5a;line-height:1.8;" id="inv-contact"></div>
+  <div dir="auto" style="font-size:13px;color:#5a5a5a;line-height:1.8;" id="inv-address"></div>
+
+  <div style="border-top:1px solid #D6CFBE;margin:24px 0 16px;"></div>
+
+  <table style="width:100%;border-collapse:collapse;font-size:13px;">
+    <thead>
+      <tr style="border-bottom:2px solid #1A1A18;">
+        <th style="text-align:left;font-size:10px;letter-spacing:2px;color:#8A9B8E;padding-bottom:10px;font-weight:400;">ITEM</th>
+        <th style="text-align:left;font-size:10px;letter-spacing:2px;color:#8A9B8E;padding-bottom:10px;font-weight:400;">SIZE</th>
+        <th style="text-align:center;font-size:10px;letter-spacing:2px;color:#8A9B8E;padding-bottom:10px;font-weight:400;">QTY</th>
+        <th style="text-align:right;font-size:10px;letter-spacing:2px;color:#8A9B8E;padding-bottom:10px;font-weight:400;">AMOUNT</th>
+      </tr>
+    </thead>
+    <tbody id="inv-items"></tbody>
+  </table>
+
+  <div style="border-top:1px solid #D6CFBE;margin:16px 0;"></div>
+
+  <div style="display:flex;justify-content:flex-end;">
+    <div style="width:260px;">
+      <div style="display:flex;justify-content:space-between;font-size:12px;color:#707070;padding:5px 0;"><span>Subtotal</span><span id="inv-subtotal" style="color:#1A1A18;"></span></div>
+      <div style="display:flex;justify-content:space-between;font-size:12px;color:#707070;padding:5px 0;"><span>Shipping</span><span id="inv-shipping" style="color:#1A1A18;"></span></div>
+      <div style="border-top:1px solid #1A1A18;margin-top:8px;padding-top:10px;display:flex;justify-content:space-between;font-family:'Cormorant Garamond',serif;font-size:19px;"><span>Total</span><span id="inv-total"></span></div>
+    </div>
+  </div>
+
+  <div id="inv-notes-wrap" style="display:none;border-top:1px solid #D6CFBE;margin-top:20px;padding-top:16px;">
+    <div style="font-size:11px;letter-spacing:2px;color:#8A9B8E;margin-bottom:6px;">ORDER NOTES</div>
+    <div dir="auto" style="font-size:13px;color:#3a3a3a;line-height:1.8;white-space:pre-wrap;" id="inv-notes"></div>
+  </div>
+
+  <div style="border-top:1px solid #eee;margin-top:28px;padding-top:14px;font-size:10px;color:#B8A882;letter-spacing:1px;">
+    Thank you for choosing PRIMORA.<br>
+    WhatsApp&nbsp; <span id="inv-wa"></span><br>
+    Cash on delivery · Egypt-wide shipping
+  </div>
+</div>
 <div id="connBanner" style="display:none;position:fixed;top:0;left:0;right:0;background:#e05555;color:#fff;text-align:center;padding:10px 16px;font-size:11px;letter-spacing:1.5px;z-index:5000;align-items:center;justify-content:center;gap:10px">
   ⚠ Can't reach the backend — check your internet connection. Changes won't be saved until reconnected.
 </div>
@@ -714,14 +772,16 @@ footer{background:var(--black);color:rgba(255,255,255,.45);padding:56px 28px 28p
       <div class="co-sub">Summer Collection · PRIMORA</div>
       <div class="co-order-list" id="coOrderList"></div>
       <div class="co-total"><div class="co-total-label">Total</div><div class="co-total-val" id="coTotal"></div></div>
-      <label class="co-field-label">Full Name</label><input class="co-input" id="coName" placeholder="Your full name">
-      <label class="co-field-label">Phone Number</label><input class="co-input" id="coPhone" placeholder="+20 1XX XXX XXXX">
+      <label class="co-field-label">Full Name *</label><input class="co-input" id="coName" dir="auto" placeholder="Your full name">
+      <label class="co-field-label">Phone Number *</label><input class="co-input" id="coPhone" placeholder="+20 1XX XXX XXXX">
       <label class="co-field-label">Email</label><input class="co-input" id="coEmail" placeholder="your@email.com">
-      <label class="co-field-label">Delivery Address</label><input class="co-input" id="coAddr" placeholder="Street, area">
+      <label class="co-field-label">Delivery Address *</label><input class="co-input" id="coAddr" dir="auto" placeholder="Street, area">
       <div class="co-row">
-        <div><label class="co-field-label">City</label><input class="co-input" id="coCity" placeholder="Cairo"></div>
-        <div><label class="co-field-label">Governorate</label><input class="co-input" id="coGov" placeholder="Cairo"></div>
+        <div><label class="co-field-label">City *</label><input class="co-input" id="coCity" dir="auto" placeholder="Cairo"></div>
+        <div><label class="co-field-label">Governorate *</label><input class="co-input" id="coGov" dir="auto" placeholder="Cairo"></div>
       </div>
+      <label class="co-field-label">Order Notes <span style="text-transform:none;font-weight:400;color:var(--warm-gray)">(optional)</span></label>
+      <textarea class="co-input" id="coNotes" dir="auto" rows="3" placeholder="Anything you'd like us to know about this order…" style="resize:vertical"></textarea>
       <button class="co-submit" onclick="submitOrder()">Confirm Order</button>
       <button class="co-wa" onclick="waOrder()">Order via WhatsApp instead</button>
     </div>
@@ -1332,7 +1392,7 @@ async function refreshOrdersForCurrentUser(){
     if(!error && data){
       const mine = data.map(o=>({
         dbId:o.id, id:o.order_ref, date:o.order_date, customer:o.customer_name, phone:o.phone,
-        email:o.email, address:o.address, items:o.items||[], total:Number(o.total)||0, status:o.status, userId:o.user_id
+        email:o.email, address:o.address, notes:o.notes||'', items:o.items||[], total:Number(o.total)||0, status:o.status, userId:o.user_id
       }));
       // Merge into S.orders without duplicating (admin view may already have loaded these)
       mine.forEach(mo=>{
@@ -1411,7 +1471,7 @@ async function loadPersisted(){
     if(ordRows){
       S.orders = ordRows.map(o=>({
         dbId:o.id, id:o.order_ref, date:o.order_date, customer:o.customer_name, phone:o.phone,
-        email:o.email, address:o.address, items:o.items||[], total:Number(o.total)||0, status:o.status, userId:o.user_id
+        email:o.email, address:o.address, notes:o.notes||'', items:o.items||[], total:Number(o.total)||0, status:o.status, userId:o.user_id
       }));
     }
     setConnStatus('connected'); backendReady=true;
@@ -1494,7 +1554,7 @@ async function deleteProductDB(idx){
    It only sends product_id + color + size + qty; the
    database looks up the real price and validates stock
    itself, inside the place_order() function. ── */
-async function placeOrderSecurely(cartItems, customerName, phone, email, address){
+async function placeOrderSecurely(cartItems, customerName, phone, email, address, notes){
   if(!sbClient) return {ok:false, error:"Can't reach the server."};
   const items = cartItems.map(it=>({product_id:it.productId, color:it.color, size:it.size, qty:it.qty}));
   const {data,error} = await sbClient.rpc('place_order', {
@@ -1502,7 +1562,8 @@ async function placeOrderSecurely(cartItems, customerName, phone, email, address
     p_customer_name: customerName,
     p_phone: phone,
     p_email: email,
-    p_address: address
+    p_address: address,
+    p_notes: notes||''
   });
   if(error){ console.warn('place_order error',error); return {ok:false, error:error.message||"Couldn't place the order."}; }
   return {ok:true, data};
@@ -2091,16 +2152,20 @@ function openCheckout(){
 function closeCheckout(){document.getElementById('checkoutOverlay').classList.remove('open');}
 async function submitOrder(){
   const name=document.getElementById('coName').value.trim(),phone=document.getElementById('coPhone').value.trim();
-  if(!name||!phone){alert('Please fill in name and phone number.');return;}
+  const addrLine=document.getElementById('coAddr').value.trim();
+  const city=document.getElementById('coCity').value.trim();
+  const gov=document.getElementById('coGov').value.trim();
+  if(!name||!phone||!addrLine||!city||!gov){alert('Please fill in your name, phone number, and full delivery address — these are required so we can deliver your order.');return;}
   if(!cart.length){alert('Your bag is empty.');return;}
   const submitBtn=document.querySelector('.co-submit');
   const originalText=submitBtn.textContent;
   submitBtn.textContent='Placing order…'; submitBtn.disabled=true;
 
   const email=document.getElementById('coEmail').value.trim();
-  const address=`${document.getElementById('coAddr').value}, ${document.getElementById('coCity').value}, ${document.getElementById('coGov').value}`;
+  const address=`${addrLine}, ${city}, ${gov}`;
+  const notes=document.getElementById('coNotes').value.trim();
 
-  const result = await placeOrderSecurely(cart, name, phone, email, address);
+  const result = await placeOrderSecurely(cart, name, phone, email, address, notes);
   submitBtn.textContent=originalText; submitBtn.disabled=false;
 
   if(!result.ok){
@@ -2110,7 +2175,7 @@ async function submitOrder(){
 
   const order={
     dbId:result.data.order_id, id:result.data.order_ref,
-    date:new Date().toLocaleDateString('en-GB'), customer:name, phone, email, address,
+    date:new Date().toLocaleDateString('en-GB'), customer:name, phone, email, address, notes,
     items:[...cart], total:result.data.total, status:'pending',
     userId: currentUser?currentUser.id:null
   };
@@ -2429,11 +2494,12 @@ function exportOrdersToExcel(){
     'Email': o.email||'',
     'Address': o.address||'',
     'Items': o.items.map(it=>`${it.name} (${it.color?it.color+', ':''}${it.size}) x${it.qty}`).join(' | '),
+    'Notes': o.notes||'',
     'Total (LE)': o.total,
     'Status': o.status
   }));
   const ws = XLSX.utils.json_to_sheet(rows);
-  ws['!cols'] = [{wch:16},{wch:12},{wch:20},{wch:16},{wch:22},{wch:30},{wch:40},{wch:12},{wch:12}];
+  ws['!cols'] = [{wch:16},{wch:12},{wch:20},{wch:16},{wch:22},{wch:30},{wch:40},{wch:30},{wch:12},{wch:12}];
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, ws, 'Orders');
   const stamp = new Date().toISOString().slice(0,10);
@@ -2441,142 +2507,86 @@ function exportOrdersToExcel(){
 }
 
 /* ── INVOICE PDF ── */
-function generateInvoicePDF(i){
+async function generateInvoicePDF(i){
   if(!window.jspdf){ alert("PDF library didn't load — check your connection and try again."); return; }
+  if(!window.html2canvas){ alert("Rendering library didn't load — check your connection and try again."); return; }
   const order = S.orders[i];
   if(!order){ alert('Order not found.'); return; }
-
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF({unit:'mm', format:'a4'});
-  const pageW = 210, marginX = 20;
-  const ink=[26,26,24], muted=[140,132,116], line=[214,207,190];
-  let y = 26;
-
-  // Brand header
-  doc.setFont('helvetica','normal');
-  doc.setFontSize(21);
-  doc.setTextColor(...ink);
-  doc.text('P R I M O R A', marginX, y);
-  doc.setFontSize(8.5);
-  doc.setTextColor(...muted);
-  doc.text('Q U I E T   L U X U R Y   F O R   H E R', marginX, y+6);
-
-  doc.setFontSize(15);
-  doc.setTextColor(...ink);
-  doc.text('INVOICE', pageW-marginX, y, {align:'right'});
-  doc.setFontSize(9.5);
-  doc.setTextColor(110,110,110);
-  doc.text(`Order  ${order.id}`, pageW-marginX, y+7, {align:'right'});
-  doc.text(`Date   ${order.date}`, pageW-marginX, y+13, {align:'right'});
-  doc.text(`Status ${(order.status||'pending').toUpperCase()}`, pageW-marginX, y+19, {align:'right'});
-
-  y += 30;
-  doc.setDrawColor(...line);
-  doc.line(marginX, y, pageW-marginX, y);
-  y += 10;
-
-  // Bill To
-  doc.setFontSize(8.5);
-  doc.setTextColor(...muted);
-  doc.text('BILL TO', marginX, y);
-  y += 6;
-  doc.setFontSize(11.5);
-  doc.setTextColor(...ink);
-  doc.text(order.customer||'-', marginX, y); y += 6;
-  doc.setFontSize(9.5);
-  doc.setTextColor(90,90,90);
-  if(order.phone){ doc.text(order.phone, marginX, y); y += 5.2; }
-  if(order.email){ doc.text(order.email, marginX, y); y += 5.2; }
-  if(order.address){
-    const addrLines = doc.splitTextToSize(order.address, 100);
-    doc.text(addrLines, marginX, y);
-    y += addrLines.length*5.2;
-  }
-
-  y += 6;
-  doc.setDrawColor(...line);
-  doc.line(marginX, y, pageW-marginX, y);
-  y += 9;
-
-  // Items table header
-  doc.setFontSize(8.5);
-  doc.setTextColor(...muted);
-  doc.text('ITEM', marginX, y);
-  doc.text('SIZE', 128, y);
-  doc.text('QTY', 150, y);
-  doc.text('AMOUNT', pageW-marginX, y, {align:'right'});
-  y += 3;
-  doc.setDrawColor(...ink);
-  doc.line(marginX, y, pageW-marginX, y);
-  y += 7.5;
-
-  doc.setFontSize(10);
-  order.items.forEach(it=>{
-    if(y > 265){ doc.addPage(); y = 26; }
-    const label = it.color ? `${it.name} — ${it.color}` : it.name;
-    const nameLines = doc.splitTextToSize(label, 100);
-    doc.setTextColor(...ink);
-    doc.text(nameLines, marginX, y);
-    doc.setTextColor(90,90,90);
-    doc.text(it.size||'-', 128, y);
-    doc.text(String(it.qty), 150, y);
-    doc.setTextColor(...ink);
-    doc.text(`LE ${(it.price*it.qty).toLocaleString()}`, pageW-marginX, y, {align:'right'});
-    y += Math.max(nameLines.length*5.4, 8);
-  });
-
-  y += 3;
-  doc.setDrawColor(...line);
-  doc.line(marginX, y, pageW-marginX, y);
-  y += 9;
 
   const subtotal = order.items.reduce((s,it)=>s+it.price*it.qty,0);
   const shipping = Math.max(0, (order.total||0) - subtotal);
 
-  doc.setFontSize(9.5);
-  doc.setTextColor(110,110,110);
-  doc.text('Subtotal', pageW-70, y);
-  doc.setTextColor(...ink);
-  doc.text(`LE ${subtotal.toLocaleString()}`, pageW-marginX, y, {align:'right'});
-  y += 6.5;
+  // Fill the hidden invoice template — the browser renders Arabic/RTL
+  // text correctly on its own, unlike jsPDF's built-in text drawing.
+  document.getElementById('inv-id').textContent = order.id;
+  document.getElementById('inv-date').textContent = order.date;
+  document.getElementById('inv-status').textContent = (order.status||'pending').toUpperCase();
+  document.getElementById('inv-customer').textContent = order.customer || '-';
+  document.getElementById('inv-contact').innerHTML = [order.phone, order.email].filter(Boolean).map(t=>escapeAttr(t)).join('<br>');
+  document.getElementById('inv-address').textContent = order.address || '';
+  document.getElementById('inv-wa').textContent = '+'+S.settings.wa;
 
-  doc.setTextColor(110,110,110);
-  doc.text('Shipping', pageW-70, y);
-  doc.setTextColor(...ink);
-  doc.text(shipping>0?`LE ${shipping.toLocaleString()}`:'Free', pageW-marginX, y, {align:'right'});
-  y += 8;
+  document.getElementById('inv-items').innerHTML = order.items.map(it=>`
+    <tr style="border-bottom:1px solid #eee;">
+      <td dir="auto" style="padding:10px 8px 10px 0;">${escapeAttr(it.name)}${it.color?' — '+escapeAttr(it.color):''}</td>
+      <td style="padding:10px 8px;">${escapeAttr(it.size||'-')}</td>
+      <td style="padding:10px 8px;text-align:center;">${Number(it.qty)||0}</td>
+      <td style="padding:10px 0 10px 8px;text-align:right;">LE ${(it.price*it.qty).toLocaleString()}</td>
+    </tr>`).join('');
 
-  doc.setDrawColor(...ink);
-  doc.line(pageW-76, y, pageW-marginX, y);
-  y += 8;
+  document.getElementById('inv-subtotal').textContent = `LE ${subtotal.toLocaleString()}`;
+  document.getElementById('inv-shipping').textContent = shipping>0 ? `LE ${shipping.toLocaleString()}` : 'Free';
+  document.getElementById('inv-total').textContent = `LE ${(order.total||0).toLocaleString()}`;
 
-  doc.setFontSize(13);
-  doc.setTextColor(...ink);
-  doc.text('Total', pageW-70, y);
-  doc.text(`LE ${(order.total||0).toLocaleString()}`, pageW-marginX, y, {align:'right'});
+  const notesWrap = document.getElementById('inv-notes-wrap');
+  if(order.notes && order.notes.trim()){
+    notesWrap.style.display = 'block';
+    document.getElementById('inv-notes').textContent = order.notes;
+  } else {
+    notesWrap.style.display = 'none';
+  }
 
-  y += 24;
-  doc.setDrawColor(230,230,230);
-  doc.line(marginX, y, pageW-marginX, y);
-  y += 9;
+  const el = document.getElementById('invoiceTemplate');
 
-  doc.setFontSize(8.5);
-  doc.setTextColor(...muted);
-  doc.text('Thank you for choosing PRIMORA.', marginX, y); y += 5;
-  doc.text(`WhatsApp  +${S.settings.wa}`, marginX, y); y += 5;
-  doc.text('Cash on delivery · Egypt-wide shipping', marginX, y);
+  try{
+    const canvas = await html2canvas(el, {scale:2, backgroundColor:'#FAF7F2', useCORS:true});
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF({unit:'mm', format:'a4'});
+    const pageW = 210, pageH = 297;
+    const imgW = pageW;
+    const imgH = (canvas.height * imgW) / canvas.width;
+    const imgData = canvas.toDataURL('image/jpeg', 0.95);
 
-  doc.save(`PRIMORA-Invoice-${order.id}.pdf`);
+    if(imgH <= pageH){
+      pdf.addImage(imgData, 'JPEG', 0, 0, imgW, imgH);
+    } else {
+      // Slice across multiple pages if the invoice is long (many items)
+      let heightLeft = imgH, position = 0;
+      pdf.addImage(imgData, 'JPEG', 0, position, imgW, imgH);
+      heightLeft -= pageH;
+      while(heightLeft > 0){
+        position = heightLeft - imgH;
+        pdf.addPage();
+        pdf.addImage(imgData, 'JPEG', 0, position, imgW, imgH);
+        heightLeft -= pageH;
+      }
+    }
+    pdf.save(`PRIMORA-Invoice-${order.id}.pdf`);
+  }catch(e){
+    console.warn('Invoice generation error', e);
+    alert("Couldn't generate the invoice. Please try again.");
+  }
 }
 
 function renderOrders(){
   const w=document.getElementById('ordersWrap');
   if(!S.orders.length){w.innerHTML='<div class="no-items">No orders yet.</div>';return;}
-  w.innerHTML=`<table class="orders-table"><thead><tr><th>ID</th><th>Customer</th><th>Items</th><th>Total</th><th>Date</th><th>Status</th><th></th><th></th></tr></thead><tbody>
+  w.innerHTML=`<table class="orders-table"><thead><tr><th>ID</th><th>Customer</th><th>Items</th><th>Notes</th><th>Total</th><th>Date</th><th>Status</th><th></th><th></th></tr></thead><tbody>
     ${S.orders.map((o,i)=>`<tr>
       <td style="font-family:'Cormorant Garamond',serif;font-size:12px">${escapeAttr(o.id)}</td>
       <td>${escapeAttr(o.customer)}<br><small style="color:var(--warm-gray)">${escapeAttr(o.phone)}<br>${escapeAttr(o.address)}</small></td>
       <td>${o.items.map(it=>`${escapeAttr(it.name)} (${it.color?escapeAttr(it.color)+', ':''}${escapeAttr(it.size)}) ×${Number(it.qty)||0}`).join('<br>')}</td>
+      <td dir="auto" style="max-width:180px;white-space:pre-wrap">${o.notes?escapeAttr(o.notes):'<span style="color:var(--warm-gray)">—</span>'}</td>
       <td>LE ${o.total.toLocaleString()}</td><td>${escapeAttr(o.date)}</td>
       <td><select onchange="setOrdStatus(${i},this.value)" style="border:1px solid rgba(0,0,0,.15);padding:4px 8px;font-size:11px;background:transparent">
         <option value="pending" ${o.status==='pending'?'selected':''}>Pending</option>

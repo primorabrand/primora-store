@@ -867,6 +867,7 @@ footer{background:var(--black);color:rgba(255,255,255,.45);padding:56px 28px 28p
           <div class="a-section-head">
             <div class="a-section-title">All Orders</div>
             <div style="display:flex;gap:10px">
+              <button class="btn-outline" id="ordersRefreshBtn" onclick="manualRefreshOrders()">↻ Refresh</button>
               <button class="btn-outline" onclick="exportOrdersToExcel()">⬇ Export to Excel</button>
               <button class="btn-danger" onclick="if(confirm('Clear all orders?'))clearOrders()">Clear All</button>
             </div>
@@ -2371,14 +2372,66 @@ async function tryLogin(){
   subscribeToNewOrders();
   openAdmin();
 }
+
+/* DASHBOARD-ACCURACY FIX: the very first data load on page boot always
+   happens as an anonymous visitor (before anyone has logged in), so RLS
+   only returns what an anonymous visitor is allowed to see — visible
+   products and zero orders. Without this, the admin dashboard kept showing
+   that stale anonymous snapshot after login instead of the real, full data
+   the admin's authenticated session is actually allowed to read. This
+   re-fetches orders and the complete product list (including hidden
+   products) fresh, under the now-authenticated admin session, every time
+   the dashboard opens. */
+async function reloadAdminData(){
+  if(!sbClient)return;
+  try{
+    const [{data:ordRows,error:e1},{data:prodRows,error:e2}] = await Promise.all([
+      sbClient.from('orders').select('*').order('created_at',{ascending:false}),
+      sbClient.from('products').select('*').order('sort_order',{ascending:true})
+    ]);
+    if(e1) throw e1;
+    if(e2) throw e2;
+    S.orders = (ordRows||[]).map(o=>({
+      dbId:o.id, id:o.order_ref, date:o.order_date, customer:o.customer_name, phone:o.phone,
+      email:o.email, address:o.address, notes:o.notes||'', items:o.items||[], total:Number(o.total)||0, status:o.status, userId:o.user_id
+    }));
+    if(prodRows && prodRows.length){
+      S.products = prodRows.map((r,i)=>{
+        const ph = phForIndex(r.sort_order??i);
+        let colors = (r.colors && r.colors.length) ? r.colors : null;
+        if(!colors) colors = [{name:'Original', hex:'#B0A388', images:r.images||[], stock:r.stock_status||'in_stock'}];
+        return {
+          id:r.id, name:r.name, desc:r.description||'', price:Number(r.price)||0,
+          mat:r.material||'', fit:r.fit||'', sizes:r.sizes||['XS','S','M','L'],
+          vis:r.visible, sort:r.sort_order??i, ph,
+          stock:r.stock_status||'in_stock', category:r.category||'Ladies', keywords:r.keywords||'',
+          occasions:r.occasions||'', sizeGuide:r.size_guide||'', colors
+        };
+      });
+    }
+    setConnStatus('connected');
+  }catch(e){
+    console.warn('Admin data reload error — dashboard may be showing stale/incomplete data', e);
+    setConnStatus('error');
+  }
+}
+
 async function openAdmin(){
   document.getElementById('adminShell').classList.add('open');
+  await reloadAdminData();
   loadAdminForms();renderAdminProducts();renderOrders();refreshDash();
   await loadSubscribers();
   renderSubscribers();
   await loadCustomers();
   renderCustomers();
   requestNotifyPermission();
+}
+async function manualRefreshOrders(){
+  const btn=document.getElementById('ordersRefreshBtn');
+  const orig=btn.textContent; btn.textContent='Refreshing…'; btn.disabled=true;
+  await reloadAdminData();
+  renderOrders(); renderAdminProducts(); refreshDash();
+  btn.textContent=orig; btn.disabled=false;
 }
 function closeAdmin(){
   document.getElementById('adminShell').classList.remove('open');

@@ -152,6 +152,19 @@ nav{background:var(--cream);border-bottom:1px solid rgba(0,0,0,.08);padding:0 24
 .ci-price{font-size:13px}
 .ci-remove{background:none;border:none;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--warm-gray);cursor:pointer;margin-top:7px;text-decoration:underline}
 .cart-foot{padding:18px 22px;border-top:1px solid rgba(0,0,0,.08)}
+
+/* ── CROSS-SELL (Bag drawer) ── */
+.xsell-section{padding:16px 22px;border-top:1px solid rgba(0,0,0,.08);background:var(--ivory)}
+.xsell-label{font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:var(--sage);margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.xsell-row{display:flex;gap:10px;overflow-x:auto;padding-bottom:2px;-webkit-overflow-scrolling:touch}
+.xsell-card{flex-shrink:0;width:104px;cursor:pointer}
+.xsell-img{width:104px;height:130px;overflow:hidden;background:var(--cream);position:relative}
+.xsell-img img,.xsell-img .p-ph{width:100%;height:100%;object-fit:cover}
+.xsell-name{font-family:'Cormorant Garamond',serif;font-size:12.5px;margin-top:7px;line-height:1.3;color:var(--black)}
+.xsell-price{font-size:11px;color:var(--warm-gray);margin-top:2px}
+.xsell-add{width:100%;margin-top:6px;background:none;border:1px solid rgba(0,0,0,.18);color:var(--black);padding:5px;font-family:'Jost',sans-serif;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:all .2s}
+.xsell-add:hover{background:var(--black);color:#fff}
+.xsell-add.added{background:var(--sage);color:#fff;border-color:var(--sage)}
 .cart-subtotal{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
 .cart-subtotal-label{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--warm-gray)}
 .cart-subtotal-val{font-family:'Cormorant Garamond',serif;font-size:22px}
@@ -752,6 +765,7 @@ footer{background:var(--black);color:rgba(255,255,255,.45);padding:56px 28px 28p
 <div class="cart-drawer" id="cartDrawer">
   <div class="cart-head"><div class="cart-head-title">Your Bag</div><button class="cart-close-btn" onclick="closeCart()">✕</button></div>
   <div class="cart-items" id="cartItems"><div class="cart-empty"><div class="cart-empty-icon">○</div><div>Your bag is empty</div></div></div>
+  <div id="crossSellWrap"></div>
   <div class="cart-foot" id="cartFoot" style="display:none">
     <div class="cart-subtotal"><div class="cart-subtotal-label">Subtotal</div><div class="cart-subtotal-val" id="cartTotal">LE 0</div></div>
     <div class="cart-note">Shipping calculated at checkout</div>
@@ -2112,7 +2126,7 @@ function updateCartUI(){
   document.getElementById('bagCount').textContent=cart.reduce((s,i)=>s+i.qty,0);
   document.getElementById('cartTotal').textContent=`LE ${total.toLocaleString()}`;
   const el=document.getElementById('cartItems'),ft=document.getElementById('cartFoot');
-  if(!cart.length){el.innerHTML='<div class="cart-empty"><div class="cart-empty-icon">○</div><div>Your bag is empty</div></div>';ft.style.display='none';return;}
+  if(!cart.length){el.innerHTML='<div class="cart-empty"><div class="cart-empty-icon">○</div><div>Your bag is empty</div></div>';ft.style.display='none';renderCrossSell();return;}
   ft.style.display='block';
   el.innerHTML=cart.map((it,i)=>`
     <div class="cart-item">
@@ -2127,6 +2141,55 @@ function updateCartUI(){
         <button class="ci-remove" onclick="cremove(${i})">Remove</button>
       </div>
     </div>`).join('');
+  renderCrossSell();
+}
+
+/* ── CROSS-SELL — shown inside the bag, right before checkout ── */
+function renderCrossSell(){
+  const wrap=document.getElementById('crossSellWrap');
+  if(!wrap)return;
+  if(!cart.length){ wrap.innerHTML=''; return; }
+
+  const cartIdxSet = new Set(cart.map(it=>it.idx));
+  const cartCategories = new Set(cart.map(it=>(S.products[it.idx]&&S.products[it.idx].category)||'Ladies'));
+
+  const candidates = S.products
+    .map((p,idx)=>({p,idx}))
+    .filter(({p,idx})=>p.vis && !cartIdxSet.has(idx) && productOverallStock(p)!=='sold_out');
+
+  candidates.sort((a,b)=>{
+    const aMatch = cartCategories.has(a.p.category||'Ladies') ? 0 : 1;
+    const bMatch = cartCategories.has(b.p.category||'Ladies') ? 0 : 1;
+    return aMatch - bMatch;
+  });
+
+  const picks = candidates.slice(0,4);
+  if(!picks.length){ wrap.innerHTML=''; return; }
+
+  wrap.innerHTML = `
+    <div class="xsell-section">
+      <div class="xsell-label">✦ Complete Your Order</div>
+      <div class="xsell-row">
+        ${picks.map(({p,idx})=>{
+          const c0=firstColor(p);
+          const img = (c0.images&&c0.images[0]) ? `<img src="${c0.images[0]}" alt="${p.name}">` : `<div class="p-ph ${p.ph}"></div>`;
+          return `<div class="xsell-card">
+            <div class="xsell-img" onclick="viewCrossSellProduct(${idx})">${img}</div>
+            <div class="xsell-name" onclick="viewCrossSellProduct(${idx})">${p.name}</div>
+            <div class="xsell-price">LE ${p.price.toLocaleString()}</div>
+            <button class="xsell-add" onclick="quickAddFromCrossSell(this,${idx})">+ Add</button>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>`;
+}
+function viewCrossSellProduct(idx){ closeCart(); openModal(idx); }
+function quickAddFromCrossSell(btn, idx){
+  const p=S.products[idx];
+  const size = (p.sizes && p.sizes[0]) || 'M';
+  addToCart(idx, size, 1, 0);
+  btn.textContent='Added ✓'; btn.classList.add('added');
+  setTimeout(()=>{ btn.textContent='+ Add'; btn.classList.remove('added'); }, 1500);
 }
 function cqty(i,d){cart[i].qty+=d;if(cart[i].qty<=0)cart.splice(i,1);updateCartUI();}
 function cremove(i){cart.splice(i,1);updateCartUI();}

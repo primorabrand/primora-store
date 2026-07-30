@@ -964,6 +964,17 @@ footer{background:var(--black);color:rgba(255,255,255,.45);padding:56px 28px 28p
         <div id="bundlesSetupNotice" style="display:none;background:#fff8e6;border:1px solid #f0d98c;padding:16px 18px;font-size:12px;color:#8a6d1a;line-height:1.8;margin-bottom:18px">
           Bundles aren't set up in your database yet. Run <strong>supabase_migration_v12_bundles.sql</strong> once in the Supabase SQL Editor, then refresh this page.
         </div>
+
+        <div class="a-section">
+          <div class="a-section-head"><div class="a-section-title">Build Your Own Bundle</div></div>
+          <div class="a-section-body">
+            <div style="font-size:11px;color:var(--warm-gray);margin-bottom:16px;line-height:1.7">Lets shoppers pick ANY 2 pieces from the whole catalog themselves and get this discount automatically at checkout. Shown as a card at the top of the storefront's Bundles tab. Requires migration v13.</div>
+            <div class="af-group" style="max-width:260px"><label class="af-label">Discount Amount (LE)</label><input class="af-input" type="number" id="s-customBundleDiscount" placeholder="300"></div>
+            <button class="btn-save" id="bsave13" onclick="saveSettings('bsave13','st13')">Save</button>
+            <span class="saved-tag" id="st13">✓ Saved</span>
+          </div>
+        </div>
+
         <div class="apc-list" id="bundlesList"></div>
       </div>
 
@@ -1221,6 +1232,18 @@ footer{background:var(--black);color:rgba(255,255,255,.45);padding:56px 28px 28p
   </div>
 </div>
 
+<!-- BUILD YOUR OWN BUNDLE — pick any 2 pieces from the whole catalog -->
+<div class="modal-overlay" id="customBundleModal" onclick="if(event.target===this)closeCustomBundlePicker()">
+  <div class="modal" style="grid-template-columns:1fr;height:auto;max-height:90vh;display:block;overflow-y:auto;background:var(--black)">
+    <div class="modal-body" style="height:auto;padding:32px 28px;background:var(--black)">
+      <button class="modal-close" onclick="closeCustomBundlePicker()">✕</button>
+      <div class="modal-tag" style="color:var(--gold)">Build Your Own Bundle</div>
+      <div class="modal-name" style="color:var(--ivory)">Pick Any 2 Pieces</div>
+      <div id="customBundleModalBody" style="margin-top:16px"></div>
+    </div>
+  </div>
+</div>
+
 <script>
 /* ════════════════════════════════
    STATE
@@ -1256,7 +1279,8 @@ const S = {
       {label:'TikTok', url:'https://tiktok.com/@primora'}
     ],
     happyCount:500,
-    happyLabel:'Happy Customers'
+    happyLabel:'Happy Customers',
+    customBundleDiscount:300
   },
   products:[
     {name:'The Ivory Shift',  desc:'Linen Blend · Relaxed Fit',   price:1250,mat:'100% Linen',       fit:'Relaxed, oversized',   sizes:['XS','S','M','L'],vis:true, stock:'in_stock', category:'Ladies', keywords:'', occasions:'', sizeGuide:'', colors:[{name:'Ivory',hex:'#C8BBA0',images:[],stock:'in_stock'}]},
@@ -1580,6 +1604,7 @@ async function loadPersisted(){
       S.settings.socials = (setRow.socials && setRow.socials.length) ? setRow.socials : S.settings.socials;
       S.settings.happyCount = setRow.happy_count ?? S.settings.happyCount;
       S.settings.happyLabel = setRow.happy_label ?? S.settings.happyLabel;
+      S.settings.customBundleDiscount = setRow.custom_bundle_discount ?? S.settings.customBundleDiscount;
     }
 
     if(prodRows && prodRows.length){
@@ -1669,7 +1694,8 @@ async function persistSettings(){
     shipping:S.settings.ship, delivery_time:S.settings.deliv, marquee:S.settings.marquee,
     edit_quote:S.settings.editQuote, edit_sub:S.settings.editSub, philosophy:S.settings.philosophy,
     footer_pages:S.settings.footerPages, faq:S.settings.faq, socials:S.settings.socials,
-    happy_count:S.settings.happyCount, happy_label:S.settings.happyLabel
+    happy_count:S.settings.happyCount, happy_label:S.settings.happyLabel,
+    custom_bundle_discount:S.settings.customBundleDiscount
   }).eq('id',1);
   if(error){ console.warn('Settings save error',error); setConnStatus('error'); return false; }
   setConnStatus('connected');
@@ -1710,6 +1736,12 @@ async function deleteProductDB(idx){
 async function placeOrderSecurely(cartItems, customerName, phone, email, address, notes){
   if(!sbClient) return {ok:false, error:"Can't reach the server."};
   const items = cartItems.map(it=>{
+    if(it.isBundle && it.isCustom){
+      return {
+        custom_bundle: true, qty: it.qty,
+        members: it.members.map(m=>({product_id:m.productId, color:m.color, size:m.size}))
+      };
+    }
     if(it.isBundle){
       return {
         bundle_id: it.bundleId, qty: it.qty,
@@ -2054,15 +2086,11 @@ function doSearch(query, catBtn, catValue){
 
 function renderCatTabs(){
   const cats = ['All', ...Array.from(new Set(S.products.map(p=>p.category||'Ladies')))];
-  const hasBundles = S.bundles && S.bundles.some(b=>b.vis);
   const wrap=document.getElementById('catTabs');
-  if(cats.length<=2 && !hasBundles){ wrap.innerHTML=''; return; }
-  let html = cats.map(c=>
+  let html = cats.length>2 ? cats.map(c=>
     `<button class="cat-tab ${c===activeCategory?'active':''}" onclick="setCategory('${c}')">${c}</button>`
-  ).join('');
-  if(hasBundles){
-    html += `<button class="cat-tab ${activeCategory==='Bundles'?'active':''}" onclick="setCategory('Bundles')">⬢ Bundles</button>`;
-  }
+  ).join('') : '';
+  html += `<button class="cat-tab ${activeCategory==='Bundles'?'active':''}" onclick="setCategory('Bundles')">⬢ Bundles</button>`;
   wrap.innerHTML = html;
 }
 function setCategory(c){
@@ -2132,11 +2160,12 @@ function bundleOriginalTotal(bundle){
 }
 function renderBundleGrid(grid){
   const visible = (S.bundles||[]).filter(b=>b.vis);
+  const customCard = renderCustomBundleCard();
   if(!visible.length){
-    grid.innerHTML = `<div class="no-items" style="grid-column:1/-1;padding:60px 20px">No bundles available right now.</div>`;
+    grid.innerHTML = customCard + `<div class="no-items" style="grid-column:1/-1;padding:60px 20px">No curated bundles yet — but you can build your own above.</div>`;
     return;
   }
-  grid.innerHTML = visible.map(b=>{
+  grid.innerHTML = customCard + visible.map(b=>{
     const idx = S.bundles.indexOf(b);
     const members = bundleMemberProducts(b);
     if(members.length<2){
@@ -2169,6 +2198,129 @@ function renderBundleGrid(grid){
       <div class="p-actions" onclick="event.stopPropagation()">${addBtn}</div>
     </div>`;
   }).join('');
+}
+
+/* ════════════════════════════════
+   BUILD YOUR OWN BUNDLE — customer picks any 2 pieces,
+   gets an automatic discount (S.settings.customBundleDiscount)
+   computed and validated server-side in place_order().
+════════════════════════════════ */
+function renderCustomBundleCard(){
+  const discount = S.settings.customBundleDiscount || 300;
+  return `<div class="p-card" onclick="openCustomBundlePicker()" style="background:var(--black);cursor:pointer">
+    <div class="p-img" style="display:flex;align-items:center;justify-content:center;background:var(--black)">
+      <div style="text-align:center;padding:20px;color:var(--ivory)">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:15px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:10px">Build Your Own</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:300;margin-bottom:8px">Any 2 Pieces</div>
+        <div style="font-size:11px;letter-spacing:1.5px;color:rgba(255,255,255,.6)">Automatic LE ${discount.toLocaleString()} off</div>
+      </div>
+    </div>
+    <div class="p-info">
+      <div class="p-name">Build Your Own Bundle</div>
+      <div class="p-desc">Pick any 2 pieces from the whole collection</div>
+    </div>
+    <div class="p-actions" onclick="event.stopPropagation()">
+      <button class="add-bag-btn" onclick="openCustomBundlePicker()">Start Building</button>
+    </div>
+  </div>`;
+}
+
+let customBundlePicks=[]; // up to 2: [{productId, name, price, img, ph, sizes, size, colorName}]
+function openCustomBundlePicker(){
+  customBundlePicks=[];
+  renderCustomBundlePickerContent();
+  document.getElementById('customBundleModal').classList.add('open');
+}
+function closeCustomBundlePicker(){
+  document.getElementById('customBundleModal').classList.remove('open');
+}
+function renderCustomBundlePickerContent(){
+  const discount = S.settings.customBundleDiscount || 300;
+  const available = S.products.filter(p=>p.vis && productOverallStock(p)!=='sold_out');
+  const pickedIds = customBundlePicks.map(x=>x.productId);
+
+  const gridHtml = available.map(p=>{
+    const c0=firstColor(p);
+    const img = (c0.images&&c0.images[0]) ? `<img src="${c0.images[0]}" alt="${p.name}">` : `<div class="p-ph ${p.ph}"></div>`;
+    const isPicked = pickedIds.includes(p.id);
+    const disabled = !isPicked && customBundlePicks.length>=2;
+    return `<div class="p-card" style="${disabled?'opacity:.4;pointer-events:none':''}${isPicked?';border:2px solid var(--gold)':''}" onclick="toggleCustomBundlePick(${p.id})">
+      <div class="p-img">${img}${isPicked?'<div class="bundle-badge" style="background:var(--gold);color:var(--black)">Selected</div>':''}</div>
+      <div class="p-info">
+        <div class="p-name">${p.name}</div>
+        <div class="p-price">LE ${p.price.toLocaleString()}</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  let sizePickerHtml = '';
+  let footerHtml = '';
+  if(customBundlePicks.length===2){
+    const sum = customBundlePicks.reduce((s,x)=>s+x.price,0);
+    const finalPrice = Math.max(0, sum-discount);
+    sizePickerHtml = `<div style="border-top:1px solid rgba(255,255,255,.15);margin-top:18px;padding-top:18px">
+      <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:12px">Choose a size for each piece</div>
+      ${customBundlePicks.map((x,mi)=>`
+        <div class="bundle-item-row" style="border-color:rgba(255,255,255,.1)">
+          <div class="bundle-item-thumb">${x.img?`<img src="${x.img}" alt="">`:`<div class="p-ph ${x.ph}"></div>`}</div>
+          <div class="bundle-item-info">
+            <div class="bundle-item-name" style="color:var(--ivory)">${x.name}</div>
+            <div class="bundle-item-sizes">${x.sizes.map((s,si)=>`<button class="sz" style="border-color:rgba(255,255,255,.3);color:var(--ivory)" onclick="selectCustomBundleSize(${mi},'${s}',this)">${s}</button>`).join('')}</div>
+          </div>
+        </div>`).join('')}
+    </div>`;
+    footerHtml = `<div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:18px;color:var(--ivory)">
+      <span style="font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.6)">Total</span>
+      <span><span class="bundle-orig-price" style="color:rgba(255,255,255,.4)">LE ${sum.toLocaleString()}</span> &nbsp; <span style="font-family:'Cormorant Garamond',serif;font-size:22px">LE ${finalPrice.toLocaleString()}</span></span>
+    </div>
+    <button class="modal-add-btn" onclick="addCustomBundleToCart()" style="margin-top:14px">Add Bundle to Bag — Save LE ${discount.toLocaleString()}</button>`;
+  }
+
+  document.getElementById('customBundleModalBody').innerHTML = `
+    <div style="font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:14px">${customBundlePicks.length}/2 pieces selected — pick any 2</div>
+    <div class="product-grid" style="background:transparent;gap:1px">${gridHtml}</div>
+    ${sizePickerHtml}
+    ${footerHtml}
+  `;
+}
+function toggleCustomBundlePick(productId){
+  const already = customBundlePicks.find(x=>x.productId===productId);
+  if(already){
+    customBundlePicks = customBundlePicks.filter(x=>x.productId!==productId);
+  } else {
+    if(customBundlePicks.length>=2) return;
+    const p = S.products.find(pp=>pp.id===productId);
+    if(!p) return;
+    const c0 = firstColor(p);
+    customBundlePicks.push({
+      productId:p.id, name:p.name, price:p.price, img:(c0.images&&c0.images[0])||null,
+      ph:p.ph, sizes:p.sizes, size:p.sizes[0]||'M', colorName:c0.name||''
+    });
+  }
+  renderCustomBundlePickerContent();
+}
+function selectCustomBundleSize(memberIdx, size, btn){
+  customBundlePicks[memberIdx].size = size;
+  btn.closest('.bundle-item-sizes').querySelectorAll('.sz').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+}
+function addCustomBundleToCart(){
+  if(customBundlePicks.length!==2) return;
+  const discount = S.settings.customBundleDiscount || 300;
+  const sum = customBundlePicks.reduce((s,x)=>s+x.price,0);
+  const finalPrice = Math.max(0, sum-discount);
+  const members = customBundlePicks.map(x=>({
+    productId:x.productId, name:x.name, color:x.colorName, size:x.size, img:x.img, ph:x.ph
+  }));
+  cart.push({
+    isBundle:true, isCustom:true, bundleId:null,
+    name:'Build Your Own Bundle', price:finalPrice, qty:1,
+    img: members.find(m=>m.img)?.img || null, ph: members[0].ph,
+    members
+  });
+  updateCartUI(); showToast();
+  closeCustomBundlePicker();
+  openCart();
 }
 
 /* ── Bundle picker modal: pick a size for each of the 2 pieces, then add
@@ -3340,6 +3492,7 @@ function loadAdminForms(){
   document.getElementById('s-editSub').value=st.editSub;
   document.getElementById('s-happyCount').value=st.happyCount||0;
   document.getElementById('s-happyLabel').value=st.happyLabel||'';
+  document.getElementById('s-customBundleDiscount').value=st.customBundleDiscount??300;
   renderPhilEditFields();
   renderFooterPageFields();
   renderFaqEditFields();
@@ -3478,6 +3631,7 @@ async function saveSettings(btnId,pillId){
   st.deliv=document.getElementById('s-deliv').value;
   st.happyCount=parseInt(document.getElementById('s-happyCount').value)||0;
   st.happyLabel=document.getElementById('s-happyLabel').value;
+  st.customBundleDiscount=Math.max(0,parseFloat(document.getElementById('s-customBundleDiscount').value)||0);
   const btn=document.getElementById(btnId);
   const orig=btn.textContent; btn.textContent='Saving…'; btn.disabled=true;
   const ok = await persistSettings();

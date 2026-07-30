@@ -503,9 +503,12 @@ footer{background:var(--black);color:rgba(255,255,255,.45);padding:56px 28px 28p
 .order-hist-total{font-size:13px;margin-top:8px;color:var(--black-s)}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<!-- SPEED FIX: xlsx, jsPDF, and html2canvas are ADMIN-ONLY tools (Excel
+     export, invoice PDF, invoice image). Every regular shopper used to
+     download all three (~600KB+ combined) before the page even became
+     interactive, even though 99% of visitors never touch the admin
+     dashboard. They're now loaded on-demand — see loadScriptOnce() — the
+     exact moment an admin actually clicks Export/Invoice, not before. -->
 </head>
 <body>
 
@@ -1293,6 +1296,44 @@ try{
 }catch(e){ console.warn('Supabase init failed', e); }
 
 function phForIndex(i){ return 'ph-'+((i%10)+1); }
+
+/* ════════════════════════════════
+   SPEED FIX: on-demand library loader
+   xlsx, jsPDF, and html2canvas are only needed inside the admin dashboard
+   (Excel export, invoice PDF/image) — never by a regular shopper. Loading
+   all three upfront added 600KB+ to every single visit. This loads a
+   script the first time it's actually needed and caches the promise so a
+   second click reuses the already-loaded library instead of re-fetching it.
+════════════════════════════════ */
+const ADMIN_LIBS = {
+  xlsx: 'https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js',
+  jspdf: 'https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js',
+  html2canvas: 'https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js'
+};
+const _libPromises = {};
+function loadScriptOnce(src){
+  if(_libPromises[src]) return _libPromises[src];
+  _libPromises[src] = new Promise((resolve,reject)=>{
+    const s=document.createElement('script');
+    s.src=src;
+    s.onload=()=>resolve(true);
+    s.onerror=()=>{ delete _libPromises[src]; reject(new Error('Failed to load '+src)); };
+    document.head.appendChild(s);
+  });
+  return _libPromises[src];
+}
+async function ensureXLSX(){
+  if(window.XLSX) return true;
+  try{ await loadScriptOnce(ADMIN_LIBS.xlsx); return !!window.XLSX; }catch(e){ return false; }
+}
+async function ensureJsPDF(){
+  if(window.jspdf) return true;
+  try{ await loadScriptOnce(ADMIN_LIBS.jspdf); return !!window.jspdf; }catch(e){ return false; }
+}
+async function ensureHtml2Canvas(){
+  if(window.html2canvas) return true;
+  try{ await loadScriptOnce(ADMIN_LIBS.html2canvas); return !!window.html2canvas; }catch(e){ return false; }
+}
 
 /* ════════════════════════════════
    CUSTOMER ACCOUNTS — real Supabase Auth
@@ -2794,9 +2835,9 @@ async function clearSubscribers(){
   S.subscribers=[];
   renderSubscribers();
 }
-function exportSubscribersToExcel(){
+async function exportSubscribersToExcel(){
   if(!S.subscribers.length){ alert('No subscribers to export yet.'); return; }
-  if(!window.XLSX){ alert("Excel library didn't load — check your connection and try again."); return; }
+  if(!(await ensureXLSX())){ alert("Excel library didn't load — check your connection and try again."); return; }
   const rows = S.subscribers.map(s=>({'Email':s.email,'Joined':new Date(s.created_at).toLocaleDateString('en-GB')}));
   const ws = XLSX.utils.json_to_sheet(rows);
   ws['!cols']=[{wch:32},{wch:14}];
@@ -2826,9 +2867,9 @@ function renderCustomers(){
     </tr>`).join('')}
   </tbody></table>`;
 }
-function exportCustomersToExcel(){
+async function exportCustomersToExcel(){
   if(!S.customers.length){ alert('No customers to export yet.'); return; }
-  if(!window.XLSX){ alert("Excel library didn't load — check your connection and try again."); return; }
+  if(!(await ensureXLSX())){ alert("Excel library didn't load — check your connection and try again."); return; }
   const rows = S.customers.map(c=>({'ID':c.id,'Username':c.username,'Email':c.email,'Joined':new Date(c.created_at).toLocaleDateString('en-GB')}));
   const ws = XLSX.utils.json_to_sheet(rows);
   ws['!cols']=[{wch:8},{wch:22},{wch:30},{wch:14}];
@@ -2837,9 +2878,9 @@ function exportCustomersToExcel(){
   XLSX.writeFile(wb, `PRIMORA-Customers-${new Date().toISOString().slice(0,10)}.xlsx`);
 }
 
-function exportOrdersToExcel(){
+async function exportOrdersToExcel(){
   if(!S.orders.length){ alert('No orders to export yet.'); return; }
-  if(!window.XLSX){ alert("Excel library didn't load — check your connection and try again."); return; }
+  if(!(await ensureXLSX())){ alert("Excel library didn't load — check your connection and try again."); return; }
   const rows = S.orders.map(o=>({
     'Order ID': o.id,
     'Date': o.date,
@@ -2862,8 +2903,9 @@ function exportOrdersToExcel(){
 
 /* ── INVOICE PDF ── */
 async function generateInvoicePDF(i){
-  if(!window.jspdf){ alert("PDF library didn't load — check your connection and try again."); return; }
-  if(!window.html2canvas){ alert("Rendering library didn't load — check your connection and try again."); return; }
+  const [jspdfOk, canvasOk] = await Promise.all([ensureJsPDF(), ensureHtml2Canvas()]);
+  if(!jspdfOk){ alert("PDF library didn't load — check your connection and try again."); return; }
+  if(!canvasOk){ alert("Rendering library didn't load — check your connection and try again."); return; }
   const order = S.orders[i];
   if(!order){ alert('Order not found.'); return; }
 

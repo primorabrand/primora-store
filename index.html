@@ -2241,7 +2241,7 @@ function renderCustomBundlePickerContent(){
 
   const gridHtml = available.map(p=>{
     const c0=firstColor(p);
-    const img = (c0.images&&c0.images[0]) ? `<img src="${c0.images[0]}" alt="${p.name}">` : `<div class="p-ph ${p.ph}"></div>`;
+    const img = (c0.images&&c0.images[0]) ? `<img class="p-real-img" src="${c0.images[0]}" alt="${p.name}">` : `<div class="p-ph ${p.ph}"></div>`;
     const isPicked = pickedIds.includes(p.id);
     const disabled = !isPicked && customBundlePicks.length>=2;
     return `<div class="p-card" style="${disabled?'opacity:.4;pointer-events:none':''}${isPicked?';border:2px solid var(--gold)':''}" onclick="toggleCustomBundlePick(${p.id})">

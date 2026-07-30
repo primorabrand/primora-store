@@ -73,6 +73,21 @@ nav{background:var(--cream);border-bottom:1px solid rgba(0,0,0,.08);padding:0 24
 .cat-tab{background:none;border:1px solid rgba(0,0,0,.15);padding:7px 18px;font-family:'Jost',sans-serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;color:var(--black);transition:all .2s}
 .cat-tab:hover{border-color:var(--black)}
 .cat-tab.active{background:var(--black);color:#fff;border-color:var(--black)}
+
+/* ── BUNDLES ── */
+.bundle-badge{position:absolute;top:14px;left:14px;background:var(--gold);color:var(--black);font-size:9px;letter-spacing:2px;text-transform:uppercase;padding:4px 10px;z-index:2;font-weight:500}
+.bundle-price-row{display:flex;align-items:baseline;gap:8px}
+.bundle-orig-price{font-size:11px;color:var(--warm-gray);text-decoration:line-through}
+.bundle-item-row{display:flex;gap:12px;align-items:center;padding:14px 0;border-bottom:1px solid rgba(0,0,0,.08)}
+.bundle-item-thumb{width:56px;height:70px;flex-shrink:0;overflow:hidden;background:#f0ece4}
+.bundle-item-thumb img,.bundle-item-thumb .p-ph{width:100%;height:100%;object-fit:cover}
+.bundle-item-info{flex:1}
+.bundle-item-name{font-family:'Cormorant Garamond',serif;font-size:15px;margin-bottom:6px}
+.bundle-item-sizes{display:flex;gap:6px;flex-wrap:wrap}
+.bundle-item-sizes .sz{padding:5px 10px}
+.ci-bundle-tag{display:inline-block;background:var(--gold);color:var(--black);font-size:8px;letter-spacing:1.5px;text-transform:uppercase;padding:2px 7px;margin-bottom:4px}
+.bundle-thumb-pair{width:72px;height:88px;flex-shrink:0;display:grid;grid-template-columns:1fr 1fr;gap:1px;overflow:hidden;background:#f0ece4}
+.bundle-thumb-pair img,.bundle-thumb-pair .p-ph{width:100%;height:100%;object-fit:cover}
 .img-count-badge{position:absolute;top:14px;right:14px;background:rgba(0,0,0,.5);color:#fff;font-size:9px;letter-spacing:1px;padding:3px 8px;z-index:2;display:flex;align-items:center;gap:4px}
 .p-info{padding:15px 15px 8px}
 .p-name{font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:400;margin-bottom:4px}
@@ -838,6 +853,7 @@ footer{background:var(--black);color:rgba(255,255,255,.45);padding:56px 28px 28p
       <div class="asb-divider"></div>
       <div class="asb-section">Store</div>
       <div class="asb-item" onclick="showPanel('products',this)">◇ Products</div>
+      <div class="asb-item" onclick="showPanel('bundles',this)">⬢ Bundles</div>
       <div class="asb-item" onclick="showPanel('store',this)">◎ Settings</div>
       <div class="asb-item" onclick="showPanel('content',this)">◈ Content</div>
       <div class="asb-divider"></div>
@@ -930,6 +946,22 @@ footer{background:var(--black);color:rgba(255,255,255,.45);padding:56px 28px 28p
         </div>
         <div style="height:20px"></div>
         <div class="apc-list" id="apcList"></div>
+      </div>
+
+      <!-- BUNDLES -->
+      <div class="a-panel" id="panel-bundles">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap">
+          <div>
+            <div class="a-page-title">Bundles</div>
+            <div class="a-page-sub" style="margin-bottom:0">Pair any two products together at a fixed bundle price. Appears as its own "Bundles" tab on the storefront automatically.</div>
+          </div>
+          <button class="btn-save" onclick="openBundlePanel(null)" style="white-space:nowrap;margin-top:2px">+ Add New Bundle</button>
+        </div>
+        <div style="height:20px"></div>
+        <div id="bundlesSetupNotice" style="display:none;background:#fff8e6;border:1px solid #f0d98c;padding:16px 18px;font-size:12px;color:#8a6d1a;line-height:1.8;margin-bottom:18px">
+          Bundles aren't set up in your database yet. Run <strong>supabase_migration_v12_bundles.sql</strong> once in the Supabase SQL Editor, then refresh this page.
+        </div>
+        <div class="apc-list" id="bundlesList"></div>
       </div>
 
       <!-- SETTINGS -->
@@ -1141,6 +1173,51 @@ footer{background:var(--black);color:rgba(255,255,255,.45);padding:56px 28px 28p
   </div>
 </div>
 
+<!-- BUNDLE EDIT PANEL -->
+<div class="apanel-overlay" id="bundlePanelOverlay" onclick="if(event.target===this)closeBundlePanel()">
+  <div class="apanel-box">
+    <button class="apanel-close" onclick="closeBundlePanel()">✕</button>
+    <div class="apanel-title" id="bpTitle">New Bundle</div>
+    <input type="hidden" id="bp-id">
+    <div class="af-group"><label class="af-label">Bundle Name</label><input class="af-input" id="bp-name" placeholder="e.g. The Weekend Duo"></div>
+    <div class="af-group">
+      <label class="af-label">Product 1</label>
+      <select class="af-input" id="bp-product1"></select>
+    </div>
+    <div class="af-group">
+      <label class="af-label">Product 2</label>
+      <select class="af-input" id="bp-product2"></select>
+    </div>
+    <div class="af-group" id="bp-origPriceHint" style="font-size:11px;color:var(--warm-gray)"></div>
+    <div class="af-group"><label class="af-label">Bundle Price (LE) <span style="text-transform:none;font-weight:400;color:var(--warm-gray)">— the fixed total price for both pieces together</span></label><input class="af-input" type="number" id="bp-price" placeholder="e.g. 1800"></div>
+    <div class="af-group">
+      <div class="a-toggle">
+        <label class="tog-sw"><input type="checkbox" id="bp-vis" checked><span class="tog-sl"></span></label>
+        <span style="font-size:12px;color:var(--warm-gray)">Visible in store</span>
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:20px;flex-wrap:wrap">
+      <button class="btn-save" id="bp-savebtn" onclick="saveBundle()">Save Bundle</button>
+      <button class="btn-outline" onclick="closeBundlePanel()">Cancel</button>
+    </div>
+    <span class="saved-tag" id="bp-saved">✓ Bundle Saved</span>
+  </div>
+</div>
+
+<!-- BUNDLE PICKER MODAL (storefront) — pick a size for each of the 2 pieces -->
+<div class="modal-overlay" id="bundleModal" onclick="if(event.target===this)closeBundleModal()">
+  <div class="modal" style="grid-template-columns:1fr;height:auto;max-height:90vh;display:block;overflow-y:auto">
+    <div class="modal-body" style="height:auto;padding:32px 28px">
+      <button class="modal-close" onclick="closeBundleModal()">✕</button>
+      <div class="modal-tag">Bundle</div>
+      <div class="modal-name" id="bundleModalName"></div>
+      <div class="modal-price" id="bundleModalPrice"></div>
+      <div id="bundleModalItems"></div>
+      <button class="modal-add-btn" id="bundleModalAddBtn" onclick="addBundleToCart()" style="margin-top:14px">Add Bundle to Bag</button>
+    </div>
+  </div>
+</div>
+
 <script>
 /* ════════════════════════════════
    STATE
@@ -1192,7 +1269,8 @@ const S = {
   ],
   orders:[],
   subscribers:[],
-  customers:[]
+  customers:[],
+  bundles:[] // [{id,name,productIds:[id1,id2],price,vis,sort}]
 };
 
 let activeCategory = 'All'; // current storefront filter
@@ -1328,7 +1406,7 @@ function myOrdersHtml(){
     <div class="order-hist-item">
       <div class="order-hist-id">${escapeAttr(o.id)}</div>
       <div class="order-hist-meta">${escapeAttr(o.date)} · <span class="os ${o.status}">${o.status}</span></div>
-      <div class="order-hist-items">${o.items.map(it=>`${escapeAttr(it.name)} (${it.color?escapeAttr(it.color)+', ':''}${escapeAttr(it.size)}) ×${Number(it.qty)||0}`).join('<br>')}</div>
+      <div class="order-hist-items">${o.items.map(it=>`${orderItemLabel(it,true)} ×${Number(it.qty)||0}`).join('<br>')}</div>
       <div class="order-hist-total">LE ${o.total.toLocaleString()}</div>
     </div>`).join('');
 }
@@ -1494,6 +1572,24 @@ async function loadPersisted(){
     console.warn('Supabase load error', e);
     setConnStatus('error');
   }
+  // Bundles load isolated on purpose: if migration v12 hasn't been run yet
+  // (table doesn't exist), this must never break the rest of the storefront.
+  await loadBundles();
+}
+
+async function loadBundles(){
+  if(!sbClient)return;
+  try{
+    const {data,error} = await sbClient.from('bundles').select('*').order('sort_order',{ascending:true});
+    if(error) throw error;
+    S.bundles = (data||[]).map(r=>({
+      id:r.id, name:r.name, productIds:r.product_ids||[], price:Number(r.price)||0,
+      vis:r.visible!==false, sort:r.sort_order||0
+    }));
+  }catch(e){
+    console.warn('Bundles load skipped (run supabase_migration_v12.sql to enable Bundles):', e.message||e);
+    S.bundles = [];
+  }
 }
 
 async function loadSubscribers(){
@@ -1565,13 +1661,22 @@ async function deleteProductDB(idx){
 }
 
 /* ── ORDERS — secure server-side placement ──
-   The browser NEVER sends price, total, or shipping.
-   It only sends product_id + color + size + qty; the
-   database looks up the real price and validates stock
-   itself, inside the place_order() function. ── */
+   The browser NEVER sends price, total, or shipping — for both regular
+   items AND bundles. Regular items send product_id+color+size+qty;
+   bundles send bundle_id+qty+members[]. The database looks up the real
+   price (product price, or the bundle's fixed price) and validates
+   stock itself, inside the place_order() function. ── */
 async function placeOrderSecurely(cartItems, customerName, phone, email, address, notes){
   if(!sbClient) return {ok:false, error:"Can't reach the server."};
-  const items = cartItems.map(it=>({product_id:it.productId, color:it.color, size:it.size, qty:it.qty}));
+  const items = cartItems.map(it=>{
+    if(it.isBundle){
+      return {
+        bundle_id: it.bundleId, qty: it.qty,
+        members: it.members.map(m=>({product_id:m.productId, color:m.color, size:m.size}))
+      };
+    }
+    return {product_id:it.productId, color:it.color, size:it.size, qty:it.qty};
+  });
   const {data,error} = await sbClient.rpc('place_order', {
     p_items: items,
     p_customer_name: customerName,
@@ -1651,7 +1756,7 @@ function viewNewOrderFromAlert(){
 function forwardOrderAlertToWhatsApp(){
   if(!lastAlertOrder)return;
   const o=lastAlertOrder;
-  const lines=o.items.map(it=>`• ${it.name} (${it.color?it.color+', ':''}${it.size}) ×${it.qty}`).join('\n');
+  const lines=o.items.map(it=>`• ${orderItemLabel(it,false)} ×${it.qty}`).join('\n');
   const msg=encodeURIComponent(`🛍️ New PRIMORA order — ${o.id}\n${o.customer} · ${o.phone}\n\n${lines}\n\nTotal: LE ${o.total.toLocaleString()}`);
   window.open(`https://wa.me/${S.settings.wa}?text=${msg}`,'_blank');
   dismissOrderAlert();
@@ -1908,11 +2013,16 @@ function doSearch(query, catBtn, catValue){
 
 function renderCatTabs(){
   const cats = ['All', ...Array.from(new Set(S.products.map(p=>p.category||'Ladies')))];
+  const hasBundles = S.bundles && S.bundles.some(b=>b.vis);
   const wrap=document.getElementById('catTabs');
-  if(cats.length<=2){ wrap.innerHTML=''; return; } // no point showing tabs for a single category
-  wrap.innerHTML = cats.map(c=>
+  if(cats.length<=2 && !hasBundles){ wrap.innerHTML=''; return; }
+  let html = cats.map(c=>
     `<button class="cat-tab ${c===activeCategory?'active':''}" onclick="setCategory('${c}')">${c}</button>`
   ).join('');
+  if(hasBundles){
+    html += `<button class="cat-tab ${activeCategory==='Bundles'?'active':''}" onclick="setCategory('Bundles')">⬢ Bundles</button>`;
+  }
+  wrap.innerHTML = html;
 }
 function setCategory(c){
   activeCategory=c;
@@ -1931,9 +2041,10 @@ function productOverallStock(p){
 
 function renderProducts(){
   const grid=document.getElementById('productGrid');
+  renderCatTabs();
+  if(activeCategory==='Bundles'){ renderBundleGrid(grid); return; }
   let visible=S.products.filter(p=>p.vis);
   if(activeCategory!=='All') visible=visible.filter(p=>(p.category||'Ladies')===activeCategory);
-  renderCatTabs();
   grid.innerHTML=visible.map(p=>{
     const idx=S.products.indexOf(p);
     const c0=firstColor(p);
@@ -1967,6 +2078,108 @@ function renderProducts(){
       </div>
     </div>`;
   }).join('');
+}
+
+/* ════════════════════════════════
+   BUNDLES — storefront
+════════════════════════════════ */
+function bundleMemberProducts(bundle){
+  return (bundle.productIds||[]).map(pid => S.products.find(p=>p.id===pid)).filter(Boolean);
+}
+function bundleOriginalTotal(bundle){
+  return bundleMemberProducts(bundle).reduce((s,p)=>s+p.price,0);
+}
+function renderBundleGrid(grid){
+  const visible = (S.bundles||[]).filter(b=>b.vis);
+  if(!visible.length){
+    grid.innerHTML = `<div class="no-items" style="grid-column:1/-1;padding:60px 20px">No bundles available right now.</div>`;
+    return;
+  }
+  grid.innerHTML = visible.map(b=>{
+    const idx = S.bundles.indexOf(b);
+    const members = bundleMemberProducts(b);
+    if(members.length<2){
+      return ''; // one of the paired products was removed/hidden — skip rendering a broken bundle
+    }
+    const origTotal = bundleOriginalTotal(b);
+    const savings = Math.max(0, origTotal - b.price);
+    const imgsHtml = members.slice(0,2).map(p=>{
+      const c0=firstColor(p);
+      return (c0.images&&c0.images[0]) ? `<img src="${c0.images[0]}" alt="${p.name}">` : `<div class="p-ph ${p.ph}"></div>`;
+    }).join('');
+    const bothInStock = members.every(p=>productOverallStock(p)!=='sold_out');
+    const addBtn = bothInStock
+      ? `<button class="add-bag-btn" onclick="openBundleModal(${idx})">View Bundle</button>`
+      : `<button class="add-bag-btn" disabled>Unavailable</button>`;
+    return `<div class="p-card" onclick="openBundleModal(${idx})">
+      <div class="p-img" style="display:flex">
+        <div class="bundle-thumb-pair" style="width:100%;height:100%;grid-template-columns:1fr 1fr">${imgsHtml}</div>
+        <div class="bundle-badge">Bundle</div>
+      </div>
+      <div class="p-info">
+        <div class="p-name">${b.name}</div>
+        <div class="p-desc">${members.map(p=>p.name).join(' + ')}</div>
+        <div class="bundle-price-row" style="margin-top:6px">
+          <span class="bundle-orig-price">LE ${origTotal.toLocaleString()}</span>
+          <span class="p-price">LE ${b.price.toLocaleString()}</span>
+          ${savings>0?`<span style="font-size:10px;color:var(--sage);letter-spacing:1px;text-transform:uppercase">Save LE ${savings.toLocaleString()}</span>`:''}
+        </div>
+      </div>
+      <div class="p-actions" onclick="event.stopPropagation()">${addBtn}</div>
+    </div>`;
+  }).join('');
+}
+
+/* ── Bundle picker modal: pick a size for each of the 2 pieces, then add
+   both to the bag as a single bundled line item at the fixed bundle price. */
+let curBundleIdx=null, bundleSelSizes={};
+function openBundleModal(bundleIdx){
+  const b=S.bundles[bundleIdx];
+  const members=bundleMemberProducts(b);
+  if(members.length<2)return;
+  curBundleIdx=bundleIdx;
+  bundleSelSizes={};
+  document.getElementById('bundleModalName').textContent=b.name;
+  const origTotal=bundleOriginalTotal(b);
+  document.getElementById('bundleModalPrice').innerHTML=
+    `<span class="bundle-orig-price">LE ${origTotal.toLocaleString()}</span> &nbsp; LE ${b.price.toLocaleString()}`;
+  document.getElementById('bundleModalItems').innerHTML = members.map((p,mi)=>{
+    const c0=firstColor(p);
+    const img=(c0.images&&c0.images[0])?`<img src="${c0.images[0]}" alt="${p.name}">`:`<div class="p-ph ${p.ph}"></div>`;
+    bundleSelSizes[mi]=p.sizes[0]||'M';
+    return `<div class="bundle-item-row">
+      <div class="bundle-item-thumb">${img}</div>
+      <div class="bundle-item-info">
+        <div class="bundle-item-name">${p.name}</div>
+        <div class="bundle-item-sizes">${p.sizes.map((s,si)=>`<button class="sz ${si===0?'active':''}" onclick="selectBundleSize(${mi},'${s}',this)">${s}</button>`).join('')}</div>
+      </div>
+    </div>`;
+  }).join('');
+  document.getElementById('bundleModal').classList.add('open');
+}
+function selectBundleSize(memberIdx,size,btn){
+  bundleSelSizes[memberIdx]=size;
+  btn.closest('.bundle-item-sizes').querySelectorAll('.sz').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+}
+function closeBundleModal(){ document.getElementById('bundleModal').classList.remove('open'); curBundleIdx=null; }
+function addBundleToCart(){
+  if(curBundleIdx===null)return;
+  const b=S.bundles[curBundleIdx];
+  const members=bundleMemberProducts(b);
+  const memberLines = members.map((p,mi)=>{
+    const c0=firstColor(p);
+    return { productId:p.id, name:p.name, color:c0.name||'', size:bundleSelSizes[mi]||p.sizes[0]||'M', img:(c0.images&&c0.images[0])||null, ph:p.ph };
+  });
+  const firstImg = memberLines.find(m=>m.img)?.img || null;
+  const ex = cart.find(i=>i.isBundle && i.bundleId===b.id && JSON.stringify(i.members.map(m=>m.size))===JSON.stringify(memberLines.map(m=>m.size)));
+  if(ex){ ex.qty+=1; }
+  else {
+    cart.push({ isBundle:true, bundleId:b.id, name:b.name, price:b.price, qty:1, img:firstImg, ph:members[0].ph, members:memberLines });
+  }
+  updateCartUI(); showToast();
+  closeBundleModal();
+  openCart();
 }
 
 /* ════════════════════════════════
@@ -2128,7 +2341,24 @@ function updateCartUI(){
   const el=document.getElementById('cartItems'),ft=document.getElementById('cartFoot');
   if(!cart.length){el.innerHTML='<div class="cart-empty"><div class="cart-empty-icon">○</div><div>Your bag is empty</div></div>';ft.style.display='none';renderCrossSell();return;}
   ft.style.display='block';
-  el.innerHTML=cart.map((it,i)=>`
+  el.innerHTML=cart.map((it,i)=>{
+    if(it.isBundle){
+      return `
+    <div class="cart-item">
+      <div class="cart-item-img">${it.img?`<img src="${it.img}" alt="" style="width:100%;height:100%;object-fit:cover">`:`<div class="p-ph ${it.ph||'ph-1'}" style="width:100%;height:100%"></div>`}</div>
+      <div class="cart-item-info">
+        <span class="ci-bundle-tag">Bundle</span>
+        <div class="ci-name">${it.name}</div>
+        <div class="ci-meta">${it.members.map(m=>`${m.name} (${m.color?m.color+', ':''}${m.size})`).join(' + ')}</div>
+        <div class="ci-row">
+          <div class="ci-qty"><button class="cq-btn" onclick="cqty(${i},-1)">−</button><span>${it.qty}</span><button class="cq-btn" onclick="cqty(${i},1)">+</button></div>
+          <div class="ci-price">LE ${(it.price*it.qty).toLocaleString()}</div>
+        </div>
+        <button class="ci-remove" onclick="cremove(${i})">Remove</button>
+      </div>
+    </div>`;
+    }
+    return `
     <div class="cart-item">
       <div class="cart-item-img">${it.img?`<img src="${it.img}" alt="" style="width:100%;height:100%;object-fit:cover">`:`<div class="p-ph ${it.ph}" style="width:100%;height:100%"></div>`}</div>
       <div class="cart-item-info">
@@ -2140,7 +2370,8 @@ function updateCartUI(){
         </div>
         <button class="ci-remove" onclick="cremove(${i})">Remove</button>
       </div>
-    </div>`).join('');
+    </div>`;
+  }).join('');
   renderCrossSell();
 }
 
@@ -2203,7 +2434,10 @@ function showToast(){const t=document.getElementById('toast');t.classList.add('s
 function openCheckout(){
   closeCart();
   const total=cart.reduce((s,i)=>s+i.price*i.qty,0)+(S.settings.ship||0);
-  document.getElementById('coOrderList').innerHTML=cart.map(i=>`<div class="co-order-item"><span>${i.name} (${i.color?i.color+', ':''}${i.size}) ×${i.qty}</span><span>LE ${(i.price*i.qty).toLocaleString()}</span></div>`).join('');
+  document.getElementById('coOrderList').innerHTML=cart.map(i=>{
+    const label = i.isBundle ? `${i.name} (Bundle: ${i.members.map(m=>`${m.name} ${m.size}`).join(' + ')})` : `${i.name} (${i.color?i.color+', ':''}${i.size})`;
+    return `<div class="co-order-item"><span>${label} ×${i.qty}</span><span>LE ${(i.price*i.qty).toLocaleString()}</span></div>`;
+  }).join('');
   document.getElementById('coTotal').textContent=`LE ${total.toLocaleString()}`;
   if(currentUser){
     document.getElementById('coName').value=currentUser.username||'';
@@ -2250,7 +2484,10 @@ async function submitOrder(){
 }
 function waOrder(){
   const total=cart.reduce((s,i)=>s+i.price*i.qty,0);
-  const lines=cart.map(i=>`• ${i.name} (${i.color?i.color+', ':''}${i.size}) ×${i.qty} — LE ${(i.price*i.qty).toLocaleString()}`).join('\n');
+  const lines=cart.map(i=>{
+    const label = i.isBundle ? `${i.name} [Bundle: ${i.members.map(m=>`${m.name} ${m.size}`).join(' + ')}]` : `${i.name} (${i.color?i.color+', ':''}${i.size})`;
+    return `• ${label} ×${i.qty} — LE ${(i.price*i.qty).toLocaleString()}`;
+  }).join('\n');
   window.open(`https://wa.me/${S.settings.wa}?text=${encodeURIComponent(`Hello PRIMORA 👋\nOrder:\n${lines}\nTotal: LE ${total.toLocaleString()}`)}`,'_blank');
 }
 
@@ -2477,12 +2714,13 @@ async function reloadAdminData(){
     console.warn('Admin data reload error — dashboard may be showing stale/incomplete data', e);
     setConnStatus('error');
   }
+  await loadBundles();
 }
 
 async function openAdmin(){
   document.getElementById('adminShell').classList.add('open');
   await reloadAdminData();
-  loadAdminForms();renderAdminProducts();renderOrders();refreshDash();
+  loadAdminForms();renderAdminProducts();renderAdminBundles();renderOrders();refreshDash();
   await loadSubscribers();
   renderSubscribers();
   await loadCustomers();
@@ -2493,7 +2731,7 @@ async function manualRefreshOrders(){
   const btn=document.getElementById('ordersRefreshBtn');
   const orig=btn.textContent; btn.textContent='Refreshing…'; btn.disabled=true;
   await reloadAdminData();
-  renderOrders(); renderAdminProducts(); refreshDash();
+  renderOrders(); renderAdminProducts(); renderAdminBundles(); refreshDash();
   btn.textContent=orig; btn.disabled=false;
 }
 function closeAdmin(){
@@ -2609,7 +2847,7 @@ function exportOrdersToExcel(){
     'Phone': o.phone,
     'Email': o.email||'',
     'Address': o.address||'',
-    'Items': o.items.map(it=>`${it.name} (${it.color?it.color+', ':''}${it.size}) x${it.qty}`).join(' | '),
+    'Items': o.items.map(it=>`${orderItemLabel(it,false)} x${it.qty}`).join(' | '),
     'Notes': o.notes||'',
     'Total (LE)': o.total,
     'Status': o.status
@@ -2642,13 +2880,23 @@ async function generateInvoicePDF(i){
   document.getElementById('inv-address').textContent = order.address || '';
   document.getElementById('inv-wa').textContent = '+'+S.settings.wa;
 
-  document.getElementById('inv-items').innerHTML = order.items.map(it=>`
-    <tr style="border-bottom:1px solid #eee;">
+  document.getElementById('inv-items').innerHTML = order.items.map(it=>{
+    if(it.bundle){
+      const memberTxt = (it.members||[]).map(m=>`${escapeAttr(m.name)} (${m.color?escapeAttr(m.color)+', ':''}${escapeAttr(m.size)})`).join(' + ');
+      return `<tr style="border-bottom:1px solid #eee;">
+      <td dir="auto" style="padding:10px 8px 10px 0;">🔗 ${escapeAttr(it.name)} — <span style="color:#888;font-size:11px">${memberTxt}</span></td>
+      <td style="padding:10px 8px;">Bundle</td>
+      <td style="padding:10px 8px;text-align:center;">${Number(it.qty)||0}</td>
+      <td style="padding:10px 0 10px 8px;text-align:right;">LE ${(it.price*it.qty).toLocaleString()}</td>
+    </tr>`;
+    }
+    return `<tr style="border-bottom:1px solid #eee;">
       <td dir="auto" style="padding:10px 8px 10px 0;">${escapeAttr(it.name)}${it.color?' — '+escapeAttr(it.color):''}</td>
       <td style="padding:10px 8px;">${escapeAttr(it.size||'-')}</td>
       <td style="padding:10px 8px;text-align:center;">${Number(it.qty)||0}</td>
       <td style="padding:10px 0 10px 8px;text-align:right;">LE ${(it.price*it.qty).toLocaleString()}</td>
-    </tr>`).join('');
+    </tr>`;
+  }).join('');
 
   document.getElementById('inv-subtotal').textContent = `LE ${subtotal.toLocaleString()}`;
   document.getElementById('inv-shipping').textContent = shipping>0 ? `LE ${shipping.toLocaleString()}` : 'Free';
@@ -2701,7 +2949,7 @@ function renderOrders(){
     ${S.orders.map((o,i)=>`<tr>
       <td style="font-family:'Cormorant Garamond',serif;font-size:12px">${escapeAttr(o.id)}</td>
       <td>${escapeAttr(o.customer)}<br><small style="color:var(--warm-gray)">${escapeAttr(o.phone)}<br>${escapeAttr(o.address)}</small></td>
-      <td>${o.items.map(it=>`${escapeAttr(it.name)} (${it.color?escapeAttr(it.color)+', ':''}${escapeAttr(it.size)}) ×${Number(it.qty)||0}`).join('<br>')}</td>
+      <td>${o.items.map(it=>`${orderItemLabel(it,true)} ×${Number(it.qty)||0}`).join('<br>')}</td>
       <td dir="auto" style="max-width:180px;white-space:pre-wrap">${o.notes?escapeAttr(o.notes):'<span style="color:var(--warm-gray)">—</span>'}</td>
       <td>LE ${o.total.toLocaleString()}</td><td>${escapeAttr(o.date)}</td>
       <td><select onchange="setOrdStatus(${i},this.value)" style="border:1px solid rgba(0,0,0,.15);padding:4px 8px;font-size:11px;background:transparent">
@@ -2798,6 +3046,153 @@ function openApanel(idx){
 }
 function closeApanel(){document.getElementById('apanelOverlay').classList.remove('open');renderAdminProducts();}
 
+/* ════════════════════════════════
+   BUNDLES — admin CRUD
+════════════════════════════════ */
+function renderAdminBundles(){
+  const wrap=document.getElementById('bundlesList');
+  const notice=document.getElementById('bundlesSetupNotice');
+  if(!wrap)return;
+  // If the bundles table doesn't exist yet (migration not run), S.bundles stays
+  // an empty array and we show a setup notice instead of a misleading "no bundles" state.
+  if(!S.bundles){ S.bundles=[]; }
+  if(notice) notice.style.display='none';
+  if(!S.bundles.length){
+    wrap.innerHTML = `<div class="no-items">No bundles yet — click "+ Add New Bundle" above. (If you just added migration v12, refresh this page first.)</div>`;
+    return;
+  }
+  wrap.innerHTML = S.bundles.map((b,i)=>{
+    const members = bundleMemberProducts(b);
+    const thumb = members[0] && firstColor(members[0]).images && firstColor(members[0]).images[0]
+      ? `<img src="${firstColor(members[0]).images[0]}" alt="" style="width:100%;height:100%;object-fit:cover">`
+      : `<div class="p-ph ${members[0]?members[0].ph:'ph-1'}" style="width:100%;height:100%"></div>`;
+    const memberNames = members.length ? members.map(p=>p.name).join(' + ') : '(missing product — edit to fix)';
+    const origTotal = bundleOriginalTotal(b);
+    return `<div class="apc">
+      <div class="apc-thumb">${thumb}</div>
+      <div>
+        <div class="apc-n">${b.name}</div>
+        <div class="apc-d">${memberNames}</div>
+        <div class="apc-p">LE ${b.price.toLocaleString()} <span style="color:var(--warm-gray);text-decoration:line-through">LE ${origTotal.toLocaleString()}</span></div>
+      </div>
+      <div class="apc-btns" onclick="event.stopPropagation()">
+        <button class="vis-tag ${b.vis?'':'off'}" onclick="toggleBundleVis(${i})">${b.vis?'● Visible':'○ Hidden'}</button>
+        <button class="btn-outline" onclick="openBundlePanel(${i})">Edit</button>
+        <button class="btn-danger" onclick="removeBundle(${i})">Delete</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function toggleBundleVis(i){
+  S.bundles[i].vis=!S.bundles[i].vis;
+  await persistBundle(i);
+  renderAdminBundles(); renderProducts();
+}
+
+function openBundlePanel(idx){
+  const options = S.products.map(p=>`<option value="${p.id}">${escapeAttr(p.name)} — LE ${p.price.toLocaleString()}</option>`).join('');
+  document.getElementById('bp-product1').innerHTML = `<option value="">— choose a product —</option>${options}`;
+  document.getElementById('bp-product2').innerHTML = `<option value="">— choose a product —</option>${options}`;
+  document.getElementById('bp-saved').classList.remove('show');
+
+  if(idx===null){
+    document.getElementById('bpTitle').textContent='New Bundle';
+    document.getElementById('bp-id').value='';
+    document.getElementById('bp-name').value='';
+    document.getElementById('bp-product1').value='';
+    document.getElementById('bp-product2').value='';
+    document.getElementById('bp-price').value='';
+    document.getElementById('bp-vis').checked=true;
+    document.getElementById('bp-origPriceHint').textContent='';
+  } else {
+    const b=S.bundles[idx];
+    document.getElementById('bpTitle').textContent=`Edit — ${b.name}`;
+    document.getElementById('bp-id').value=idx;
+    document.getElementById('bp-name').value=b.name;
+    document.getElementById('bp-product1').value=(b.productIds&&b.productIds[0])||'';
+    document.getElementById('bp-product2').value=(b.productIds&&b.productIds[1])||'';
+    document.getElementById('bp-price').value=b.price;
+    document.getElementById('bp-vis').checked=b.vis;
+    updateBundleOrigPriceHint();
+  }
+  document.getElementById('bp-product1').onchange = updateBundleOrigPriceHint;
+  document.getElementById('bp-product2').onchange = updateBundleOrigPriceHint;
+  document.getElementById('bundlePanelOverlay').classList.add('open');
+}
+function updateBundleOrigPriceHint(){
+  const id1=parseInt(document.getElementById('bp-product1').value);
+  const id2=parseInt(document.getElementById('bp-product2').value);
+  const p1=S.products.find(p=>p.id===id1), p2=S.products.find(p=>p.id===id2);
+  const hint=document.getElementById('bp-origPriceHint');
+  if(p1 && p2){
+    hint.textContent = `Combined individual price: LE ${(p1.price+p2.price).toLocaleString()}`;
+  } else {
+    hint.textContent = '';
+  }
+}
+function closeBundlePanel(){ document.getElementById('bundlePanelOverlay').classList.remove('open'); renderAdminBundles(); }
+
+async function saveBundle(){
+  const idxVal = document.getElementById('bp-id').value;
+  const idx = idxVal==='' ? null : parseInt(idxVal);
+  const name = document.getElementById('bp-name').value.trim();
+  const id1 = parseInt(document.getElementById('bp-product1').value);
+  const id2 = parseInt(document.getElementById('bp-product2').value);
+  const price = parseFloat(document.getElementById('bp-price').value)||0;
+  const vis = document.getElementById('bp-vis').checked;
+
+  if(!name){ alert('Please give this bundle a name.'); return; }
+  if(!id1 || !id2){ alert('Please choose both products for the bundle.'); return; }
+  if(id1===id2){ alert('Please choose two different products.'); return; }
+  if(price<=0){ alert('Please set a bundle price greater than 0.'); return; }
+
+  const bundleObj = { name, productIds:[id1,id2], price, vis, sort: idx===null ? S.bundles.length : S.bundles[idx].sort };
+
+  const btn=document.getElementById('bp-savebtn');
+  const orig=btn.textContent; btn.textContent='Saving…'; btn.disabled=true;
+
+  let saveIdx;
+  if(idx===null){ S.bundles.push(bundleObj); saveIdx=S.bundles.length-1; }
+  else { S.bundles[idx] = {...S.bundles[idx], ...bundleObj}; saveIdx=idx; }
+
+  const ok = await persistBundle(saveIdx);
+  btn.textContent=orig; btn.disabled=false;
+  if(!ok){ alert("Couldn't save — check your connection and try again, or run supabase_migration_v12_bundles.sql if you haven't yet."); return; }
+
+  renderAdminBundles();
+  renderProducts();
+  const pill=document.getElementById('bp-saved');
+  pill.classList.add('show'); setTimeout(()=>pill.classList.remove('show'),2000);
+}
+
+async function removeBundle(i){
+  if(!confirm(`Delete the "${S.bundles[i].name}" bundle? This cannot be undone.`))return;
+  const b=S.bundles[i];
+  if(b.id && sbClient){
+    const {error}=await sbClient.from('bundles').delete().eq('id',b.id);
+    if(error){ console.warn(error); alert("Couldn't delete — check your connection and try again."); return; }
+  }
+  S.bundles.splice(i,1);
+  renderAdminBundles();
+  renderProducts();
+}
+
+async function persistBundle(idx){
+  if(!sbClient)return false;
+  const b=S.bundles[idx];
+  const payload={ name:b.name, product_ids:b.productIds, price:b.price, visible:b.vis, sort_order:b.sort||0 };
+  if(b.id){
+    const {error}=await sbClient.from('bundles').update(payload).eq('id',b.id);
+    if(error){ console.warn(error); return false; }
+  } else {
+    const {data,error}=await sbClient.from('bundles').insert(payload).select().single();
+    if(error){ console.warn(error); return false; }
+    b.id=data.id;
+  }
+  return true;
+}
+
 /* ── COLOR VARIANTS EDITOR ── */
 function renderColorsEditor(idx){
   const p=S.products[idx];
@@ -2877,6 +3272,19 @@ async function saveProduct(){
 /* ── SETTINGS ── */
 function escapeAttr(str){
   return String(str==null?'':str).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+/* Renders one line item from an order stored in the database — handles
+   both regular product lines and bundle lines (which have a `members`
+   breakdown instead of a single color/size). Used everywhere an order's
+   items are displayed: admin table, invoice, Excel export, WhatsApp
+   forwarding, "My Orders" on the customer account page. */
+function orderItemLabel(it, escape){
+  const esc = escape ? escapeAttr : (s=>s);
+  if(it.bundle){
+    const members=(it.members||[]).map(m=>`${esc(m.name)} (${m.color?esc(m.color)+', ':''}${esc(m.size)})`).join(' + ');
+    return `[Bundle] ${esc(it.name)}: ${members}`;
+  }
+  return `${esc(it.name)} (${it.color?esc(it.color)+', ':''}${esc(it.size)})`;
 }
 function loadAdminForms(){
   const st=S.settings;

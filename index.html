@@ -88,6 +88,24 @@ nav{background:var(--cream);border-bottom:1px solid rgba(0,0,0,.08);padding:0 24
 .ci-bundle-tag{display:inline-block;background:var(--gold);color:var(--black);font-size:8px;letter-spacing:1.5px;text-transform:uppercase;padding:2px 7px;margin-bottom:4px}
 .bundle-thumb-pair{width:72px;height:88px;flex-shrink:0;display:grid;grid-template-columns:1fr 1fr;gap:1px;overflow:hidden;background:#f0ece4}
 .bundle-thumb-pair img,.bundle-thumb-pair .p-ph{width:100%;height:100%;object-fit:cover}
+
+/* ── CLIENT REVIEWS LIGHTBOX ── */
+.review-lightbox-overlay{position:fixed;inset:0;background:rgba(10,10,9,.97);z-index:900;display:none;align-items:center;justify-content:center;flex-direction:column;padding:0}
+.review-lightbox-overlay.open{display:flex}
+.review-lightbox-close{position:absolute;top:16px;right:16px;background:rgba(255,255,255,.12);border:none;color:#fff;font-size:20px;width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:10}
+.review-lightbox-close:hover{background:rgba(255,255,255,.22)}
+.review-lightbox-imgwrap{width:100%;height:100%;display:flex;align-items:center;justify-content:center;padding:56px 16px 80px;box-sizing:border-box}
+.review-lightbox-imgwrap img{max-width:100%;max-height:100%;object-fit:contain;display:block;border-radius:4px}
+.review-lightbox-arrow{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.12);border:none;color:#fff;width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:22px;z-index:10}
+.review-lightbox-arrow:hover{background:rgba(255,255,255,.22)}
+.review-lightbox-arrow.left{left:12px}
+.review-lightbox-arrow.right{right:12px}
+.review-lightbox-caption{position:absolute;bottom:44px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.85);font-family:'Cormorant Garamond',serif;font-size:15px;font-style:italic;text-align:center;max-width:80%}
+.review-lightbox-counter{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.5);font-family:'Jost',sans-serif;font-size:11px;letter-spacing:2px}
+@media(max-width:600px){
+  .review-lightbox-imgwrap{padding:70px 8px 90px}
+  .review-lightbox-arrow{width:38px;height:38px;font-size:19px}
+}
 .img-count-badge{position:absolute;top:14px;right:14px;background:rgba(0,0,0,.5);color:#fff;font-size:9px;letter-spacing:1px;padding:3px 8px;z-index:2;display:flex;align-items:center;gap:4px}
 .p-info{padding:15px 15px 8px}
 .p-name{font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:400;margin-bottom:4px}
@@ -663,6 +681,7 @@ footer{background:var(--black);color:rgba(255,255,255,.45);padding:56px 28px 28p
   ⚠ Can't reach the backend — check your internet connection. Changes won't be saved until reconnected.
 </div>
 <input type="file" id="imgFileInput" accept="image/*" style="display:none" onchange="handleImgUpload(event)">
+<input type="file" id="reviewFileInput" accept="image/*" style="display:none" onchange="handleReviewImgUpload(event)">
 
 <!-- MENU DRAWER — Brand Story + Suggestions -->
 <div class="menu-overlay" id="menuOverlay" onclick="closeMenu()"></div>
@@ -857,6 +876,7 @@ footer{background:var(--black);color:rgba(255,255,255,.45);padding:56px 28px 28p
       <div class="asb-section">Store</div>
       <div class="asb-item" onclick="showPanel('products',this)">◇ Products</div>
       <div class="asb-item" onclick="showPanel('bundles',this)">⬢ Bundles</div>
+      <div class="asb-item" onclick="showPanel('reviews',this)">✦ Client Reviews</div>
       <div class="asb-item" onclick="showPanel('store',this)">◎ Settings</div>
       <div class="asb-item" onclick="showPanel('content',this)">◈ Content</div>
       <div class="asb-divider"></div>
@@ -976,6 +996,22 @@ footer{background:var(--black);color:rgba(255,255,255,.45);padding:56px 28px 28p
         </div>
 
         <div class="apc-list" id="bundlesList"></div>
+      </div>
+
+      <!-- CLIENT REVIEWS -->
+      <div class="a-panel" id="panel-reviews">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap">
+          <div>
+            <div class="a-page-title">Client Reviews</div>
+            <div class="a-page-sub" style="margin-bottom:0">Upload screenshots of customer feedback (WhatsApp thank-yous, etc.). Appears as its own "Client Reviews" tab on the storefront automatically once you add the first one.</div>
+          </div>
+          <button class="btn-save" onclick="triggerReviewUpload()" style="white-space:nowrap;margin-top:2px">+ Add Review Screenshot</button>
+        </div>
+        <div style="height:20px"></div>
+        <div id="reviewsSetupNotice" style="display:none;background:#fff8e6;border:1px solid #f0d98c;padding:16px 18px;font-size:12px;color:#8a6d1a;line-height:1.8;margin-bottom:18px">
+          Client Reviews aren't set up in your database yet. Run <strong>supabase_migration_v14_reviews.sql</strong> once in the Supabase SQL Editor, then refresh this page.
+        </div>
+        <div class="apc-list" id="reviewsList"></div>
       </div>
 
       <!-- SETTINGS -->
@@ -1244,6 +1280,16 @@ footer{background:var(--black);color:rgba(255,255,255,.45);padding:56px 28px 28p
   </div>
 </div>
 
+<!-- CLIENT REVIEWS — full-screen screenshot viewer -->
+<div class="review-lightbox-overlay" id="reviewLightboxOverlay" onclick="if(event.target===this)closeReviewLightbox()">
+  <button class="review-lightbox-close" onclick="closeReviewLightbox()" aria-label="Close">✕</button>
+  <div class="review-lightbox-imgwrap" id="reviewLightboxImgWrap"></div>
+  <button class="review-lightbox-arrow left" id="rlbLeft" onclick="reviewLightboxNav(-1)">&#8249;</button>
+  <button class="review-lightbox-arrow right" id="rlbRight" onclick="reviewLightboxNav(1)">&#8250;</button>
+  <div class="review-lightbox-caption" id="reviewLightboxCaption"></div>
+  <div class="review-lightbox-counter" id="reviewLightboxCounter"></div>
+</div>
+
 <script>
 /* ════════════════════════════════
    STATE
@@ -1297,7 +1343,8 @@ const S = {
   orders:[],
   subscribers:[],
   customers:[],
-  bundles:[] // [{id,name,productIds:[id1,id2],price,vis,sort}]
+  bundles:[], // [{id,name,productIds:[id1,id2],price,vis,sort}]
+  reviews:[] // [{id,imageUrl,caption,vis,sort}]
 };
 
 let activeCategory = 'All'; // current storefront filter
@@ -1320,6 +1367,61 @@ try{
 }catch(e){ console.warn('Supabase init failed', e); }
 
 function phForIndex(i){ return 'ph-'+((i%10)+1); }
+
+/* ════════════════════════════════
+   DEEP LINKS — shareable per-product URLs
+   Every product gets its own link (?product=ID). Opening that link goes
+   straight to the product's modal instead of the plain collection page —
+   built for running ads directly to a single piece. Used for:
+   - "Copy Link" button in the admin Products list
+   - Reading the URL on page load to auto-open the right product
+   - Keeping the URL in sync while browsing (Back button closes the modal)
+════════════════════════════════ */
+function productShareURL(productId){
+  const url = new URL(window.location.href);
+  url.search=''; url.hash='';
+  url.searchParams.set('product', productId);
+  return url.toString();
+}
+function setURLToProduct(productId){
+  const url = new URL(window.location.href);
+  url.searchParams.set('product', productId);
+  history.pushState({product:productId}, '', url.toString());
+}
+function clearProductURL(){
+  const url = new URL(window.location.href);
+  if(!url.searchParams.has('product')) return; // nothing to clear, avoid a junk history entry
+  url.searchParams.delete('product');
+  history.pushState({}, '', url.toString());
+}
+function checkURLForProduct(){
+  const params = new URLSearchParams(window.location.search);
+  const pid = params.get('product');
+  if(!pid) return;
+  const idx = S.products.findIndex(p=>String(p.id)===String(pid) && p.vis);
+  if(idx>=0) openModal(idx, false); // false = don't push a new history entry, we're already on this URL
+}
+window.addEventListener('popstate', ()=>{
+  const params = new URLSearchParams(window.location.search);
+  const pid = params.get('product');
+  if(pid){
+    const idx = S.products.findIndex(p=>String(p.id)===String(pid) && p.vis);
+    if(idx>=0){ openModal(idx, false); return; }
+  }
+  closeModal(false);
+});
+async function copyProductLink(idx){
+  const p=S.products[idx];
+  if(!p || !p.id){ alert('Save this product first (so it has an ID), then copy its link.'); return; }
+  const link = productShareURL(p.id);
+  try{
+    await navigator.clipboard.writeText(link);
+  }catch(e){
+    prompt('Copy this link:', link); return;
+  }
+  const btn=document.getElementById('copyLinkBtn-'+idx);
+  if(btn){ const orig=btn.textContent; btn.textContent='✓ Copied'; setTimeout(()=>{btn.textContent=orig;},1800); }
+}
 
 /* ════════════════════════════════
    SPEED FIX: on-demand library loader
@@ -1641,6 +1743,7 @@ async function loadPersisted(){
   // Bundles load isolated on purpose: if migration v12 hasn't been run yet
   // (table doesn't exist), this must never break the rest of the storefront.
   await loadBundles();
+  await loadReviews();
 }
 
 async function loadBundles(){
@@ -1655,6 +1758,20 @@ async function loadBundles(){
   }catch(e){
     console.warn('Bundles load skipped (run supabase_migration_v12.sql to enable Bundles):', e.message||e);
     S.bundles = [];
+  }
+}
+
+async function loadReviews(){
+  if(!sbClient)return;
+  try{
+    const {data,error} = await sbClient.from('reviews').select('*').order('sort_order',{ascending:true});
+    if(error) throw error;
+    S.reviews = (data||[]).map(r=>({
+      id:r.id, imageUrl:r.image_url, caption:r.caption||'', vis:r.visible!==false, sort:r.sort_order||0
+    }));
+  }catch(e){
+    console.warn('Client Reviews load skipped (run supabase_migration_v14_reviews.sql to enable it):', e.message||e);
+    S.reviews = [];
   }
 }
 
@@ -1884,6 +2001,14 @@ async function uploadImageToStorage(productId, colorIdx, slotIdx, blob){
   const {data}=sbClient.storage.from(IMAGE_BUCKET).getPublicUrl(path);
   return data.publicUrl;
 }
+async function uploadReviewImage(blob){
+  if(!sbClient) return null;
+  const path=`reviews/${Date.now()}-${Math.random().toString(36).slice(2,8)}.jpg`;
+  const {error}=await sbClient.storage.from(IMAGE_BUCKET).upload(path, blob, {upsert:true, contentType:'image/jpeg'});
+  if(error){ console.warn('Review upload error',error); return null; }
+  const {data}=sbClient.storage.from(IMAGE_BUCKET).getPublicUrl(path);
+  return data.publicUrl;
+}
 
 /* ════════════════════════════════
    STORE RENDER
@@ -2091,6 +2216,9 @@ function renderCatTabs(){
     `<button class="cat-tab ${c===activeCategory?'active':''}" onclick="setCategory('${c}')">${c}</button>`
   ).join('') : '';
   html += `<button class="cat-tab ${activeCategory==='Bundles'?'active':''}" onclick="setCategory('Bundles')">⬢ Bundles</button>`;
+  if(S.reviews && S.reviews.some(r=>r.vis)){
+    html += `<button class="cat-tab ${activeCategory==='Reviews'?'active':''}" onclick="setCategory('Reviews')">✦ Client Reviews</button>`;
+  }
   wrap.innerHTML = html;
 }
 function setCategory(c){
@@ -2112,6 +2240,7 @@ function renderProducts(){
   const grid=document.getElementById('productGrid');
   renderCatTabs();
   if(activeCategory==='Bundles'){ renderBundleGrid(grid); return; }
+  if(activeCategory==='Reviews'){ renderReviewsGrid(grid); return; }
   let visible=S.products.filter(p=>p.vis);
   if(activeCategory!=='All') visible=visible.filter(p=>(p.category||'Ladies')===activeCategory);
   grid.innerHTML=visible.map(p=>{
@@ -2376,12 +2505,61 @@ function addBundleToCart(){
 }
 
 /* ════════════════════════════════
+   CLIENT REVIEWS — storefront gallery
+   Simple screenshot gallery (WhatsApp thank-you messages etc.), fully
+   managed from admin → Store → Client Reviews. Not purchasable — just
+   a trust-building gallery with a click-to-enlarge viewer.
+════════════════════════════════ */
+function renderReviewsGrid(grid){
+  const visible = (S.reviews||[]).filter(r=>r.vis);
+  if(!visible.length){
+    grid.innerHTML = `<div class="no-items" style="grid-column:1/-1;padding:60px 20px">No client reviews posted yet.</div>`;
+    return;
+  }
+  grid.innerHTML = visible.map((r,vi)=>`
+    <div class="p-card" onclick="openReviewLightbox(${vi})">
+      <div class="p-img"><img class="p-real-img" src="${r.imageUrl}" alt="Client review" loading="lazy"></div>
+      ${r.caption?`<div class="p-info"><div class="p-desc">${escapeAttr(r.caption)}</div></div>`:''}
+    </div>`).join('');
+}
+
+let reviewLightboxIdx=0;
+function reviewLightboxImages(){ return (S.reviews||[]).filter(r=>r.vis); }
+function openReviewLightbox(vi){
+  reviewLightboxIdx=vi;
+  renderReviewLightbox();
+  document.getElementById('reviewLightboxOverlay').classList.add('open');
+}
+function closeReviewLightbox(){
+  document.getElementById('reviewLightboxOverlay').classList.remove('open');
+}
+function reviewLightboxNav(dir){
+  const imgs=reviewLightboxImages();
+  const total=Math.max(1,imgs.length);
+  reviewLightboxIdx=(reviewLightboxIdx+dir+total)%total;
+  renderReviewLightbox();
+}
+function renderReviewLightbox(){
+  const imgs=reviewLightboxImages();
+  if(!imgs.length)return;
+  const r=imgs[reviewLightboxIdx];
+  document.getElementById('reviewLightboxImgWrap').innerHTML=`<img src="${r.imageUrl}" alt="Client review">`;
+  document.getElementById('reviewLightboxCaption').textContent=r.caption||'';
+  document.getElementById('reviewLightboxCounter').textContent = imgs.length>1 ? `${reviewLightboxIdx+1} / ${imgs.length}` : '';
+  const lBtn=document.getElementById('rlbLeft'), rBtn=document.getElementById('rlbRight');
+  lBtn.style.display = imgs.length>1 ? 'flex':'none';
+  rBtn.style.display = imgs.length>1 ? 'flex':'none';
+}
+
+/* ════════════════════════════════
    MODAL + GALLERY
 ════════════════════════════════ */
 let curProd=null,curQty=1,curSize=null,galIdx=0,curColorIdx=0;
 
-function openModal(idx){
+function openModal(idx, updateUrl){
+  if(updateUrl===undefined) updateUrl=true;
   const p=S.products[idx];
+  if(!p)return;
   curProd=idx; curQty=1; curSize=null; galIdx=0; curColorIdx=0;
   document.getElementById('modalName').textContent=p.name;
   document.getElementById('modalPrice').textContent=`LE ${p.price.toLocaleString()}`;
@@ -2404,6 +2582,7 @@ function openModal(idx){
   applyColorState(p, curColorIdx);
   buildGallery(p);
   document.getElementById('productModal').classList.add('open');
+  if(updateUrl && p.id) setURLToProduct(p.id);
 }
 
 function renderColorSwatches(p){
@@ -2493,7 +2672,11 @@ function galNav(dir){
 }
 
 function selSz(btn,s){document.querySelectorAll('.modal-sz').forEach(b=>b.classList.remove('sel'));btn.classList.add('sel');curSize=s;}
-function closeModal(){document.getElementById('productModal').classList.remove('open');}
+function closeModal(updateUrl){
+  if(updateUrl===undefined) updateUrl=true;
+  document.getElementById('productModal').classList.remove('open');
+  if(updateUrl) clearProductURL();
+}
 function changeQty(d){curQty=Math.max(1,curQty+d);document.getElementById('qtyNum').textContent=curQty;}
 function addFromModal(){
   addToCart(curProd,curSize||'M',curQty,curColorIdx);
@@ -2908,12 +3091,13 @@ async function reloadAdminData(){
     setConnStatus('error');
   }
   await loadBundles();
+  await loadReviews();
 }
 
 async function openAdmin(){
   document.getElementById('adminShell').classList.add('open');
   await reloadAdminData();
-  loadAdminForms();renderAdminProducts();renderAdminBundles();renderOrders();refreshDash();
+  loadAdminForms();renderAdminProducts();renderAdminBundles();renderAdminReviews();renderOrders();refreshDash();
   await loadSubscribers();
   renderSubscribers();
   await loadCustomers();
@@ -2924,7 +3108,7 @@ async function manualRefreshOrders(){
   const btn=document.getElementById('ordersRefreshBtn');
   const orig=btn.textContent; btn.textContent='Refreshing…'; btn.disabled=true;
   await reloadAdminData();
-  renderOrders(); renderAdminProducts(); renderAdminBundles(); refreshDash();
+  renderOrders(); renderAdminProducts(); renderAdminBundles(); renderAdminReviews(); refreshDash();
   btn.textContent=orig; btn.disabled=false;
 }
 function closeAdmin(){
@@ -3183,6 +3367,7 @@ function renderAdminProducts(){
       </div>
       <div class="apc-btns" onclick="event.stopPropagation()">
         <button class="vis-tag ${p.vis?'':'off'}" onclick="toggleVis(${i})">${p.vis?'● Visible':'○ Hidden'}</button>
+        <button class="btn-outline" id="copyLinkBtn-${i}" onclick="copyProductLink(${i})" title="Copy a direct link to this product — great for ads">🔗 Copy Link</button>
         <button class="btn-outline" onclick="openApanel(${i})">Edit</button>
         <button class="btn-danger" onclick="removeProduct(${i})">Delete</button>
       </div>
@@ -3383,6 +3568,123 @@ async function persistBundle(idx){
     const {data,error}=await sbClient.from('bundles').insert(payload).select().single();
     if(error){ console.warn(error); return false; }
     b.id=data.id;
+  }
+  return true;
+}
+
+/* ════════════════════════════════
+   CLIENT REVIEWS — admin CRUD
+════════════════════════════════ */
+function renderAdminReviews(){
+  const wrap=document.getElementById('reviewsList');
+  if(!wrap)return;
+  if(!S.reviews){ S.reviews=[]; }
+  if(!S.reviews.length){
+    wrap.innerHTML = `<div class="no-items">No review screenshots yet — click "+ Add Review Screenshot" above. (If you just added migration v14, refresh this page first.)</div>`;
+    return;
+  }
+  wrap.innerHTML = S.reviews.map((r,i)=>`
+    <div class="apc">
+      <div class="apc-reorder" onclick="event.stopPropagation()">
+        <button class="reorder-btn" onclick="moveReview(${i},-1)" ${i===0?'disabled':''} title="Move up">▲</button>
+        <button class="reorder-btn" onclick="moveReview(${i},1)" ${i===S.reviews.length-1?'disabled':''} title="Move down">▼</button>
+      </div>
+      <div class="apc-thumb"><img src="${r.imageUrl}" alt="" style="width:100%;height:100%;object-fit:cover"></div>
+      <div>
+        <input class="af-input" style="margin-bottom:0;font-size:12px;padding:7px 10px" value="${escapeAttr(r.caption)}" placeholder="Optional caption (e.g. customer's name)" onchange="updateReviewCaption(${i},this.value)">
+      </div>
+      <div class="apc-btns" onclick="event.stopPropagation()">
+        <button class="vis-tag ${r.vis?'':'off'}" onclick="toggleReviewVis(${i})">${r.vis?'● Visible':'○ Hidden'}</button>
+        <button class="btn-danger" onclick="removeReview(${i})">Delete</button>
+      </div>
+    </div>`).join('');
+}
+
+function triggerReviewUpload(){
+  document.getElementById('reviewFileInput').click();
+}
+
+async function handleReviewImgUpload(e){
+  const file=e.target.files[0];
+  if(!file)return;
+  e.target.value='';
+  const btn=document.querySelector('#panel-reviews .btn-save');
+  const orig=btn?btn.textContent:null;
+  if(btn){ btn.textContent='Uploading…'; btn.disabled=true; }
+
+  const blob = await compressImage(file);
+  const url = await uploadReviewImage(blob);
+
+  if(!url){
+    if(btn){ btn.textContent=orig; btn.disabled=false; }
+    alert('Upload failed. Please check your connection and try again.');
+    return;
+  }
+
+  const review = { imageUrl:url, caption:'', vis:true, sort:S.reviews.length };
+  S.reviews.push(review);
+  const idx = S.reviews.length-1;
+
+  if(sbClient){
+    const {data,error} = await sbClient.from('reviews').insert({
+      image_url:url, caption:'', visible:true, sort_order:idx
+    }).select().single();
+    if(!error && data) review.id=data.id;
+    else console.warn('Review save error', error);
+  }
+
+  if(btn){ btn.textContent=orig; btn.disabled=false; }
+  renderAdminReviews();
+  renderProducts();
+}
+
+async function updateReviewCaption(i, value){
+  S.reviews[i].caption = value;
+  await persistReview(i);
+}
+
+async function toggleReviewVis(i){
+  S.reviews[i].vis = !S.reviews[i].vis;
+  await persistReview(i);
+  renderAdminReviews();
+  renderProducts();
+}
+
+async function moveReview(i, dir){
+  const j=i+dir;
+  if(j<0 || j>=S.reviews.length)return;
+  [S.reviews[i], S.reviews[j]] = [S.reviews[j], S.reviews[i]];
+  S.reviews.forEach((r,idx)=>r.sort=idx);
+  renderAdminReviews();
+  if(sbClient){
+    await Promise.all([persistReview(i), persistReview(j)]);
+  }
+}
+
+async function removeReview(i){
+  if(!confirm('Delete this review screenshot? This cannot be undone.'))return;
+  const r=S.reviews[i];
+  if(r.id && sbClient){
+    const {error}=await sbClient.from('reviews').delete().eq('id',r.id);
+    if(error){ console.warn(error); alert("Couldn't delete — check your connection and try again."); return; }
+  }
+  S.reviews.splice(i,1);
+  S.reviews.forEach((rv,idx)=>rv.sort=idx);
+  renderAdminReviews();
+  renderProducts();
+}
+
+async function persistReview(idx){
+  if(!sbClient)return false;
+  const r=S.reviews[idx];
+  const payload={ image_url:r.imageUrl, caption:r.caption||'', visible:r.vis, sort_order:r.sort||0 };
+  if(r.id){
+    const {error}=await sbClient.from('reviews').update(payload).eq('id',r.id);
+    if(error){ console.warn(error); return false; }
+  } else {
+    const {data,error}=await sbClient.from('reviews').insert(payload).select().single();
+    if(error){ console.warn(error); return false; }
+    r.id=data.id;
   }
   return true;
 }
@@ -3695,6 +3997,7 @@ function setGrid(btn){document.querySelectorAll('.gtoggle').forEach(b=>b.classLi
 (async()=>{
   await loadPersisted();
   renderStore();
+  checkURLForProduct(); // deep link: ?product=ID opens straight to that product
   await initAuth();
   if(currentUser) await refreshOrdersForCurrentUser();
 })();

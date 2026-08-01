@@ -548,6 +548,33 @@ footer{background:var(--black);color:rgba(255,255,255,.45);padding:56px 28px 28p
      interactive, even though 99% of visitors never touch the admin
      dashboard. They're now loaded on-demand — see loadScriptOnce() — the
      exact moment an admin actually clicks Export/Invoice, not before. -->
+
+<!-- ══════════════════════════════════════════════════════════
+     META PIXEL — replace PIXEL_ID below with your real Pixel ID
+     from Meta Events Manager (business.facebook.com/events_manager),
+     then delete this comment. Everything else is already wired up:
+     PageView (automatic), ViewContent, AddToCart, InitiateCheckout,
+     Purchase (with the real server-verified order total).
+     ══════════════════════════════════════════════════════════ -->
+<script>
+  window.PRIMORA_PIXEL_ID = '2071267320451467';
+</script>
+<script>
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+document,'script','https://connect.facebook.net/en_US/fbevents.js');
+if(window.PRIMORA_PIXEL_ID && window.PRIMORA_PIXEL_ID!=='PIXEL_ID'){
+  fbq('init', window.PRIMORA_PIXEL_ID);
+  fbq('track', 'PageView');
+}
+/* Central helper — never throws even before a real Pixel ID is set, so
+   nothing on the site can break while ads aren't configured yet. */
+function trackEvent(name, params){
+  try{ if(window.fbq && window.PRIMORA_PIXEL_ID!=='PIXEL_ID') fbq('track', name, params||{}); }catch(e){}
+}
+</script>
 </head>
 <body>
 
@@ -2512,6 +2539,7 @@ function addCustomBundleToCart(){
     img: members.find(m=>m.img)?.img || null, ph: members[0].ph,
     members
   });
+  trackEvent('AddToCart', {content_name:'Build Your Own Bundle', content_type:'product_group', value:finalPrice, currency:'EGP'});
   updateCartUI(); showToast();
   closeCustomBundlePicker();
   openCart();
@@ -2564,6 +2592,7 @@ function addBundleToCart(){
   else {
     cart.push({ isBundle:true, bundleId:b.id, name:b.name, price:b.price, qty:1, img:firstImg, ph:members[0].ph, members:memberLines });
   }
+  trackEvent('AddToCart', {content_name:b.name, content_ids:[b.id], content_type:'product_group', value:b.price, currency:'EGP'});
   updateCartUI(); showToast();
   closeBundleModal();
   openCart();
@@ -2626,6 +2655,7 @@ function openModal(idx, updateUrl){
   const p=S.products[idx];
   if(!p)return;
   curProd=idx; curQty=1; curSize=null; galIdx=0; curColorIdx=0;
+  trackEvent('ViewContent', {content_name:p.name, content_ids:[p.id||idx], content_type:'product', value:p.price, currency:'EGP'});
   document.getElementById('modalName').textContent=p.name;
   document.getElementById('modalPrice').textContent=`LE ${p.price.toLocaleString()}`;
   document.getElementById('modalDesc').textContent=`A signature piece from PRIMORA. ${p.desc}.`;
@@ -2773,6 +2803,7 @@ function addToCart(idx,size,qty,colorIdx){
   const col=(p.colors&&p.colors[colorIdx])?p.colors[colorIdx]:firstColor(p);
   const ex=cart.find(i=>i.idx===idx&&i.size===size&&i.color===col.name);
   if(ex)ex.qty+=qty;else cart.push({idx,productId:p.id,name:p.name,price:p.price,size,qty,color:col.name,ph:p.ph,img:(col.images&&col.images[0])||null});
+  trackEvent('AddToCart', {content_name:p.name, content_ids:[p.id||idx], content_type:'product', value:p.price*qty, currency:'EGP'});
   updateCartUI();showToast();
 }
 function updateCartUI(){
@@ -2875,6 +2906,7 @@ function showToast(){const t=document.getElementById('toast');t.classList.add('s
 function openCheckout(){
   closeCart();
   const total=cart.reduce((s,i)=>s+i.price*i.qty,0)+(S.settings.ship||0);
+  trackEvent('InitiateCheckout', {value:total, currency:'EGP', num_items:cart.reduce((s,i)=>s+i.qty,0)});
   document.getElementById('coOrderList').innerHTML=cart.map(i=>{
     const label = i.isBundle ? `${i.name} (Bundle: ${i.members.map(m=>`${m.name} ${m.size}`).join(' + ')})` : `${i.name} (${i.color?i.color+', ':''}${i.size})`;
     return `<div class="co-order-item"><span>${label} ×${i.qty}</span><span>LE ${(i.price*i.qty).toLocaleString()}</span></div>`;
@@ -2919,6 +2951,12 @@ async function submitOrder(){
     userId: currentUser?currentUser.id:null
   };
   S.orders.unshift(order);
+  trackEvent('Purchase', {
+    value: result.data.total, currency:'EGP',
+    content_ids: cart.map(i=>i.isBundle?('bundle-'+(i.bundleId||'custom')):i.productId),
+    num_items: cart.reduce((s,i)=>s+i.qty,0),
+    order_id: result.data.order_ref
+  });
   document.getElementById('checkoutForm').style.display='none';
   document.getElementById('successScreen').classList.add('show');
   cart=[];updateCartUI();

@@ -29,6 +29,19 @@ nav{background:var(--cream);border-bottom:1px solid rgba(0,0,0,.08);padding:0 24
 .col-title{font-family:'Cormorant Garamond',serif;font-size:40px;font-weight:300;margin-bottom:6px}
 .col-sub{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--warm-gray)}
 .filter-row{padding:14px 24px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(0,0,0,.06)}
+
+/* ── TRUST BAR — shown right below nav, above the collection title ── */
+.trust-bar{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;padding:12px 20px;background:var(--ivory);border-bottom:1px solid rgba(0,0,0,.08)}
+.trust-item{display:flex;align-items:center;gap:7px;background:none;border:none;cursor:pointer;color:var(--black-s);font-family:'Jost',sans-serif;font-size:10px;font-weight:400;letter-spacing:1.5px;text-transform:uppercase;padding:4px 2px;transition:opacity .2s}
+.trust-item:hover{opacity:.6}
+.trust-item svg{flex-shrink:0;opacity:.75}
+.trust-dot{color:var(--sage);font-size:14px}
+@media(max-width:640px){
+  .trust-bar{gap:6px;padding:10px 14px}
+  .trust-item{font-size:9px;letter-spacing:1px}
+  .trust-item span{white-space:nowrap}
+  .trust-dot{display:none}
+}
 .filter-label{font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:var(--black-s);display:flex;align-items:center;gap:7px;opacity:.7}
 .grid-toggles{display:flex;gap:8px}
 .gtoggle{background:none;border:1px solid rgba(0,0,0,.15);padding:5px 7px;cursor:pointer;display:flex;align-items:center}
@@ -548,6 +561,23 @@ footer{background:var(--black);color:rgba(255,255,255,.45);padding:56px 28px 28p
     <button class="nav-icon" onclick="openCart()"><svg width="18" height="20" viewBox="0 0 18 20" fill="none"><rect x="1" y="6" width="16" height="13" rx="1" stroke="currentColor" stroke-width="1.2"/><path d="M6 9V5a3 3 0 016 0v4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></button>
   </div>
 </nav>
+
+<div class="trust-bar" id="trustBar">
+  <button class="trust-item" onclick="openInfoPage('shipping')">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M1 3h13v13H1V3z" stroke="currentColor" stroke-width="1.3"/><path d="M14 8h4l4 4v4h-8V8z" stroke="currentColor" stroke-width="1.3"/><circle cx="6" cy="18" r="2" stroke="currentColor" stroke-width="1.3"/><circle cx="18" cy="18" r="2" stroke="currentColor" stroke-width="1.3"/></svg>
+    <span>Nationwide Shipping</span>
+  </button>
+  <span class="trust-dot">·</span>
+  <button class="trust-item" onclick="openInfoPage('returns')">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M3 12a9 9 0 109-9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><path d="M3 4v5h5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <span>Easy Returns</span>
+  </button>
+  <span class="trust-dot">·</span>
+  <button class="trust-item" onclick="openInfoPage('exchange')">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 7h13l-3-3M20 17H7l3 3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <span>Free Size Exchange</span>
+  </button>
+</div>
 
 <div class="col-header" id="collection">
   <div class="col-title" id="colTitle">Summer Collection</div>
@@ -1111,6 +1141,7 @@ footer{background:var(--black);color:rgba(255,255,255,.45);padding:56px 28px 28p
             <div class="af-group"><label class="af-label">Care Guide</label><textarea class="af-input" id="fp-careGuide" rows="4"></textarea></div>
             <div class="af-group"><label class="af-label">Shipping Info</label><textarea class="af-input" id="fp-shipping" rows="4"></textarea></div>
             <div class="af-group"><label class="af-label">Returns Policy</label><textarea class="af-input" id="fp-returns" rows="4"></textarea></div>
+            <div class="af-group"><label class="af-label">Exchange a Size</label><textarea class="af-input" id="fp-exchange" rows="4"></textarea></div>
             <div class="af-group"><label class="af-label">Contact Us</label><textarea class="af-input" id="fp-contact" rows="4"></textarea></div>
             <button class="btn-save" id="bsave8" onclick="saveFooterPages('bsave8','st8')">Save</button>
             <span class="saved-tag" id="st8">✓ Saved</span>
@@ -1313,6 +1344,7 @@ const S = {
       careGuide:{title:'Care Guide', content:'Hand wash cold or gentle machine cycle.\nDo not bleach.\nDry flat in shade — avoid direct sunlight.\nIron on low heat if needed.\nStore folded to preserve shape.'},
       shipping:{title:'Shipping Info', content:'We deliver across Egypt within 2–4 business days.\nCash on delivery is available everywhere.\nYou will receive a confirmation call before dispatch.'},
       returns:{title:'Returns Policy', content:'Items may be returned within 3 days of delivery if unworn, unwashed, and with tags attached.\nMessage us on WhatsApp to arrange a pickup.\nRefunds are processed after the item is inspected.'},
+      exchange:{title:'Size Exchange', content:'Ordered the wrong size? No problem.\nMessage us on WhatsApp within 3 days of delivery to arrange a free size exchange.\nThe piece must be unworn, unwashed, and with tags attached.'},
       contact:{title:'Contact Us', content:'WhatsApp: +20 100 000 0000\nEmail: hello@primora.com\n\nWe usually respond within a few hours.'}
     },
     faq:[
@@ -1701,7 +1733,7 @@ async function loadPersisted(){
       S.settings.editQuote= setRow.edit_quote ?? S.settings.editQuote;
       S.settings.editSub  = setRow.edit_sub ?? S.settings.editSub;
       S.settings.philosophy = (setRow.philosophy && setRow.philosophy.length) ? setRow.philosophy : S.settings.philosophy;
-      S.settings.footerPages = setRow.footer_pages ?? S.settings.footerPages;
+      S.settings.footerPages = {...S.settings.footerPages, ...(setRow.footer_pages||{})};
       S.settings.faq = (setRow.faq && setRow.faq.length) ? setRow.faq : S.settings.faq;
       S.settings.socials = (setRow.socials && setRow.socials.length) ? setRow.socials : S.settings.socials;
       S.settings.happyCount = setRow.happy_count ?? S.settings.happyCount;
@@ -3830,7 +3862,7 @@ async function savePhilosophy(btnId,pillId){
 /* ── FOOTER PAGES ── */
 function renderFooterPageFields(){
   const fp=S.settings.footerPages;
-  const map={sizeGuide:'fp-sizeGuide',careGuide:'fp-careGuide',shipping:'fp-shipping',returns:'fp-returns',contact:'fp-contact'};
+  const map={sizeGuide:'fp-sizeGuide',careGuide:'fp-careGuide',shipping:'fp-shipping',returns:'fp-returns',exchange:'fp-exchange',contact:'fp-contact'};
   Object.keys(map).forEach(key=>{
     const el=document.getElementById(map[key]);
     if(el && fp[key]) el.value=fp[key].content;
@@ -3842,6 +3874,8 @@ async function saveFooterPages(btnId,pillId){
   fp.careGuide.content = document.getElementById('fp-careGuide').value;
   fp.shipping.content  = document.getElementById('fp-shipping').value;
   fp.returns.content   = document.getElementById('fp-returns').value;
+  if(!fp.exchange) fp.exchange = {title:'Size Exchange', content:''}; // stores saved before this field existed
+  fp.exchange.content  = document.getElementById('fp-exchange').value;
   fp.contact.content   = document.getElementById('fp-contact').value;
   const btn=document.getElementById(btnId);
   const orig=btn.textContent; btn.textContent='Saving…'; btn.disabled=true;

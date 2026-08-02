@@ -73,6 +73,7 @@ nav{background:var(--cream);border-bottom:1px solid rgba(0,0,0,.08);padding:0 24
 .ph-9{background:linear-gradient(160deg,#B0B4BC,#909498,#707478)}
 .ph-10{background:linear-gradient(160deg,#C8B880,#B0A060,#988848)}
 .new-badge{position:absolute;top:14px;left:14px;background:var(--black);color:var(--ivory);font-size:9px;letter-spacing:2.5px;text-transform:uppercase;padding:4px 10px;z-index:2}
+.best-seller-tag{display:inline-block;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);font-weight:500;margin-bottom:5px}
 .stock-badge{position:absolute;top:14px;left:14px;font-size:9px;letter-spacing:2px;text-transform:uppercase;padding:4px 10px;z-index:3}
 .stock-badge.low{background:#B8860B;color:#fff}
 .stock-badge.sold{background:#7a1f1f;color:#fff}
@@ -1121,6 +1122,15 @@ function trackEvent(name, params){
           </div>
         </div>
         <div class="a-section">
+          <div class="a-section-head"><div class="a-section-title">Filter Tab Order</div></div>
+          <div class="a-section-body">
+            <div style="font-size:11px;color:var(--warm-gray);margin-bottom:16px;line-height:1.7">Controls the order of the tabs shown above the collection (Categories, Best Sellers, Almost Sold Out, Bundles, Client Reviews). A tab only appears on the storefront once it has something to show (e.g. "Best Sellers" stays hidden until at least one product is marked as a best seller).</div>
+            <div id="tabOrderList"></div>
+            <button class="btn-save" id="bsave14" onclick="saveTabOrder('bsave14','st14')" style="margin-top:10px">Save</button>
+            <span class="saved-tag" id="st14">✓ Saved</span>
+          </div>
+        </div>
+        <div class="a-section">
           <div class="a-section-head"><div class="a-section-title">Collection Header</div></div>
           <div class="a-section-body">
             <div class="af-group"><label class="af-label">Collection Name</label><input class="af-input" id="s-colTitle"></div>
@@ -1306,6 +1316,12 @@ function trackEvent(name, params){
         <span style="font-size:12px;color:var(--warm-gray)">Visible in store</span>
       </div>
     </div>
+    <div class="af-group">
+      <div class="a-toggle">
+        <label class="tog-sw"><input type="checkbox" id="ap-bestseller"><span class="tog-sl"></span></label>
+        <span style="font-size:12px;color:var(--warm-gray)">★ Best Seller <span style="text-transform:none">— shows a badge on this piece and adds it to the storefront's "Best Sellers" tab</span></span>
+      </div>
+    </div>
     <div style="display:flex;gap:10px;margin-top:20px;flex-wrap:wrap">
       <button class="btn-save" id="ap-savebtn" onclick="saveProduct()">Save Product</button>
       <button class="btn-outline" onclick="closeApanel()">Cancel</button>
@@ -1418,7 +1434,8 @@ const S = {
     ],
     happyCount:500,
     happyLabel:'Happy Customers',
-    customBundleDiscount:300
+    customBundleDiscount:300,
+    tabOrder:['categories','bestsellers','lowstock','bundles','reviews']
   },
   products:[
     {name:'The Ivory Shift',  desc:'Linen Blend · Relaxed Fit',   price:1250,mat:'100% Linen',       fit:'Relaxed, oversized',   sizes:['XS','S','M','L'],vis:true, stock:'in_stock', category:'Ladies', keywords:'', occasions:'', sizeGuide:'', colors:[{name:'Ivory',hex:'#C8BBA0',images:[],stock:'in_stock'}]},
@@ -1799,6 +1816,7 @@ async function loadPersisted(){
       S.settings.happyCount = setRow.happy_count ?? S.settings.happyCount;
       S.settings.happyLabel = setRow.happy_label ?? S.settings.happyLabel;
       S.settings.customBundleDiscount = setRow.custom_bundle_discount ?? S.settings.customBundleDiscount;
+      S.settings.tabOrder = (setRow.tab_order && setRow.tab_order.length) ? setRow.tab_order : S.settings.tabOrder;
     }
 
     if(prodRows && prodRows.length){
@@ -1814,7 +1832,8 @@ async function loadPersisted(){
           mat:r.material||'', fit:r.fit||'', sizes:r.sizes||['XS','S','M','L'],
           vis:r.visible, sort:r.sort_order??i, ph,
           stock:r.stock_status||'in_stock', category:r.category||'Ladies', keywords:r.keywords||'',
-          occasions:r.occasions||'', sizeGuide:r.size_guide||'', colors
+          occasions:r.occasions||'', sizeGuide:r.size_guide||'', colors,
+          isBestSeller: !!r.is_best_seller
         };
       });
     } else {
@@ -1889,7 +1908,8 @@ async function seedDefaultProducts(){
       sizes:r.sizes, vis:r.visible, sort:r.sort_order, ph:phForIndex(r.sort_order),
       stock:r.stock_status||'in_stock', category:r.category||'Ladies', keywords:r.keywords||'',
       occasions:r.occasions||'', sizeGuide:r.size_guide||'',
-      colors:(r.colors&&r.colors.length)?r.colors:[{name:'Original',hex:'#B0A388',images:[],stock:'in_stock'}]
+      colors:(r.colors&&r.colors.length)?r.colors:[{name:'Original',hex:'#B0A388',images:[],stock:'in_stock'}],
+      isBestSeller: !!r.is_best_seller
     }));
   }
 }
@@ -1904,7 +1924,8 @@ async function persistSettings(){
     edit_quote:S.settings.editQuote, edit_sub:S.settings.editSub, philosophy:S.settings.philosophy,
     footer_pages:S.settings.footerPages, faq:S.settings.faq, socials:S.settings.socials,
     happy_count:S.settings.happyCount, happy_label:S.settings.happyLabel,
-    custom_bundle_discount:S.settings.customBundleDiscount
+    custom_bundle_discount:S.settings.customBundleDiscount,
+    tab_order:S.settings.tabOrder
   }).eq('id',1);
   if(error){ console.warn('Settings save error',error); setConnStatus('error'); return false; }
   setConnStatus('connected');
@@ -1915,7 +1936,7 @@ async function persistSettings(){
 async function persistProduct(idx){
   if(!sbClient)return false;
   const p=S.products[idx];
-  const payload={name:p.name, description:p.desc, price:p.price, material:p.mat, fit:p.fit, sizes:p.sizes, visible:p.vis, stock_status:p.stock||'in_stock', category:p.category||'Ladies', keywords:p.keywords||'', occasions:p.occasions||'', size_guide:p.sizeGuide||'', colors:p.colors||[], sort_order: typeof p.sort==='number'?p.sort:idx};
+  const payload={name:p.name, description:p.desc, price:p.price, material:p.mat, fit:p.fit, sizes:p.sizes, visible:p.vis, stock_status:p.stock||'in_stock', category:p.category||'Ladies', keywords:p.keywords||'', occasions:p.occasions||'', size_guide:p.sizeGuide||'', colors:p.colors||[], sort_order: typeof p.sort==='number'?p.sort:idx, is_best_seller: !!p.isBestSeller};
   if(p.id){
     const {error}=await sbClient.from('products').update(payload).eq('id',p.id);
     if(error){ console.warn(error); setConnStatus('error'); return false; }
@@ -2304,13 +2325,25 @@ function doSearch(query, catBtn, catValue){
 function renderCatTabs(){
   const cats = ['All', ...Array.from(new Set(S.products.map(p=>p.category||'Ladies')))];
   const wrap=document.getElementById('catTabs');
-  let html = cats.length>2 ? cats.map(c=>
-    `<button class="cat-tab ${c===activeCategory?'active':''}" onclick="setCategory('${c}')">${c}</button>`
-  ).join('') : '';
-  html += `<button class="cat-tab ${activeCategory==='Bundles'?'active':''}" onclick="setCategory('Bundles')">⬢ Bundles</button>`;
-  if(S.reviews && S.reviews.some(r=>r.vis)){
-    html += `<button class="cat-tab ${activeCategory==='Reviews'?'active':''}" onclick="setCategory('Reviews')">✦ Client Reviews</button>`;
-  }
+  const hasBestSellers = S.products.some(p=>p.vis && p.isBestSeller);
+  const hasLowStock = S.products.some(p=>p.vis && productOverallStock(p)==='low_stock');
+  const hasReviews = S.reviews && S.reviews.some(r=>r.vis);
+
+  const tabBuilders = {
+    categories: ()=> cats.length>2 ? cats.map(c=>
+      `<button class="cat-tab ${c===activeCategory?'active':''}" onclick="setCategory('${c}')">${c}</button>`
+    ).join('') : '',
+    bestsellers: ()=> hasBestSellers
+      ? `<button class="cat-tab ${activeCategory==='BestSellers'?'active':''}" onclick="setCategory('BestSellers')">★ Best Sellers</button>` : '',
+    lowstock: ()=> hasLowStock
+      ? `<button class="cat-tab ${activeCategory==='LowStock'?'active':''}" onclick="setCategory('LowStock')">⚠ Almost Sold Out</button>` : '',
+    bundles: ()=> `<button class="cat-tab ${activeCategory==='Bundles'?'active':''}" onclick="setCategory('Bundles')">⬢ Bundles</button>`,
+    reviews: ()=> hasReviews
+      ? `<button class="cat-tab ${activeCategory==='Reviews'?'active':''}" onclick="setCategory('Reviews')">✦ Client Reviews</button>` : ''
+  };
+
+  const order = (S.settings.tabOrder && S.settings.tabOrder.length) ? S.settings.tabOrder : ['categories','bestsellers','lowstock','bundles','reviews'];
+  const html = order.map(key => tabBuilders[key] ? tabBuilders[key]() : '').join('');
   wrap.innerHTML = html;
 }
 function setCategory(c){
@@ -2328,14 +2361,15 @@ function productOverallStock(p){
   return 'in_stock';
 }
 
-function renderProducts(){
-  const grid=document.getElementById('productGrid');
-  renderCatTabs();
-  if(activeCategory==='Bundles'){ renderBundleGrid(grid); return; }
-  if(activeCategory==='Reviews'){ renderReviewsGrid(grid); return; }
-  let visible=S.products.filter(p=>p.vis);
-  if(activeCategory!=='All') visible=visible.filter(p=>(p.category||'Ladies')===activeCategory);
-  grid.innerHTML=visible.map(p=>{
+/* Renders an array of products into #productGrid using the standard product
+   card template. Shared by the normal All/category view, Best Sellers, and
+   Almost Sold Out, so the card markup only lives in one place. */
+function renderProductCardsGrid(grid, list){
+  if(!list.length){
+    grid.innerHTML = `<div class="no-items" style="grid-column:1/-1;padding:60px 20px">No pieces here yet.</div>`;
+    return;
+  }
+  grid.innerHTML=list.map(p=>{
     const idx=S.products.indexOf(p);
     const c0=firstColor(p);
     const hasImg=c0.images&&c0.images.length>0;
@@ -2350,6 +2384,7 @@ function renderProducts(){
     if(stock==='low_stock') stockBadge='<div class="stock-badge low">Almost Sold Out</div>';
     else if(stock==='sold_out') stockBadge='<div class="stock-badge sold">Sold Out</div>';
     const topBadge = stockBadge || '<div class="new-badge">New</div>';
+    const bestSellerTag = p.isBestSeller ? `<div class="best-seller-tag">★ Best Seller</div>` : '';
     const addBtn = isSold
       ? `<button class="add-bag-btn" disabled>Sold Out</button>`
       : `<button class="add-bag-btn" onclick="quickAdd(this,${idx})">Add to Bag</button>`;
@@ -2357,6 +2392,7 @@ function renderProducts(){
     return `<div class="p-card ${isSold?'is-sold':''}" onclick="openModal(${idx})">
       <div class="p-img">${imgHTML}${countBadge}${topBadge}</div>
       <div class="p-info">
+        ${bestSellerTag}
         <div class="p-name">${p.name}</div>
         <div class="p-desc">${p.desc}</div>
         ${colorCount}
@@ -2368,6 +2404,24 @@ function renderProducts(){
       </div>
     </div>`;
   }).join('');
+}
+
+function renderProducts(){
+  const grid=document.getElementById('productGrid');
+  renderCatTabs();
+  if(activeCategory==='Bundles'){ renderBundleGrid(grid); return; }
+  if(activeCategory==='Reviews'){ renderReviewsGrid(grid); return; }
+  if(activeCategory==='BestSellers'){
+    renderProductCardsGrid(grid, S.products.filter(p=>p.vis && p.isBestSeller));
+    return;
+  }
+  if(activeCategory==='LowStock'){
+    renderProductCardsGrid(grid, S.products.filter(p=>p.vis && productOverallStock(p)==='low_stock'));
+    return;
+  }
+  let visible=S.products.filter(p=>p.vis);
+  if(activeCategory!=='All') visible=visible.filter(p=>(p.category||'Ladies')===activeCategory);
+  renderProductCardsGrid(grid, visible);
 }
 
 /* ════════════════════════════════
@@ -3184,7 +3238,8 @@ async function reloadAdminData(){
           mat:r.material||'', fit:r.fit||'', sizes:r.sizes||['XS','S','M','L'],
           vis:r.visible, sort:r.sort_order??i, ph,
           stock:r.stock_status||'in_stock', category:r.category||'Ladies', keywords:r.keywords||'',
-          occasions:r.occasions||'', sizeGuide:r.size_guide||'', colors
+          occasions:r.occasions||'', sizeGuide:r.size_guide||'', colors,
+          isBestSeller: !!r.is_best_seller
         };
       });
     }
@@ -3470,6 +3525,7 @@ function renderAdminProducts(){
       </div>
       <div class="apc-btns" onclick="event.stopPropagation()">
         <button class="vis-tag ${p.vis?'':'off'}" onclick="toggleVis(${i})">${p.vis?'● Visible':'○ Hidden'}</button>
+        <button class="vis-tag ${p.isBestSeller?'':'off'}" onclick="toggleBestSeller(${i})">${p.isBestSeller?'★ Best Seller':'☆ Best Seller'}</button>
         <button class="btn-outline" id="copyLinkBtn-${i}" onclick="copyProductLink(${i})" title="Copy a direct link to this product — great for ads">🔗 Copy Link</button>
         <button class="btn-outline" onclick="openApanel(${i})">Edit</button>
         <button class="btn-danger" onclick="removeProduct(${i})">Delete</button>
@@ -3488,6 +3544,11 @@ async function moveProduct(i, dir){
 }
 async function toggleVis(i){
   S.products[i].vis=!S.products[i].vis;
+  await persistProduct(i);
+  renderAdminProducts();renderProducts();
+}
+async function toggleBestSeller(i){
+  S.products[i].isBestSeller=!S.products[i].isBestSeller;
   await persistProduct(i);
   renderAdminProducts();renderProducts();
 }
@@ -3521,6 +3582,7 @@ function openApanel(idx){
   document.getElementById('ap-stock').value=p.stock||'in_stock';
   document.getElementById('ap-category').value=p.category||'Ladies';
   document.getElementById('ap-vis').checked=p.vis;
+  document.getElementById('ap-bestseller').checked=!!p.isBestSeller;
   document.getElementById('ap-saved').classList.remove('show');
   if(!p.colors || !p.colors.length) p.colors=[{name:'Default',hex:'#B0A388',images:[],stock:'in_stock'}];
   renderColorsEditor(idx);
@@ -3854,7 +3916,8 @@ async function saveProduct(){
     sizeGuide:document.getElementById('ap-sizeGuide').value,
     stock:document.getElementById('ap-stock').value,
     category:document.getElementById('ap-category').value,
-    vis:document.getElementById('ap-vis').checked
+    vis:document.getElementById('ap-vis').checked,
+    isBestSeller:document.getElementById('ap-bestseller').checked
   };
   const btn=document.getElementById('ap-savebtn');
   btn.textContent='Saving…'; btn.disabled=true;
@@ -3898,10 +3961,48 @@ function loadAdminForms(){
   document.getElementById('s-happyCount').value=st.happyCount||0;
   document.getElementById('s-happyLabel').value=st.happyLabel||'';
   document.getElementById('s-customBundleDiscount').value=st.customBundleDiscount??300;
+  renderTabOrderList();
   renderPhilEditFields();
   renderFooterPageFields();
   renderFaqEditFields();
   renderSocialEditFields();
+}
+const TAB_ORDER_LABELS = {
+  categories: 'Categories (Ladies, Men, etc.)',
+  bestsellers: '★ Best Sellers',
+  lowstock: '⚠ Almost Sold Out',
+  bundles: '⬢ Bundles',
+  reviews: '✦ Client Reviews'
+};
+function renderTabOrderList(){
+  const container=document.getElementById('tabOrderList');
+  if(!container)return;
+  if(!S.settings.tabOrder || !S.settings.tabOrder.length){
+    S.settings.tabOrder = ['categories','bestsellers','lowstock','bundles','reviews'];
+  }
+  container.innerHTML = S.settings.tabOrder.map((key,i)=>`
+    <div class="apc" style="grid-template-columns:auto 1fr">
+      <div class="apc-reorder">
+        <button class="reorder-btn" onclick="moveTabOrderItem(${i},-1)" ${i===0?'disabled':''} title="Move up">▲</button>
+        <button class="reorder-btn" onclick="moveTabOrderItem(${i},1)" ${i===S.settings.tabOrder.length-1?'disabled':''} title="Move down">▼</button>
+      </div>
+      <div style="display:flex;align-items:center;font-size:13px;padding:4px 0">${TAB_ORDER_LABELS[key]||key}</div>
+    </div>`).join('');
+}
+function moveTabOrderItem(i,dir){
+  const j=i+dir;
+  if(j<0||j>=S.settings.tabOrder.length)return;
+  [S.settings.tabOrder[i],S.settings.tabOrder[j]]=[S.settings.tabOrder[j],S.settings.tabOrder[i]];
+  renderTabOrderList();
+}
+async function saveTabOrder(btnId,pillId){
+  const btn=document.getElementById(btnId);
+  const orig=btn.textContent; btn.textContent='Saving…'; btn.disabled=true;
+  const ok = await persistSettings();
+  btn.textContent=orig; btn.disabled=false;
+  if(!ok){ alert("Couldn't save — check your connection and try again."); return; }
+  renderCatTabs();
+  showSaved(pillId,btnId);
 }
 function renderPhilEditFields(){
   const container=document.getElementById('philEditFields');

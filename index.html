@@ -125,6 +125,9 @@ nav{background:var(--cream);border-bottom:1px solid rgba(0,0,0,.08);padding:0 24
 .p-name{font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:400;margin-bottom:4px}
 .p-desc{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--warm-gray);margin-bottom:9px}
 .p-price{font-size:13px;color:var(--black-s)}
+.price-orig{color:var(--warm-gray);text-decoration:line-through;font-size:12px;margin-right:2px}
+.price-now{color:var(--black-s)}
+.price-discount-badge{display:inline-block;background:#fdeee8;color:#c14a2a;font-size:10px;font-weight:600;letter-spacing:.5px;padding:2px 7px;border-radius:20px;margin-left:2px;vertical-align:middle}
 .p-actions{padding:8px 15px 16px;display:flex;flex-direction:column;gap:7px;opacity:0;transform:translateY(6px);transition:all .3s ease}
 .p-card:hover .p-actions{opacity:1;transform:translateY(0)}
 .size-row{display:flex;gap:5px;flex-wrap:wrap}
@@ -1282,8 +1285,15 @@ function trackEvent(name, params){
 
     <div class="af-group"><label class="af-label">Product Name</label><input class="af-input" id="ap-name"></div>
     <div class="af-row">
-      <div class="af-group"><label class="af-label">Price (LE)</label><input class="af-input" type="number" id="ap-price"></div>
+      <div class="af-group"><label class="af-label">Price (LE) <span style="text-transform:none;font-weight:400;color:var(--warm-gray)">— the price the customer pays now</span></label><input class="af-input" type="number" id="ap-price" oninput="updateDiscountPreview()"></div>
       <div class="af-group"><label class="af-label">Subtitle</label><input class="af-input" id="ap-desc"></div>
+    </div>
+    <div class="af-row">
+      <div class="af-group"><label class="af-label">Original Price (LE) <span style="text-transform:none;font-weight:400;color:var(--warm-gray)">— optional, leave blank for no discount</span></label><input class="af-input" type="number" id="ap-originalPrice" placeholder="e.g. 1800" oninput="updateDiscountPreview()"></div>
+      <div class="af-group">
+        <label class="af-label">Discount</label>
+        <div class="af-input" id="ap-discountPreview" style="display:flex;align-items:center;background:var(--ivory);color:var(--warm-gray)">No discount</div>
+      </div>
     </div>
     <div class="af-row">
       <div class="af-group"><label class="af-label">Material</label><input class="af-input" id="ap-mat"></div>
@@ -1829,6 +1839,7 @@ async function loadPersisted(){
         }
         return {
           id:r.id, name:r.name, desc:r.description||'', price:Number(r.price)||0,
+          originalPrice: r.original_price!=null ? Number(r.original_price) : null,
           mat:r.material||'', fit:r.fit||'', sizes:r.sizes||['XS','S','M','L'],
           vis:r.visible, sort:r.sort_order??i, ph,
           stock:r.stock_status||'in_stock', category:r.category||'Ladies', keywords:r.keywords||'',
@@ -1905,6 +1916,7 @@ async function seedDefaultProducts(){
   if(!error && data){
     S.products = data.map((r,i)=>({
       id:r.id, name:r.name, desc:r.description, price:Number(r.price), mat:r.material, fit:r.fit,
+      originalPrice: r.original_price!=null ? Number(r.original_price) : null,
       sizes:r.sizes, vis:r.visible, sort:r.sort_order, ph:phForIndex(r.sort_order),
       stock:r.stock_status||'in_stock', category:r.category||'Ladies', keywords:r.keywords||'',
       occasions:r.occasions||'', sizeGuide:r.size_guide||'',
@@ -1936,7 +1948,7 @@ async function persistSettings(){
 async function persistProduct(idx){
   if(!sbClient)return false;
   const p=S.products[idx];
-  const payload={name:p.name, description:p.desc, price:p.price, material:p.mat, fit:p.fit, sizes:p.sizes, visible:p.vis, stock_status:p.stock||'in_stock', category:p.category||'Ladies', keywords:p.keywords||'', occasions:p.occasions||'', size_guide:p.sizeGuide||'', colors:p.colors||[], sort_order: typeof p.sort==='number'?p.sort:idx, is_best_seller: !!p.isBestSeller};
+  const payload={name:p.name, description:p.desc, price:p.price, original_price: (p.originalPrice!=null && p.originalPrice!=='') ? p.originalPrice : null, material:p.mat, fit:p.fit, sizes:p.sizes, visible:p.vis, stock_status:p.stock||'in_stock', category:p.category||'Ladies', keywords:p.keywords||'', occasions:p.occasions||'', size_guide:p.sizeGuide||'', colors:p.colors||[], sort_order: typeof p.sort==='number'?p.sort:idx, is_best_seller: !!p.isBestSeller};
   if(p.id){
     const {error}=await sbClient.from('products').update(payload).eq('id',p.id);
     if(error){ console.warn(error); setConnStatus('error'); return false; }
@@ -2361,6 +2373,19 @@ function productOverallStock(p){
   return 'in_stock';
 }
 
+/* DISCOUNT DISPLAY: if a product has an Original Price set (and it's
+   actually higher than the current price), show the crossed-out original,
+   the current price, and the discount percentage — computed automatically,
+   never entered by hand. Falls back to a plain price when there's no
+   discount, so nothing changes for products that don't use this field. */
+function priceDisplayHTML(p){
+  if(p.originalPrice && p.originalPrice > p.price){
+    const pct = Math.round(((p.originalPrice - p.price) / p.originalPrice) * 100);
+    return `<span class="price-orig">LE ${p.originalPrice.toLocaleString()}</span> <span class="price-now">LE ${p.price.toLocaleString()}</span> <span class="price-discount-badge">−${pct}%</span>`;
+  }
+  return `LE ${p.price.toLocaleString()}`;
+}
+
 /* Renders an array of products into #productGrid using the standard product
    card template. Shared by the normal All/category view, Best Sellers, and
    Almost Sold Out, so the card markup only lives in one place. */
@@ -2396,7 +2421,7 @@ function renderProductCardsGrid(grid, list){
         <div class="p-name">${p.name}</div>
         <div class="p-desc">${p.desc}</div>
         ${colorCount}
-        <div class="p-price">LE ${p.price.toLocaleString()}</div>
+        <div class="p-price">${priceDisplayHTML(p)}</div>
       </div>
       <div class="p-actions" onclick="event.stopPropagation()">
         <div class="size-row">${p.sizes.map(s=>`<button class="sz" onclick="selectSize(this)">${s}</button>`).join('')}</div>
@@ -2711,7 +2736,7 @@ function openModal(idx, updateUrl){
   curProd=idx; curQty=1; curSize=null; galIdx=0; curColorIdx=0;
   trackEvent('ViewContent', {content_name:p.name, content_ids:[p.id||idx], content_type:'product', value:p.price, currency:'EGP'});
   document.getElementById('modalName').textContent=p.name;
-  document.getElementById('modalPrice').textContent=`LE ${p.price.toLocaleString()}`;
+  document.getElementById('modalPrice').innerHTML=priceDisplayHTML(p);
   document.getElementById('modalDesc').textContent=`A signature piece from PRIMORA. ${p.desc}.`;
   document.getElementById('modalMat').textContent=p.mat;
   document.getElementById('modalFit').textContent=p.fit;
@@ -2842,8 +2867,27 @@ function waProduct(){
 
 /* ════════════════════════════════
    CART
+   PERSISTENCE FIX: the cart now survives a refresh/closed tab via
+   localStorage, with a safe in-memory fallback if storage is blocked
+   (private browsing, etc.) so nothing ever throws.
 ════════════════════════════════ */
-let cart=[];
+const CART_STORAGE_KEY='primora_cart_v1';
+function loadCartFromStorage(){
+  try{
+    const raw=localStorage.getItem(CART_STORAGE_KEY);
+    if(!raw)return [];
+    const parsed=JSON.parse(raw);
+    return Array.isArray(parsed)?parsed:[];
+  }catch(e){
+    console.warn('Cart storage unavailable, using in-memory cart for this session.', e);
+    return [];
+  }
+}
+function saveCartToStorage(){
+  try{ localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart)); }
+  catch(e){ /* storage blocked — cart still works in-memory for this session */ }
+}
+let cart=loadCartFromStorage();
 function selectSize(btn){btn.closest('.size-row').querySelectorAll('.sz').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
 function quickAdd(btn,idx){
   const sel=btn.closest('.p-actions').querySelector('.sz.active');
@@ -2861,6 +2905,7 @@ function addToCart(idx,size,qty,colorIdx){
   updateCartUI();showToast();
 }
 function updateCartUI(){
+  saveCartToStorage();
   const total=cart.reduce((s,i)=>s+i.price*i.qty,0);
   document.getElementById('bagCount').textContent=cart.reduce((s,i)=>s+i.qty,0);
   document.getElementById('cartTotal').textContent=`LE ${total.toLocaleString()}`;
@@ -3235,6 +3280,7 @@ async function reloadAdminData(){
         if(!colors) colors = [{name:'Original', hex:'#B0A388', images:r.images||[], stock:r.stock_status||'in_stock'}];
         return {
           id:r.id, name:r.name, desc:r.description||'', price:Number(r.price)||0,
+          originalPrice: r.original_price!=null ? Number(r.original_price) : null,
           mat:r.material||'', fit:r.fit||'', sizes:r.sizes||['XS','S','M','L'],
           vis:r.visible, sort:r.sort_order??i, ph,
           stock:r.stock_status||'in_stock', category:r.category||'Ladies', keywords:r.keywords||'',
@@ -3572,6 +3618,7 @@ function openApanel(idx){
   document.getElementById('apTitle').textContent=`Edit — ${p.name}`;
   document.getElementById('ap-name').value=p.name;
   document.getElementById('ap-price').value=p.price;
+  document.getElementById('ap-originalPrice').value=(p.originalPrice!=null)?p.originalPrice:'';
   document.getElementById('ap-desc').value=p.desc;
   document.getElementById('ap-mat').value=p.mat;
   document.getElementById('ap-fit').value=p.fit;
@@ -3586,7 +3633,21 @@ function openApanel(idx){
   document.getElementById('ap-saved').classList.remove('show');
   if(!p.colors || !p.colors.length) p.colors=[{name:'Default',hex:'#B0A388',images:[],stock:'in_stock'}];
   renderColorsEditor(idx);
+  updateDiscountPreview();
   document.getElementById('apanelOverlay').classList.add('open');
+}
+function updateDiscountPreview(){
+  const price=parseFloat(document.getElementById('ap-price').value)||0;
+  const orig=parseFloat(document.getElementById('ap-originalPrice').value)||0;
+  const el=document.getElementById('ap-discountPreview');
+  if(orig>price && price>0){
+    const pct=Math.round(((orig-price)/orig)*100);
+    el.textContent=`−${pct}% (was LE ${orig.toLocaleString()})`;
+    el.style.color='#2e7d5e';
+  } else {
+    el.textContent='No discount';
+    el.style.color='var(--warm-gray)';
+  }
 }
 function closeApanel(){document.getElementById('apanelOverlay').classList.remove('open');renderAdminProducts();}
 
@@ -3907,6 +3968,7 @@ async function saveProduct(){
     ...p,
     name:document.getElementById('ap-name').value,
     price:parseInt(document.getElementById('ap-price').value)||0,
+    originalPrice: (()=>{ const v=document.getElementById('ap-originalPrice').value.trim(); return v===''?null:(parseInt(v)||null); })(),
     desc:document.getElementById('ap-desc').value,
     mat:document.getElementById('ap-mat').value,
     fit:document.getElementById('ap-fit').value,
@@ -4203,6 +4265,7 @@ function setGrid(btn){document.querySelectorAll('.gtoggle').forEach(b=>b.classLi
 (async()=>{
   await loadPersisted();
   renderStore();
+  updateCartUI(); // reflect any cart restored from localStorage
   checkURLForProduct(); // deep link: ?product=ID opens straight to that product
   await initAuth();
   if(currentUser) await refreshOrdersForCurrentUser();

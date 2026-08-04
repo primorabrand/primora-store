@@ -1329,6 +1329,14 @@ function trackEvent(name, params){
         <select class="af-input" id="ap-category">
           <option value="Ladies">Ladies</option>
           <option value="Men">Men</option>
+        </select>
+      </div>
+    </div>
+    <div class="af-row">
+      <div class="af-group">
+        <label class="af-label">Piece Type <span style="text-transform:none;font-weight:400;color:var(--warm-gray)">— independent of Category, e.g. a Men's Set or a Ladies' Set</span></label>
+        <select class="af-input" id="ap-garmentType">
+          <option value="">— None —</option>
           <option value="Sets">Sets</option>
           <option value="Blouses">Blouses</option>
           <option value="Pants">Pants</option>
@@ -1859,7 +1867,8 @@ async function loadPersisted(){
           vis:r.visible, sort:r.sort_order??i, ph,
           stock:r.stock_status||'in_stock', category:r.category||'Ladies', keywords:r.keywords||'',
           occasions:r.occasions||'', sizeGuide:r.size_guide||'', colors,
-          isBestSeller: !!r.is_best_seller
+          isBestSeller: !!r.is_best_seller,
+          garmentType: r.garment_type||'',
         };
       });
     } else {
@@ -1936,7 +1945,8 @@ async function seedDefaultProducts(){
       stock:r.stock_status||'in_stock', category:r.category||'Ladies', keywords:r.keywords||'',
       occasions:r.occasions||'', sizeGuide:r.size_guide||'',
       colors:(r.colors&&r.colors.length)?r.colors:[{name:'Original',hex:'#B0A388',images:[],stock:'in_stock'}],
-      isBestSeller: !!r.is_best_seller
+      isBestSeller: !!r.is_best_seller,
+      garmentType: r.garment_type||'',
     }));
   }
 }
@@ -1963,7 +1973,7 @@ async function persistSettings(){
 async function persistProduct(idx){
   if(!sbClient)return false;
   const p=S.products[idx];
-  const payload={name:p.name, description:p.desc, price:p.price, original_price: (p.originalPrice!=null && p.originalPrice!=='') ? p.originalPrice : null, material:p.mat, fit:p.fit, sizes:p.sizes, visible:p.vis, stock_status:p.stock||'in_stock', category:p.category||'Ladies', keywords:p.keywords||'', occasions:p.occasions||'', size_guide:p.sizeGuide||'', colors:p.colors||[], sort_order: typeof p.sort==='number'?p.sort:idx, is_best_seller: !!p.isBestSeller};
+  const payload={name:p.name, description:p.desc, price:p.price, original_price: (p.originalPrice!=null && p.originalPrice!=='') ? p.originalPrice : null, material:p.mat, fit:p.fit, sizes:p.sizes, visible:p.vis, stock_status:p.stock||'in_stock', category:p.category||'Ladies', garment_type:p.garmentType||'', keywords:p.keywords||'', occasions:p.occasions||'', size_guide:p.sizeGuide||'', colors:p.colors||[], sort_order: typeof p.sort==='number'?p.sort:idx, is_best_seller: !!p.isBestSeller};
   if(p.id){
     const {error}=await sbClient.from('products').update(payload).eq('id',p.id);
     if(error){ console.warn(error); setConnStatus('error'); return false; }
@@ -2350,7 +2360,9 @@ function doSearch(query, catBtn, catValue){
 }
 
 function renderCatTabs(){
-  const cats = ['All', ...Array.from(new Set(S.products.map(p=>p.category||'Ladies')))];
+  const genderCats = Array.from(new Set(S.products.map(p=>p.category||'Ladies')));
+  const typeCats = Array.from(new Set(S.products.filter(p=>p.garmentType).map(p=>p.garmentType)));
+  const cats = ['All', ...genderCats, ...typeCats];
   const wrap=document.getElementById('catTabs');
   const hasBestSellers = S.products.some(p=>p.vis && p.isBestSeller);
   const hasLowStock = S.products.some(p=>p.vis && productOverallStock(p)==='low_stock');
@@ -2468,7 +2480,7 @@ function renderProducts(){
     return;
   }
   let visible=S.products.filter(p=>p.vis);
-  if(activeCategory!=='All') visible=visible.filter(p=>(p.category||'Ladies')===activeCategory);
+  if(activeCategory!=='All') visible=visible.filter(p=>(p.category||'Ladies')===activeCategory || p.garmentType===activeCategory);
   renderProductCardsGrid(grid, visible);
 }
 
@@ -3349,7 +3361,8 @@ async function reloadAdminData(){
           vis:r.visible, sort:r.sort_order??i, ph,
           stock:r.stock_status||'in_stock', category:r.category||'Ladies', keywords:r.keywords||'',
           occasions:r.occasions||'', sizeGuide:r.size_guide||'', colors,
-          isBestSeller: !!r.is_best_seller
+          isBestSeller: !!r.is_best_seller,
+          garmentType: r.garment_type||'',
         };
       });
     }
@@ -3631,7 +3644,7 @@ function renderAdminProducts(){
       <div>
         <div class="apc-n">${p.name}</div>
         <div class="apc-d">${p.desc}</div>
-        <div class="apc-p">LE ${p.price.toLocaleString()} · ${totalPhotos?totalPhotos+' photo(s)':'No photos'} · ${colorsTxt} · ${p.sizes.join(', ')} · ${p.category||'Ladies'} · <span style="color:${overallStock==='sold_out'?'#7a1f1f':overallStock==='low_stock'?'#B8860B':'var(--sage)'}">${overallStock==='sold_out'?'Sold Out':overallStock==='low_stock'?'Almost Sold Out':'In Stock'}</span></div>
+        <div class="apc-p">LE ${p.price.toLocaleString()} · ${totalPhotos?totalPhotos+' photo(s)':'No photos'} · ${colorsTxt} · ${p.sizes.join(', ')} · ${p.category||'Ladies'}${p.garmentType?' · '+p.garmentType:''} · <span style="color:${overallStock==='sold_out'?'#7a1f1f':overallStock==='low_stock'?'#B8860B':'var(--sage)'}">${overallStock==='sold_out'?'Sold Out':overallStock==='low_stock'?'Almost Sold Out':'In Stock'}</span></div>
       </div>
       <div class="apc-btns" onclick="event.stopPropagation()">
         <button class="vis-tag ${p.vis?'':'off'}" onclick="toggleVis(${i})">${p.vis?'● Visible':'○ Hidden'}</button>
@@ -3692,6 +3705,7 @@ function openApanel(idx){
   document.getElementById('ap-sizeGuide').value=p.sizeGuide||'';
   document.getElementById('ap-stock').value=p.stock||'in_stock';
   document.getElementById('ap-category').value=p.category||'Ladies';
+  document.getElementById('ap-garmentType').value=p.garmentType||'';
   document.getElementById('ap-vis').checked=p.vis;
   document.getElementById('ap-bestseller').checked=!!p.isBestSeller;
   document.getElementById('ap-saved').classList.remove('show');
@@ -4042,6 +4056,7 @@ async function saveProduct(){
     sizeGuide:document.getElementById('ap-sizeGuide').value,
     stock:document.getElementById('ap-stock').value,
     category:document.getElementById('ap-category').value,
+    garmentType:document.getElementById('ap-garmentType').value,
     vis:document.getElementById('ap-vis').checked,
     isBestSeller:document.getElementById('ap-bestseller').checked
   };

@@ -28,7 +28,7 @@ nav{background:var(--cream);border-bottom:1px solid rgba(0,0,0,.08);padding:0 24
 .col-header{padding:44px 24px 20px;border-bottom:1px solid rgba(0,0,0,.08)}
 .col-title{font-family:'Cormorant Garamond',serif;font-size:40px;font-weight:300;margin-bottom:6px}
 .col-sub{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--warm-gray)}
-.filter-row{padding:14px 24px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(0,0,0,.06)}
+.filter-row{padding:14px 24px;display:flex;align-items:center;justify-content:space-between}
 
 /* ── TRUST BAR — shown right below nav, above the collection title ── */
 .trust-bar{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;padding:12px 20px;background:var(--ivory);border-bottom:1px solid rgba(0,0,0,.08)}
@@ -83,10 +83,19 @@ nav{background:var(--cream);border-bottom:1px solid rgba(0,0,0,.08);padding:0 24
 .modal-stock-badge{display:inline-block;font-size:10px;letter-spacing:2px;text-transform:uppercase;padding:4px 12px;margin-bottom:10px}
 .modal-stock-badge.low{background:#fff3d6;color:#B8860B}
 .modal-stock-badge.sold{background:#fbe6e6;color:#7a1f1f}
-.cat-tabs{display:flex;gap:6px;padding:0 24px 16px;flex-wrap:wrap}
+.cat-tabs{display:flex;gap:6px;padding:0 24px 16px;flex-wrap:wrap;border-top:1px solid rgba(0,0,0,.06)}
 .cat-tab{background:none;border:1px solid rgba(0,0,0,.15);padding:7px 18px;font-family:'Jost',sans-serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;color:var(--black);transition:all .2s}
 .cat-tab:hover{border-color:var(--black)}
 .cat-tab.active{background:var(--black);color:#fff;border-color:var(--black)}
+
+/* ── CLIENT REVIEWS DIVIDER LABEL — sits centered on the filter-row's
+   border line, standing apart from the regular filter tabs since it's
+   the most important trust signal on the page. ── */
+.reviews-label-wrap{position:relative;display:flex;align-items:center;justify-content:center;padding:10px 0;z-index:5}
+.reviews-label-wrap::before{content:'';position:absolute;left:24px;right:24px;top:50%;height:1px;background:rgba(0,0,0,.1);z-index:1}
+.reviews-label-btn{position:relative;z-index:2;background:var(--cream);border:1px solid rgba(0,0,0,.1);border-radius:20px;padding:6px 18px;font-family:'Jost',sans-serif;font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:var(--black);cursor:pointer;transition:all .2s;box-shadow:0 1px 4px rgba(0,0,0,.04);display:flex;align-items:center;line-height:1}
+.reviews-label-btn:hover{border-color:var(--gold);color:var(--gold)}
+.reviews-label-btn.active{background:var(--black);border-color:var(--black);color:var(--gold)}
 
 /* ── BUNDLES ── */
 .bundle-badge{position:absolute;top:14px;left:14px;background:var(--gold);color:var(--black);font-size:9px;letter-spacing:2px;text-transform:uppercase;padding:4px 10px;z-index:2;font-weight:500}
@@ -631,6 +640,9 @@ function trackEvent(name, params){
     <button class="gtoggle active" onclick="setGrid(this)"><div class="g4"><span></span><span></span><span></span><span></span></div></button>
     <button class="gtoggle" onclick="setGrid(this)"><div class="g1"></div></button>
   </div>
+</div>
+<div class="reviews-label-wrap" id="reviewsLabelWrap" style="display:none">
+  <button class="reviews-label-btn" id="reviewsLabelBtn" onclick="setCategory('Reviews')">✦ Client Reviews</button>
 </div>
 <div class="cat-tabs" id="catTabs"></div>
 
@@ -1317,6 +1329,9 @@ function trackEvent(name, params){
         <select class="af-input" id="ap-category">
           <option value="Ladies">Ladies</option>
           <option value="Men">Men</option>
+          <option value="Sets">Sets</option>
+          <option value="Blouses">Blouses</option>
+          <option value="Pants">Pants</option>
         </select>
       </div>
     </div>
@@ -2349,14 +2364,22 @@ function renderCatTabs(){
       ? `<button class="cat-tab ${activeCategory==='BestSellers'?'active':''}" onclick="setCategory('BestSellers')">★ Best Sellers</button>` : '',
     lowstock: ()=> hasLowStock
       ? `<button class="cat-tab ${activeCategory==='LowStock'?'active':''}" onclick="setCategory('LowStock')">⚠ Almost Sold Out</button>` : '',
-    bundles: ()=> `<button class="cat-tab ${activeCategory==='Bundles'?'active':''}" onclick="setCategory('Bundles')">⬢ Bundles</button>`,
-    reviews: ()=> hasReviews
-      ? `<button class="cat-tab ${activeCategory==='Reviews'?'active':''}" onclick="setCategory('Reviews')">✦ Client Reviews</button>` : ''
+    bundles: ()=> `<button class="cat-tab ${activeCategory==='Bundles'?'active':''}" onclick="setCategory('Bundles')">⬢ Bundles</button>`
   };
 
   const order = (S.settings.tabOrder && S.settings.tabOrder.length) ? S.settings.tabOrder : ['categories','bestsellers','lowstock','bundles','reviews'];
   const html = order.map(key => tabBuilders[key] ? tabBuilders[key]() : '').join('');
   wrap.innerHTML = html;
+
+  // Client Reviews stands apart on its own — the single most important
+  // trust signal, so it sits on the divider line above the tabs instead
+  // of blending in as just another filter button.
+  const reviewsWrap=document.getElementById('reviewsLabelWrap');
+  const reviewsBtn=document.getElementById('reviewsLabelBtn');
+  if(reviewsWrap){
+    reviewsWrap.style.display = hasReviews ? 'flex' : 'none';
+    if(reviewsBtn) reviewsBtn.classList.toggle('active', activeCategory==='Reviews');
+  }
 }
 function setCategory(c){
   activeCategory=c;
@@ -2685,15 +2708,56 @@ function addBundleToCart(){
 ════════════════════════════════ */
 function renderReviewsGrid(grid){
   const visible = (S.reviews||[]).filter(r=>r.vis);
+  const feedbackCard = renderFeedbackCard();
   if(!visible.length){
-    grid.innerHTML = `<div class="no-items" style="grid-column:1/-1;padding:60px 20px">No client reviews posted yet.</div>`;
+    grid.innerHTML = feedbackCard + `<div class="no-items" style="grid-column:1/-1;padding:60px 20px">No client reviews posted yet.</div>`;
     return;
   }
-  grid.innerHTML = visible.map((r,vi)=>`
+  grid.innerHTML = feedbackCard + visible.map((r,vi)=>`
     <div class="p-card" onclick="openReviewLightbox(${vi})">
       <div class="p-img"><img class="p-real-img" src="${r.imageUrl}" alt="Client review" loading="lazy"></div>
       ${r.caption?`<div class="p-info"><div class="p-desc">${escapeAttr(r.caption)}</div></div>`:''}
     </div>`).join('');
+}
+
+/* ── FEEDBACK CARD — lets the customer choose where to send their own
+   review/feedback (WhatsApp or Instagram). Instagram opens the profile
+   link from Store Settings → Social Links; WhatsApp opens a pre-filled
+   message. If Instagram isn't configured, only WhatsApp is shown. */
+function renderFeedbackCard(){
+  const igEntry = (S.settings.socials||[]).find(s=>(s.label||'').toLowerCase().includes('instagram'));
+  return `<div class="p-card" style="background:var(--black);cursor:default">
+    <div class="p-img" style="display:flex;align-items:center;justify-content:center;background:var(--black)">
+      <div style="text-align:center;padding:20px;color:var(--ivory)">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:15px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:10px">Your Voice Matters</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:300;margin-bottom:10px;line-height:1.3">We'd Love To<br>Hear Your Review</div>
+        <div style="font-size:11px;letter-spacing:1px;color:rgba(255,255,255,.6)">Tell us about your PRIMORA experience</div>
+      </div>
+    </div>
+    <div class="p-info">
+      <div class="p-name">Send Us Your Feedback</div>
+      <div class="p-desc">Choose where you'd like to send it</div>
+    </div>
+    <div class="p-actions" onclick="event.stopPropagation()" style="gap:7px">
+      <button class="add-bag-btn" style="display:flex;align-items:center;justify-content:center;gap:8px;background:#25D366" onclick="sendFeedbackWhatsApp()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="#fff"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.124.558 4.118 1.532 5.847L.057 23.882l6.196-1.626A11.936 11.936 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.81 9.81 0 01-5.032-1.385l-.36-.214-3.736.98.997-3.648-.235-.374A9.818 9.818 0 012.182 12C2.182 6.57 6.57 2.182 12 2.182S21.818 6.57 21.818 12 17.43 21.818 12 21.818z"/></svg>
+        WhatsApp
+      </button>
+      ${igEntry ? `<button class="add-bag-btn" style="display:flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888)" onclick="sendFeedbackInstagram()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="#fff"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zM12 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+        Instagram
+      </button>` : ''}
+    </div>
+  </div>`;
+}
+function sendFeedbackWhatsApp(){
+  const msg=encodeURIComponent(`Hello PRIMORA 👋\nI'd like to share my feedback about my recent order:\n\n`);
+  window.open(`https://wa.me/${S.settings.wa}?text=${msg}`,'_blank');
+}
+function sendFeedbackInstagram(){
+  const igEntry = (S.settings.socials||[]).find(s=>(s.label||'').toLowerCase().includes('instagram'));
+  if(!igEntry || !igEntry.url){ alert('Instagram is not set up yet.'); return; }
+  window.open(igEntry.url,'_blank');
 }
 
 let reviewLightboxIdx=0;

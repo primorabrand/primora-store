@@ -763,6 +763,7 @@ function trackEvent(name, params){
 </div>
 <input type="file" id="imgFileInput" accept="image/*" style="display:none" onchange="handleImgUpload(event)">
 <input type="file" id="reviewFileInput" accept="image/*" style="display:none" onchange="handleReviewImgUpload(event)">
+<input type="file" id="designImageFileInput" accept="image/*" style="display:none" onchange="handleDesignImageUpload(event)">
 
 <!-- MENU DRAWER — Brand Story + Suggestions -->
 <div class="menu-overlay" id="menuOverlay" onclick="closeMenu()"></div>
@@ -983,6 +984,7 @@ function trackEvent(name, params){
       <div class="asb-item" onclick="showPanel('products',this)">◇ Products</div>
       <div class="asb-item" onclick="showPanel('bundles',this)">⬢ Bundles</div>
       <div class="asb-item" onclick="showPanel('reviews',this)">✦ Client Reviews</div>
+      <div class="asb-item" onclick="showPanel('designs',this)">✎ Design Submissions <span class="asb-badge" id="designBadge">0</span></div>
       <div class="asb-item" onclick="showPanel('store',this)">◎ Settings</div>
       <div class="asb-item" onclick="showPanel('content',this)">◈ Content</div>
       <div class="asb-divider"></div>
@@ -1120,6 +1122,16 @@ function trackEvent(name, params){
         <div class="apc-list" id="reviewsList"></div>
       </div>
 
+      <!-- DESIGN SUBMISSIONS -->
+      <div class="a-panel" id="panel-designs">
+        <div class="a-page-title">Design Submissions</div>
+        <div class="a-page-sub">Designs shared by visitors through the storefront's "Designer Collab" tab</div>
+        <div id="designsSetupNotice" style="display:none;background:#fff8e6;border:1px solid #f0d98c;padding:16px 18px;font-size:12px;color:#8a6d1a;line-height:1.8;margin-bottom:18px">
+          Design Submissions aren't set up in your database yet. Run <strong>supabase_migration_v18_design_collab.sql</strong> once in the Supabase SQL Editor, then refresh this page.
+        </div>
+        <div id="designsWrap"></div>
+      </div>
+
       <!-- SETTINGS -->
       <div class="a-panel" id="panel-store">
         <div class="a-page-title">Store Settings</div>
@@ -1143,6 +1155,17 @@ function trackEvent(name, params){
             <div id="tabOrderList"></div>
             <button class="btn-save" id="bsave14" onclick="saveTabOrder('bsave14','st14')" style="margin-top:10px">Save</button>
             <span class="saved-tag" id="st14">✓ Saved</span>
+          </div>
+        </div>
+        <div class="a-section">
+          <div class="a-section-head"><div class="a-section-title">Designer Collab</div></div>
+          <div class="a-section-body">
+            <div style="font-size:11px;color:var(--warm-gray);margin-bottom:16px;line-height:1.7">Lets any visitor submit a design idea (image + description) through its own storefront tab. Their own email client opens pre-filled to send it to you directly, and every submission is also saved under admin → Design Submissions. Requires migration v18.</div>
+            <div class="af-group"><label class="af-label">Tab Label</label><input class="af-input" id="s-designTabLabel" placeholder="✎ Designer Collab"></div>
+            <div class="af-group"><label class="af-label">Intro Text</label><textarea class="af-input" id="s-designIntro" rows="3"></textarea></div>
+            <div class="af-group"><label class="af-label">Destination Email</label><input class="af-input" type="email" id="s-designEmail" placeholder="hello@primora.com"></div>
+            <button class="btn-save" id="bsave15" onclick="saveSettings('bsave15','st15')">Save</button>
+            <span class="saved-tag" id="st15">✓ Saved</span>
           </div>
         </div>
         <div class="a-section">
@@ -1468,7 +1491,10 @@ const S = {
     happyCount:500,
     happyLabel:'Happy Customers',
     customBundleDiscount:300,
-    tabOrder:['categories','bestsellers','lowstock','bundles','reviews']
+    tabOrder:['categories','bestsellers','lowstock','bundles','design'],
+    designTabLabel:'✎ Designer Collab',
+    designIntro:"Are you a designer? Send us any design you'd love to see made real. Upload your idea below — if it's a hit, we'll bring it to life and share the success with you.",
+    designEmail:'hello@primora.com'
   },
   products:[
     {name:'The Ivory Shift',  desc:'Linen Blend · Relaxed Fit',   price:1250,mat:'100% Linen',       fit:'Relaxed, oversized',   sizes:['XS','S','M','L'],vis:true, stock:'in_stock', category:'Ladies', keywords:'', occasions:'', sizeGuide:'', colors:[{name:'Ivory',hex:'#C8BBA0',images:[],stock:'in_stock'}]},
@@ -1486,7 +1512,8 @@ const S = {
   subscribers:[],
   customers:[],
   bundles:[], // [{id,name,productIds:[id1,id2],price,vis,sort}]
-  reviews:[] // [{id,imageUrl,caption,vis,sort}]
+  reviews:[], // [{id,imageUrl,caption,vis,sort}]
+  designSubmissions:[] // [{id,name,email,description,imageUrl,status,createdAt}]
 };
 
 let activeCategory = 'All'; // current storefront filter
@@ -1850,6 +1877,9 @@ async function loadPersisted(){
       S.settings.happyLabel = setRow.happy_label ?? S.settings.happyLabel;
       S.settings.customBundleDiscount = setRow.custom_bundle_discount ?? S.settings.customBundleDiscount;
       S.settings.tabOrder = (setRow.tab_order && setRow.tab_order.length) ? setRow.tab_order : S.settings.tabOrder;
+      S.settings.designTabLabel = setRow.design_tab_label ?? S.settings.designTabLabel;
+      S.settings.designIntro = setRow.design_intro ?? S.settings.designIntro;
+      S.settings.designEmail = setRow.design_email ?? S.settings.designEmail;
     }
 
     if(prodRows && prodRows.length){
@@ -1921,6 +1951,24 @@ async function loadReviews(){
   }
 }
 
+/* Admin-only — a regular visitor's RLS session can never read this table
+   (design_submissions_select_admin_only policy), so this is only ever
+   called from reloadAdminData(), never from the public loadPersisted(). */
+async function loadDesignSubmissions(){
+  if(!sbClient)return;
+  try{
+    const {data,error} = await sbClient.from('design_submissions').select('*').order('created_at',{ascending:false});
+    if(error) throw error;
+    S.designSubmissions = (data||[]).map(r=>({
+      id:r.id, name:r.name||'', email:r.email||'', description:r.description||'',
+      imageUrl:r.image_url, status:r.status||'new', createdAt:r.created_at
+    }));
+  }catch(e){
+    console.warn('Design submissions load skipped (run supabase_migration_v18_design_collab.sql to enable it):', e.message||e);
+    S.designSubmissions = [];
+  }
+}
+
 async function loadSubscribers(){
   if(!sbClient)return;
   try{
@@ -1962,7 +2010,8 @@ async function persistSettings(){
     footer_pages:S.settings.footerPages, faq:S.settings.faq, socials:S.settings.socials,
     happy_count:S.settings.happyCount, happy_label:S.settings.happyLabel,
     custom_bundle_discount:S.settings.customBundleDiscount,
-    tab_order:S.settings.tabOrder
+    tab_order:S.settings.tabOrder,
+    design_tab_label:S.settings.designTabLabel, design_intro:S.settings.designIntro, design_email:S.settings.designEmail
   }).eq('id',1);
   if(error){ console.warn('Settings save error',error); setConnStatus('error'); return false; }
   setConnStatus('connected');
@@ -2376,10 +2425,11 @@ function renderCatTabs(){
       ? `<button class="cat-tab ${activeCategory==='BestSellers'?'active':''}" onclick="setCategory('BestSellers')">★ Best Sellers</button>` : '',
     lowstock: ()=> hasLowStock
       ? `<button class="cat-tab ${activeCategory==='LowStock'?'active':''}" onclick="setCategory('LowStock')">⚠ Almost Sold Out</button>` : '',
-    bundles: ()=> `<button class="cat-tab ${activeCategory==='Bundles'?'active':''}" onclick="setCategory('Bundles')">⬢ Bundles</button>`
+    bundles: ()=> `<button class="cat-tab ${activeCategory==='Bundles'?'active':''}" onclick="setCategory('Bundles')">⬢ Bundles</button>`,
+    design: ()=> `<button class="cat-tab ${activeCategory==='DesignCollab'?'active':''}" onclick="setCategory('DesignCollab')">${escapeAttr(S.settings.designTabLabel||'✎ Designer Collab')}</button>`
   };
 
-  const order = (S.settings.tabOrder && S.settings.tabOrder.length) ? S.settings.tabOrder : ['categories','bestsellers','lowstock','bundles','reviews'];
+  const order = (S.settings.tabOrder && S.settings.tabOrder.length) ? S.settings.tabOrder : ['categories','bestsellers','lowstock','bundles','design'];
   const html = order.map(key => tabBuilders[key] ? tabBuilders[key]() : '').join('');
   wrap.innerHTML = html;
 
@@ -2471,6 +2521,7 @@ function renderProducts(){
   renderCatTabs();
   if(activeCategory==='Bundles'){ renderBundleGrid(grid); return; }
   if(activeCategory==='Reviews'){ renderReviewsGrid(grid); return; }
+  if(activeCategory==='DesignCollab'){ renderDesignCollabPage(grid); return; }
   if(activeCategory==='BestSellers'){
     renderProductCardsGrid(grid, S.products.filter(p=>p.vis && p.isBestSeller));
     return;
@@ -2798,6 +2849,100 @@ function renderReviewLightbox(){
   const lBtn=document.getElementById('rlbLeft'), rBtn=document.getElementById('rlbRight');
   lBtn.style.display = imgs.length>1 ? 'flex':'none';
   rBtn.style.display = imgs.length>1 ? 'flex':'none';
+}
+
+/* ════════════════════════════════
+   DESIGNER COLLAB — storefront submission page
+   Anyone can submit a design idea (image + description). Two things
+   happen on submit: (1) it's saved to design_submissions so you can
+   review every idea from admin, and (2) the VISITOR'S OWN email app
+   opens pre-filled to send it to your address directly — that's the
+   only technically honest way for the email to truly come from them
+   (a website can never fake the From: address of someone else's email).
+════════════════════════════════ */
+let designSubmitImageUrl = null;
+function renderDesignCollabPage(grid){
+  designSubmitImageUrl = null;
+  grid.innerHTML = `
+    <div style="grid-column:1/-1;max-width:640px;margin:0 auto;padding:30px 24px 60px">
+      <div style="text-align:center;margin-bottom:36px">
+        <div style="font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:14px">Collaborate With Us</div>
+        <h2 style="font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:300;margin-bottom:14px">${escapeAttr((S.settings.designTabLabel||'Designer Collab').replace(/^[✎\s]+/,''))}</h2>
+        <p style="font-size:13px;color:var(--warm-gray);line-height:1.9">${escapeAttr(S.settings.designIntro||'')}</p>
+      </div>
+      <div id="designFormBody">
+        <label class="af-label" style="display:block;margin-bottom:8px">Your Name</label>
+        <input class="co-input" id="design-name" placeholder="Your full name" style="margin-bottom:16px">
+        <label class="af-label" style="display:block;margin-bottom:8px">Your Email</label>
+        <input class="co-input" type="email" id="design-email" placeholder="your@email.com" style="margin-bottom:16px">
+        <label class="af-label" style="display:block;margin-bottom:8px">Describe Your Design</label>
+        <textarea class="co-input" id="design-desc" rows="4" placeholder="Tell us about your idea…" style="margin-bottom:16px;resize:vertical"></textarea>
+        <label class="af-label" style="display:block;margin-bottom:8px">Upload Your Design</label>
+        <div id="designImageSlot" style="width:140px;height:175px;border:1.5px dashed rgba(0,0,0,.2);cursor:pointer;margin-bottom:22px;position:relative;overflow:hidden;background:#f8f5f0" onclick="triggerDesignImageUpload()">
+          <div id="designImageSlotEmpty" style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:6px">
+            <div style="font-size:22px;opacity:.3">+</div>
+            <div style="font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--warm-gray);text-align:center;padding:0 10px">Add Image</div>
+          </div>
+        </div>
+        <button class="checkout-btn" onclick="submitDesignForm()">Send My Design</button>
+        <div style="font-size:10px;color:var(--warm-gray);text-align:center;margin-top:12px;line-height:1.7">Your own email app will also open so this comes straight from you to us.</div>
+      </div>
+      <div id="designSuccessMsg" style="display:none;text-align:center;padding:50px 0">
+        <div style="font-size:30px;margin-bottom:14px">✦</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:22px;margin-bottom:10px">Thank You!</div>
+        <div style="font-size:12px;color:var(--warm-gray);line-height:1.8">We've received your design and opened your email app to send it directly. We'll be in touch soon.</div>
+      </div>
+    </div>`;
+}
+function triggerDesignImageUpload(){
+  document.getElementById('designImageFileInput').click();
+}
+async function handleDesignImageUpload(e){
+  const file=e.target.files[0];
+  if(!file)return;
+  e.target.value='';
+  const slot=document.getElementById('designImageSlot');
+  if(!slot)return;
+  slot.innerHTML='<div style="display:flex;align-items:center;justify-content:center;height:100%;font-size:10px;color:var(--warm-gray)">Uploading…</div>';
+  const blob = await compressImage(file);
+  const url = await uploadDesignImage(blob);
+  if(!url){
+    alert('Image upload failed. Please check your connection and try again.');
+    slot.innerHTML='<div id="designImageSlotEmpty" style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:6px"><div style="font-size:22px;opacity:.3">+</div><div style="font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--warm-gray)">Add Image</div></div>';
+    return;
+  }
+  designSubmitImageUrl = url;
+  slot.innerHTML = `<img src="${url}" alt="" style="width:100%;height:100%;object-fit:cover">`;
+}
+async function uploadDesignImage(blob){
+  if(!sbClient) return null;
+  const path=`design-${Date.now()}-${Math.random().toString(36).slice(2,8)}.jpg`;
+  const {error}=await sbClient.storage.from('design-submissions').upload(path, blob, {upsert:true, contentType:'image/jpeg'});
+  if(error){ console.warn('Design image upload error',error); return null; }
+  const {data}=sbClient.storage.from('design-submissions').getPublicUrl(path);
+  return data.publicUrl;
+}
+async function submitDesignForm(){
+  const name=document.getElementById('design-name').value.trim();
+  const email=document.getElementById('design-email').value.trim();
+  const desc=document.getElementById('design-desc').value.trim();
+  if(!name||!email||!desc){ alert('Please fill in your name, email, and design description.'); return; }
+  if(!designSubmitImageUrl){ alert('Please upload an image of your design.'); return; }
+
+  if(sbClient){
+    const {error} = await sbClient.from('design_submissions').insert({
+      name, email, description:desc, image_url:designSubmitImageUrl, status:'new'
+    });
+    if(error) console.warn('Design submission save error (run migration v18 if needed):', error);
+  }
+
+  const to = S.settings.designEmail || 'hello@primora.com';
+  const subject = encodeURIComponent(`Design Submission from ${name}`);
+  const body = encodeURIComponent(`Hi PRIMORA,\n\nI'd love for you to consider this design:\n\n${desc}\n\nI've also uploaded the image directly on your site — you can find it under my submission.\n\n— ${name}`);
+  window.location.href = `mailto:${to}?subject=${subject}&body=${body}`;
+
+  document.getElementById('designFormBody').style.display='none';
+  document.getElementById('designSuccessMsg').style.display='block';
 }
 
 /* ════════════════════════════════
@@ -3373,12 +3518,13 @@ async function reloadAdminData(){
   }
   await loadBundles();
   await loadReviews();
+  await loadDesignSubmissions();
 }
 
 async function openAdmin(){
   document.getElementById('adminShell').classList.add('open');
   await reloadAdminData();
-  loadAdminForms();renderAdminProducts();renderAdminBundles();renderAdminReviews();renderOrders();refreshDash();
+  loadAdminForms();renderAdminProducts();renderAdminBundles();renderAdminReviews();renderAdminDesignSubmissions();renderOrders();refreshDash();
   await loadSubscribers();
   renderSubscribers();
   await loadCustomers();
@@ -3389,7 +3535,7 @@ async function manualRefreshOrders(){
   const btn=document.getElementById('ordersRefreshBtn');
   const orig=btn.textContent; btn.textContent='Refreshing…'; btn.disabled=true;
   await reloadAdminData();
-  renderOrders(); renderAdminProducts(); renderAdminBundles(); renderAdminReviews(); refreshDash();
+  renderOrders(); renderAdminProducts(); renderAdminBundles(); renderAdminReviews(); renderAdminDesignSubmissions(); refreshDash();
   btn.textContent=orig; btn.disabled=false;
 }
 function closeAdmin(){
@@ -3993,6 +4139,53 @@ async function persistReview(idx){
   return true;
 }
 
+/* ════════════════════════════════
+   DESIGN SUBMISSIONS — admin (read, mark reviewed, delete)
+════════════════════════════════ */
+function renderAdminDesignSubmissions(){
+  const wrap=document.getElementById('designsWrap');
+  const badge=document.getElementById('designBadge');
+  if(!wrap)return;
+  if(!S.designSubmissions){ S.designSubmissions=[]; }
+  if(badge) badge.textContent = S.designSubmissions.filter(d=>d.status==='new').length;
+  if(!S.designSubmissions.length){
+    wrap.innerHTML = `<div class="no-items">No design submissions yet. (If you just added migration v18, refresh this page first.)</div>`;
+    return;
+  }
+  wrap.innerHTML = `<div class="apc-list">${S.designSubmissions.map((d,i)=>`
+    <div class="apc">
+      <div class="apc-thumb">${d.imageUrl?`<img src="${d.imageUrl}" alt="" style="width:100%;height:100%;object-fit:cover">`:''}</div>
+      <div>
+        <div class="apc-n">${escapeAttr(d.name)} ${d.status==='new'?'<span class="vis-tag" style="border-color:var(--gold);color:var(--gold)">New</span>':''}</div>
+        <div class="apc-d">${escapeAttr(d.email)} · ${d.createdAt?new Date(d.createdAt).toLocaleDateString('en-GB'):''}</div>
+        <div class="apc-p" style="white-space:pre-wrap">${escapeAttr(d.description)}</div>
+      </div>
+      <div class="apc-btns" onclick="event.stopPropagation()">
+        <button class="vis-tag ${d.status==='reviewed'?'':'off'}" onclick="toggleDesignStatus(${i})">${d.status==='reviewed'?'✓ Reviewed':'Mark Reviewed'}</button>
+        <button class="btn-danger" onclick="removeDesignSubmission(${i})">Delete</button>
+      </div>
+    </div>`).join('')}</div>`;
+}
+async function toggleDesignStatus(i){
+  const d=S.designSubmissions[i];
+  d.status = d.status==='reviewed' ? 'new' : 'reviewed';
+  if(sbClient && d.id){
+    const {error}=await sbClient.from('design_submissions').update({status:d.status}).eq('id',d.id);
+    if(error) console.warn(error);
+  }
+  renderAdminDesignSubmissions();
+}
+async function removeDesignSubmission(i){
+  if(!confirm('Delete this design submission? This cannot be undone.'))return;
+  const d=S.designSubmissions[i];
+  if(sbClient && d.id){
+    const {error}=await sbClient.from('design_submissions').delete().eq('id',d.id);
+    if(error){ console.warn(error); alert("Couldn't delete — check your connection and try again."); return; }
+  }
+  S.designSubmissions.splice(i,1);
+  renderAdminDesignSubmissions();
+}
+
 /* ── COLOR VARIANTS EDITOR ── */
 function renderColorsEditor(idx){
   const p=S.products[idx];
@@ -4102,6 +4295,9 @@ function loadAdminForms(){
   document.getElementById('s-happyCount').value=st.happyCount||0;
   document.getElementById('s-happyLabel').value=st.happyLabel||'';
   document.getElementById('s-customBundleDiscount').value=st.customBundleDiscount??300;
+  document.getElementById('s-designTabLabel').value=st.designTabLabel||'';
+  document.getElementById('s-designIntro').value=st.designIntro||'';
+  document.getElementById('s-designEmail').value=st.designEmail||'';
   renderTabOrderList();
   renderPhilEditFields();
   renderFooterPageFields();
@@ -4113,13 +4309,13 @@ const TAB_ORDER_LABELS = {
   bestsellers: '★ Best Sellers',
   lowstock: '⚠ Almost Sold Out',
   bundles: '⬢ Bundles',
-  reviews: '✦ Client Reviews'
+  design: '✎ Designer Collab'
 };
 function renderTabOrderList(){
   const container=document.getElementById('tabOrderList');
   if(!container)return;
   if(!S.settings.tabOrder || !S.settings.tabOrder.length){
-    S.settings.tabOrder = ['categories','bestsellers','lowstock','bundles','reviews'];
+    S.settings.tabOrder = ['categories','bestsellers','lowstock','bundles','design'];
   }
   container.innerHTML = S.settings.tabOrder.map((key,i)=>`
     <div class="apc" style="grid-template-columns:auto 1fr">
@@ -4281,6 +4477,9 @@ async function saveSettings(btnId,pillId){
   st.happyCount=parseInt(document.getElementById('s-happyCount').value)||0;
   st.happyLabel=document.getElementById('s-happyLabel').value;
   st.customBundleDiscount=Math.max(0,parseFloat(document.getElementById('s-customBundleDiscount').value)||0);
+  st.designTabLabel=document.getElementById('s-designTabLabel').value.trim()||'✎ Designer Collab';
+  st.designIntro=document.getElementById('s-designIntro').value;
+  st.designEmail=document.getElementById('s-designEmail').value.trim();
   const btn=document.getElementById(btnId);
   const orig=btn.textContent; btn.textContent='Saving…'; btn.disabled=true;
   const ok = await persistSettings();

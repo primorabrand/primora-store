@@ -172,6 +172,15 @@ nav{background:var(--cream);border-bottom:1px solid rgba(0,0,0,.08);padding:0 24
 .modal-name{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300;margin-bottom:5px}
 .modal-price{font-size:16px;color:var(--black-s);margin-bottom:20px}
 .modal-desc{font-size:12px;line-height:1.9;color:var(--warm-gray);margin-bottom:22px}
+
+/* ── STOCK URGENCY WIDGET ── */
+.stock-urgency{background:#F5F0FA;border-radius:8px;padding:14px 16px;margin-bottom:20px}
+.stock-urgency-head{display:flex;align-items:center;gap:10px;margin-bottom:4px}
+.stock-urgency-dot{width:11px;height:11px;border-radius:50%;background:#D42B2B;flex-shrink:0}
+.stock-urgency-title{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:600;color:#7A1414}
+.stock-urgency-sub{font-size:11.5px;color:#A97878;margin:0 0 10px 21px}
+.stock-urgency-bar-wrap{height:6px;border-radius:4px;background:#E2DFE8;overflow:hidden}
+.stock-urgency-bar{height:100%;border-radius:4px;background:#D42B2B}
 .modal-label{font-size:10px;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:9px}
 .modal-sizes{display:flex;gap:7px;margin-bottom:20px;flex-wrap:wrap}
 .modal-sz{border:1px solid rgba(0,0,0,.18);background:none;padding:8px 15px;font-family:'Jost',sans-serif;font-size:11px;cursor:pointer;color:var(--black);transition:all .2s}
@@ -484,6 +493,15 @@ footer{background:var(--black);color:rgba(255,255,255,.45);padding:56px 28px 28p
 .menu-close-btn{background:none;border:none;font-size:20px;cursor:pointer;opacity:.5}
 .menu-body{flex:1;overflow-y:auto;padding:24px 26px}
 .menu-section-label{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--sage);margin-bottom:14px}
+
+/* ── DESIGNER COLLAB — standout card at the top of the hamburger menu ── */
+.menu-design-card{display:flex;align-items:center;gap:14px;background:var(--black);color:var(--ivory);padding:18px;margin-bottom:28px;cursor:pointer;border:1px solid var(--gold);transition:all .2s}
+.menu-design-card:hover{background:var(--black-s)}
+.menu-design-icon{font-size:22px;color:var(--gold);flex-shrink:0;width:34px;height:34px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(201,169,110,.4);border-radius:50%}
+.menu-design-text{flex:1;min-width:0}
+.menu-design-title{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:500;letter-spacing:.5px;margin-bottom:4px;color:var(--ivory)}
+.menu-design-sub{font-size:10.5px;color:rgba(255,255,255,.55);line-height:1.6}
+.menu-design-arrow{font-size:20px;color:var(--gold);flex-shrink:0}
 .menu-phil-item{display:flex;gap:14px;margin-bottom:20px}
 .menu-phil-num{font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--sage);font-style:italic;flex-shrink:0;width:26px}
 .menu-phil-title{font-size:11px;letter-spacing:2px;text-transform:uppercase;margin-bottom:5px}
@@ -776,6 +794,14 @@ function trackEvent(name, params){
     <button class="menu-close-btn" onclick="closeMenu()">✕</button>
   </div>
   <div class="menu-body">
+    <div class="menu-design-card" onclick="goToDesignCollab()">
+      <div class="menu-design-icon">✎</div>
+      <div class="menu-design-text">
+        <div class="menu-design-title" id="menuDesignLabel">Designer Collab</div>
+        <div class="menu-design-sub">Send us your design — if it succeeds, we'll bring it to life and share the win with you.</div>
+      </div>
+      <div class="menu-design-arrow">›</div>
+    </div>
     <div class="menu-section-label">Our Story</div>
     <div id="menuPhilList"></div>
     <div class="menu-divider"></div>
@@ -848,6 +874,7 @@ function trackEvent(name, params){
       <div class="modal-name" id="modalName"></div>
       <div class="modal-price" id="modalPrice"></div>
       <div class="modal-desc" id="modalDesc"></div>
+      <div id="modalStockUrgencyWrap" style="display:none"></div>
       <div id="modalOccasionsWrap" style="display:none;margin-bottom:20px">
         <div class="modal-label">Perfect For</div>
         <div id="modalOccasionsText" style="font-size:12px;color:var(--warm-gray);line-height:1.8"></div>
@@ -1378,6 +1405,12 @@ function trackEvent(name, params){
         <span style="font-size:12px;color:var(--warm-gray)">★ Best Seller <span style="text-transform:none">— shows a badge on this piece and adds it to the storefront's "Best Sellers" tab</span></span>
       </div>
     </div>
+    <div class="af-group">
+      <div class="a-toggle">
+        <label class="tog-sw"><input type="checkbox" id="ap-isnew"><span class="tog-sl"></span></label>
+        <span style="font-size:12px;color:var(--warm-gray)">"New" Badge <span style="text-transform:none">— optional, off by default. Turn on for pieces you want tagged as new arrivals</span></span>
+      </div>
+    </div>
     <div style="display:flex;gap:10px;margin-top:20px;flex-wrap:wrap">
       <button class="btn-save" id="ap-savebtn" onclick="saveProduct()">Save Product</button>
       <button class="btn-outline" onclick="closeApanel()">Cancel</button>
@@ -1491,7 +1524,7 @@ const S = {
     happyCount:500,
     happyLabel:'Happy Customers',
     customBundleDiscount:300,
-    tabOrder:['categories','bestsellers','lowstock','bundles','design'],
+    tabOrder:['categories','bestsellers','lowstock','bundles'],
     designTabLabel:'✎ Designer Collab',
     designIntro:"Are you a designer? Send us any design you'd love to see made real. Upload your idea below — if it's a hit, we'll bring it to life and share the success with you.",
     designEmail:'hello@primora.com'
@@ -1876,7 +1909,12 @@ async function loadPersisted(){
       S.settings.happyCount = setRow.happy_count ?? S.settings.happyCount;
       S.settings.happyLabel = setRow.happy_label ?? S.settings.happyLabel;
       S.settings.customBundleDiscount = setRow.custom_bundle_discount ?? S.settings.customBundleDiscount;
-      S.settings.tabOrder = (setRow.tab_order && setRow.tab_order.length) ? setRow.tab_order : S.settings.tabOrder;
+      {
+        const savedOrder = (setRow.tab_order && setRow.tab_order.length) ? setRow.tab_order : S.settings.tabOrder;
+        const allKnownKeys = ['categories','bestsellers','lowstock','bundles'];
+        const missingKeys = allKnownKeys.filter(k => !savedOrder.includes(k));
+        S.settings.tabOrder = [...savedOrder, ...missingKeys]; // append anything new so it's never silently hidden
+      }
       S.settings.designTabLabel = setRow.design_tab_label ?? S.settings.designTabLabel;
       S.settings.designIntro = setRow.design_intro ?? S.settings.designIntro;
       S.settings.designEmail = setRow.design_email ?? S.settings.designEmail;
@@ -1899,6 +1937,7 @@ async function loadPersisted(){
           occasions:r.occasions||'', sizeGuide:r.size_guide||'', colors,
           isBestSeller: !!r.is_best_seller,
           garmentType: r.garment_type||'',
+          isNew: !!r.is_new,
         };
       });
     } else {
@@ -1995,6 +2034,7 @@ async function seedDefaultProducts(){
       colors:(r.colors&&r.colors.length)?r.colors:[{name:'Original',hex:'#B0A388',images:[],stock:'in_stock'}],
       isBestSeller: !!r.is_best_seller,
       garmentType: r.garment_type||'',
+      isNew: !!r.is_new,
     }));
   }
 }
@@ -2022,7 +2062,7 @@ async function persistSettings(){
 async function persistProduct(idx){
   if(!sbClient)return false;
   const p=S.products[idx];
-  const payload={name:p.name, description:p.desc, price:p.price, original_price: (p.originalPrice!=null && p.originalPrice!=='') ? p.originalPrice : null, material:p.mat, fit:p.fit, sizes:p.sizes, visible:p.vis, stock_status:p.stock||'in_stock', category:p.category||'Ladies', garment_type:p.garmentType||'', keywords:p.keywords||'', occasions:p.occasions||'', size_guide:p.sizeGuide||'', colors:p.colors||[], sort_order: typeof p.sort==='number'?p.sort:idx, is_best_seller: !!p.isBestSeller};
+  const payload={name:p.name, description:p.desc, price:p.price, original_price: (p.originalPrice!=null && p.originalPrice!=='') ? p.originalPrice : null, material:p.mat, fit:p.fit, sizes:p.sizes, visible:p.vis, stock_status:p.stock||'in_stock', category:p.category||'Ladies', garment_type:p.garmentType||'', keywords:p.keywords||'', occasions:p.occasions||'', size_guide:p.sizeGuide||'', colors:p.colors||[], sort_order: typeof p.sort==='number'?p.sort:idx, is_best_seller: !!p.isBestSeller, is_new: !!p.isNew};
   if(p.id){
     const {error}=await sbClient.from('products').update(payload).eq('id',p.id);
     if(error){ console.warn(error); setConnStatus('error'); return false; }
@@ -2330,12 +2370,19 @@ function closeFaqPage(){document.getElementById('faqOverlay').classList.remove('
 
 function openMenu(){
   renderPhilosophy();
+  const lbl=document.getElementById('menuDesignLabel');
+  if(lbl) lbl.textContent = (S.settings.designTabLabel || '✎ Designer Collab').replace(/^[✎\s]+/,'');
   document.getElementById('menuDrawer').classList.add('open');
   document.getElementById('menuOverlay').classList.add('open');
 }
 function closeMenu(){
   document.getElementById('menuDrawer').classList.remove('open');
   document.getElementById('menuOverlay').classList.remove('open');
+}
+function goToDesignCollab(){
+  closeMenu();
+  setCategory('DesignCollab');
+  document.getElementById('collection').scrollIntoView({behavior:'smooth', block:'start'});
 }
 function sendSuggestion(){
   const text=document.getElementById('suggestText').value.trim();
@@ -2425,11 +2472,10 @@ function renderCatTabs(){
       ? `<button class="cat-tab ${activeCategory==='BestSellers'?'active':''}" onclick="setCategory('BestSellers')">★ Best Sellers</button>` : '',
     lowstock: ()=> hasLowStock
       ? `<button class="cat-tab ${activeCategory==='LowStock'?'active':''}" onclick="setCategory('LowStock')">⚠ Almost Sold Out</button>` : '',
-    bundles: ()=> `<button class="cat-tab ${activeCategory==='Bundles'?'active':''}" onclick="setCategory('Bundles')">⬢ Bundles</button>`,
-    design: ()=> `<button class="cat-tab ${activeCategory==='DesignCollab'?'active':''}" onclick="setCategory('DesignCollab')">${escapeAttr(S.settings.designTabLabel||'✎ Designer Collab')}</button>`
+    bundles: ()=> `<button class="cat-tab ${activeCategory==='Bundles'?'active':''}" onclick="setCategory('Bundles')">⬢ Bundles</button>`
   };
 
-  const order = (S.settings.tabOrder && S.settings.tabOrder.length) ? S.settings.tabOrder : ['categories','bestsellers','lowstock','bundles','design'];
+  const order = (S.settings.tabOrder && S.settings.tabOrder.length) ? S.settings.tabOrder : ['categories','bestsellers','lowstock','bundles'];
   const html = order.map(key => tabBuilders[key] ? tabBuilders[key]() : '').join('');
   wrap.innerHTML = html;
 
@@ -2493,7 +2539,7 @@ function renderProductCardsGrid(grid, list){
     let stockBadge='';
     if(stock==='low_stock') stockBadge='<div class="stock-badge low">Almost Sold Out</div>';
     else if(stock==='sold_out') stockBadge='<div class="stock-badge sold">Sold Out</div>';
-    const topBadge = stockBadge || '<div class="new-badge">New</div>';
+    const topBadge = stockBadge || (p.isNew ? '<div class="new-badge">New</div>' : '');
     const bestSellerTag = p.isBestSeller ? `<div class="best-seller-tag">★ Best Seller</div>` : '';
     const addBtn = isSold
       ? `<button class="add-bag-btn" disabled>Sold Out</button>`
@@ -3020,6 +3066,33 @@ function applyColorState(p, ci){
     addBtn.textContent='Add to Bag'; addBtn.disabled=false; addBtn.classList.remove('added');
     if(waBtn){ waBtn.style.display=''; }
   }
+  renderStockUrgencyWidget(stock, col.lowStockQty);
+}
+
+/* Shows "Only X in stock" with a dot + urgency bar, inside the product
+   description area — only when the admin marked this color Almost Sold
+   Out AND entered a remaining quantity. Bar fill is a visual heuristic
+   (full at 10+ remaining) purely to communicate urgency, not an exact
+   inventory gauge. */
+function renderStockUrgencyWidget(stock, qty){
+  const wrap=document.getElementById('modalStockUrgencyWrap');
+  if(!wrap)return;
+  if(stock!=='low_stock' || qty==null || qty<=0){
+    wrap.style.display='none';
+    wrap.innerHTML='';
+    return;
+  }
+  const pct=Math.max(8, Math.min(100, Math.round((qty/10)*100)));
+  wrap.innerHTML=`
+    <div class="stock-urgency">
+      <div class="stock-urgency-head">
+        <span class="stock-urgency-dot"></span>
+        <span class="stock-urgency-title">Only ${qty} in stock</span>
+      </div>
+      <div class="stock-urgency-sub">Low stock, it's out of stock soon</div>
+      <div class="stock-urgency-bar-wrap"><div class="stock-urgency-bar" style="width:${pct}%"></div></div>
+    </div>`;
+  wrap.style.display='block';
 }
 
 function buildGallery(p){
@@ -3508,6 +3581,7 @@ async function reloadAdminData(){
           occasions:r.occasions||'', sizeGuide:r.size_guide||'', colors,
           isBestSeller: !!r.is_best_seller,
           garmentType: r.garment_type||'',
+          isNew: !!r.is_new,
         };
       });
     }
@@ -3854,6 +3928,7 @@ function openApanel(idx){
   document.getElementById('ap-garmentType').value=p.garmentType||'';
   document.getElementById('ap-vis').checked=p.vis;
   document.getElementById('ap-bestseller').checked=!!p.isBestSeller;
+  document.getElementById('ap-isnew').checked=!!p.isNew;
   document.getElementById('ap-saved').classList.remove('show');
   if(!p.colors || !p.colors.length) p.colors=[{name:'Default',hex:'#B0A388',images:[],stock:'in_stock'}];
   renderColorsEditor(idx);
@@ -4200,6 +4275,7 @@ function renderColorsEditor(idx){
           <option value="low_stock" ${c.stock==='low_stock'?'selected':''}>Almost Sold Out</option>
           <option value="sold_out" ${c.stock==='sold_out'?'selected':''}>Sold Out</option>
         </select>
+        <input class="af-input" type="number" min="0" id="col-qty-${ci}" value="${c.lowStockQty!=null?c.lowStockQty:''}" placeholder="Qty left" style="width:110px" title="Shown to customers as 'Only X in stock' when this color is Almost Sold Out — leave blank to not show a number">
         ${p.colors.length>1?`<button class="btn-danger" onclick="removeColorVariant(${ci})">Remove Color</button>`:''}
       </div>
       <div class="img-slots" id="imgSlots-${ci}"></div>
@@ -4228,13 +4304,17 @@ function removeColorVariant(ci){
 async function saveProduct(){
   const i=parseInt(document.getElementById('ap-idx').value);
   const p=S.products[i];
-  // Sync color name/hex/stock from the editor inputs (images are already live-saved on upload)
-  p.colors = p.colors.map((c,ci)=>({
-    ...c,
-    name: (document.getElementById(`col-name-${ci}`).value.trim()) || `Color ${ci+1}`,
-    hex: document.getElementById(`col-hex-${ci}`).value,
-    stock: document.getElementById(`col-stock-${ci}`).value
-  }));
+  // Sync color name/hex/stock/qty from the editor inputs (images are already live-saved on upload)
+  p.colors = p.colors.map((c,ci)=>{
+    const qtyRaw=document.getElementById(`col-qty-${ci}`).value.trim();
+    return {
+      ...c,
+      name: (document.getElementById(`col-name-${ci}`).value.trim()) || `Color ${ci+1}`,
+      hex: document.getElementById(`col-hex-${ci}`).value,
+      stock: document.getElementById(`col-stock-${ci}`).value,
+      lowStockQty: qtyRaw==='' ? null : Math.max(0, parseInt(qtyRaw)||0)
+    };
+  });
   S.products[i]={
     ...p,
     name:document.getElementById('ap-name').value,
@@ -4251,7 +4331,8 @@ async function saveProduct(){
     category:document.getElementById('ap-category').value,
     garmentType:document.getElementById('ap-garmentType').value,
     vis:document.getElementById('ap-vis').checked,
-    isBestSeller:document.getElementById('ap-bestseller').checked
+    isBestSeller:document.getElementById('ap-bestseller').checked,
+    isNew:document.getElementById('ap-isnew').checked
   };
   const btn=document.getElementById('ap-savebtn');
   btn.textContent='Saving…'; btn.disabled=true;
@@ -4308,14 +4389,13 @@ const TAB_ORDER_LABELS = {
   categories: 'Categories (Ladies, Men, etc.)',
   bestsellers: '★ Best Sellers',
   lowstock: '⚠ Almost Sold Out',
-  bundles: '⬢ Bundles',
-  design: '✎ Designer Collab'
+  bundles: '⬢ Bundles'
 };
 function renderTabOrderList(){
   const container=document.getElementById('tabOrderList');
   if(!container)return;
   if(!S.settings.tabOrder || !S.settings.tabOrder.length){
-    S.settings.tabOrder = ['categories','bestsellers','lowstock','bundles','design'];
+    S.settings.tabOrder = ['categories','bestsellers','lowstock','bundles'];
   }
   container.innerHTML = S.settings.tabOrder.map((key,i)=>`
     <div class="apc" style="grid-template-columns:auto 1fr">

@@ -21,6 +21,8 @@ body{font-family:'Jost',sans-serif;font-weight:300;background:var(--cream);color
 nav{background:var(--cream);border-bottom:1px solid rgba(0,0,0,.08);padding:0 24px;height:62px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200}
 .nav-left,.nav-right{display:flex;align-items:center;gap:18px}
 .nav-icon{background:none;border:none;cursor:pointer;color:var(--black);padding:5px;display:flex;align-items:center;opacity:.75;transition:opacity .2s}
+.lang-toggle-btn{display:flex;align-items:center;gap:5px;background:none;border:1px solid rgba(0,0,0,.18);border-radius:20px;padding:5px 10px;cursor:pointer;color:var(--black);font-family:'Jost',sans-serif;font-size:10px;letter-spacing:.5px;transition:all .2s}
+.lang-toggle-btn:hover{border-color:var(--black);background:rgba(0,0,0,.03)}
 .nav-icon:hover{opacity:1}
 .nav-logo{font-family:'Cormorant Garamond',serif;font-size:21px;font-weight:400;letter-spacing:7px;text-transform:uppercase;color:var(--black);text-decoration:none;position:absolute;left:50%;transform:translateX(-50%);cursor:pointer;user-select:none}
 
@@ -571,6 +573,20 @@ footer{background:var(--black);color:rgba(255,255,255,.45);padding:56px 28px 28p
 .order-hist-meta{font-size:11px;color:var(--warm-gray);margin:4px 0 8px}
 .order-hist-items{font-size:12px;color:var(--black-s);line-height:1.7}
 .order-hist-total{font-size:13px;margin-top:8px;color:var(--black-s)}
+/* ── RTL (Arabic) SUPPORT ── */
+html[dir="rtl"] body{text-align:right}
+html[dir="rtl"] .p-info,html[dir="rtl"] .cart-item-info,html[dir="rtl"] .modal-body,
+html[dir="rtl"] .co-field-label,html[dir="rtl"] .af-label,html[dir="rtl"] .bundle-item-info{text-align:right}
+html[dir="rtl"] .co-input,html[dir="rtl"] .suggest-textarea,html[dir="rtl"] .suggest-input,
+html[dir="rtl"] .search-input{text-align:right;direction:rtl}
+html[dir="rtl"] .trust-item,html[dir="rtl"] .lang-toggle-btn,html[dir="rtl"] .modal-trust-en,
+html[dir="rtl"] .xsell-add,html[dir="rtl"] .modal-wa-btn,html[dir="rtl"] .wa-checkout-btn,
+html[dir="rtl"] .co-wa{flex-direction:row-reverse}
+html[dir="rtl"] .ci-row,html[dir="rtl"] .cart-item,html[dir="rtl"] .bundle-item-row,
+html[dir="rtl"] .apc{direction:rtl}
+html[dir="rtl"] .modal-close,html[dir="rtl"] .co-close{left:16px;right:auto}
+html[dir="rtl"] .new-badge,html[dir="rtl"] .stock-badge,html[dir="rtl"] .bundle-badge{left:auto;right:14px}
+html[dir="rtl"] .img-count-badge{right:auto;left:14px}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <!-- SPEED FIX: xlsx, jsPDF, and html2canvas are ADMIN-ONLY tools (Excel
@@ -618,6 +634,10 @@ function trackEvent(name, params){
   </div>
   <a href="#" class="nav-logo" id="navLogo" onclick="logoClick(event)">PRIMORA</a>
   <div class="nav-right">
+    <button class="lang-toggle-btn" id="langToggleBtn" onclick="toggleLanguage()" aria-label="Switch language">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M4 5h11M9.5 3v2M6 5c0 5 3 8.5 7 10M13 8c-1 3-4 6.5-9 8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M17 12l4.5 10M17 12l-4.5 10M13.7 19h6.6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span id="langToggleLabel">العربية</span>
+    </button>
     <button class="nav-icon" id="accountIconBtn" onclick="openAccount()" style="position:relative"><svg width="18" height="20" viewBox="0 0 18 20" fill="none"><circle cx="9" cy="6" r="4.5" stroke="currentColor" stroke-width="1.2"/><path d="M1 19c0-4.418 3.582-8 8-8s8 3.582 8 8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg><span id="accountDot" style="display:none;position:absolute;top:2px;right:2px;width:7px;height:7px;border-radius:50%;background:var(--sage)"></span></button>
     <button class="nav-icon" onclick="openCart()"><svg width="18" height="20" viewBox="0 0 18 20" fill="none"><rect x="1" y="6" width="16" height="13" rx="1" stroke="currentColor" stroke-width="1.2"/><path d="M6 9V5a3 3 0 016 0v4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></button>
   </div>
@@ -1569,6 +1589,169 @@ try{
 }catch(e){ console.warn('Supabase init failed', e); }
 
 function phForIndex(i){ return 'ph-'+((i%10)+1); }
+
+/* ════════════════════════════════════════════════════════════
+   LANGUAGE / TRANSLATION SYSTEM
+   Covers every FIXED interface string in the code (buttons, labels,
+   headers, system messages) — translated to Egyptian-colloquial-leaning
+   Arabic. Product/piece NAMES are never translated (by design — they
+   stay in English always). Free-text content typed by the admin into
+   Settings (announcement text, FAQ answers, footer paragraphs, brand
+   story, product descriptions) is NOT auto-translated — that text has
+   no fixed key to look up, since only the admin who wrote it knows
+   what it says. Extending that would need either a second Arabic
+   field for each of those settings, or a live translation API.
+   ════════════════════════════════════════════════════════════ */
+let currentLang = (function(){ try{ return localStorage.getItem('primora_lang')||'en'; }catch(e){ return 'en'; } })();
+
+const AR_DICT = {
+  // Nav / global
+  'Search products…':'دوري على قطعة…','Menu':'القائمة','Your Bag':'شنطتك','Filter':'فلترة',
+  // Trust bar
+  'Nationwide Shipping':'شحن لكل مصر','Easy Returns':'استرجاع سهل','Free Size Exchange':'استبدال مقاس مجاني',
+  // Announcement
+  'Shop Now':'اتسوقي دلوقتي',
+  // Collection header / filters
+  'All':'الكل','Ladies':'حريمي','Men':'رجالي','Sets':'أطقم','Blouses':'بلايز','Pants':'بناطيل',
+  '⬢ Bundles':'⬢ بندلات','★ Best Sellers':'★ الأكتر مبيعًا','⚠ Almost Sold Out':'⚠ شبه خلصان',
+  // Product card / badges
+  'Add to Bag':'ضيفيها للشنطة','Sold Out':'خلصت','New':'جديد','Best Seller':'الأكتر مبيعًا',
+  'Almost Sold Out':'شبه خلصان','Colors':'ألوان','Color':'لون',
+  // Product modal
+  'Summer Collection':'كوليكشن الصيف','Select Size':'اختاري المقاس','Size Guide':'دليل المقاسات',
+  'Quantity':'الكمية','Order via WhatsApp':'اطلبي عن طريق واتساب','Perfect For':'مناسبة لـ',
+  'Material':'الخامة','Fit':'القصة','Care':'العناية','Hand wash cold':'غسيل يدوي بمياه باردة',
+  'Delivery':'التوصيل','2–4 business days':'2 لـ 4 أيام عمل','Safe Shipping':'شحن آمن',
+  'Easy Exchange':'استبدال سهل','Cash on Delivery':'الدفع عند الاستلام',
+  "Only {n} in stock":'متبقي {n} قطع بس',"Low stock, it's out of stock soon":'الكمية بتخلص قريب',
+  // Cart
+  'Your bag is empty':'الشنطة فاضية','Subtotal':'الإجمالي','Shipping calculated at checkout':'مصاريف الشحن بتتحسب عند الدفع',
+  'Proceed to Checkout':'كمّلي الطلب','Remove':'شيلي',
+  // Cross-sell
+  '✦ Complete Your Order':'✦ كمّلي طلبك','+ Add':'+ ضيفي',
+  // Checkout
+  'Checkout':'إتمام الطلب','Total':'الإجمالي','Full Name *':'الاسم بالكامل *','Phone Number *':'رقم الموبايل *',
+  'Email':'الإيميل','Delivery Address *':'عنوان التوصيل *','City *':'المدينة *','Governorate *':'المحافظة *',
+  'Order Notes':'ملاحظات على الطلب','(optional)':'(اختياري)',"Anything you'd like us to know about this order…":'أي حاجة حابة تقوليها لنا عن الطلب ده…',
+  'Confirm Order':'أكّدي الطلب','Order via WhatsApp instead':'اطلبي بالواتساب بدلًا من كده',
+  'Order Received':'استلمنا طلبك',"Thank you for choosing PRIMORA.":'شكرًا لاختيارك PRIMORA.',
+  "We'll confirm your order within 24 hours.":'هنأكد طلبك خلال 24 ساعة.','Pay Online':'ادفعي أونلاين',
+  'Prefer to pay now instead of cash on delivery?':'تفضّلي تدفعي دلوقتي بدل الدفع عند الاستلام؟',
+  // Bundles
+  'Bundle':'بندل','View Bundle':'شوفي البندل','Unavailable':'مش متاحة','Add Bundle to Bag':'ضيفي البندل للشنطة',
+  'Save LE':'وفّري جنيه','Build Your Own Bundle':'اعملي بندل بنفسك','Pick Any 2 Pieces':'اختاري أي قطعتين',
+  'pieces selected — pick any 2':'قطع مختارة — اختاري 2','Choose a size for each piece':'اختاري مقاس لكل قطعة',
+  'No bundles available right now.':'مفيش بندلات متاحة دلوقتي.','No curated bundles yet — but you can build your own above.':'لسه مفيش بندلات جاهزة، بس تقدري تعملي واحدة بنفسك فوق.',
+  // Reviews
+  'Client Reviews':'آراء العملاء','No client reviews posted yet.':'لسه مفيش آراء عملاء متنشورة.',
+  'Your Voice Matters':'رأيك يهمنا','We\'d Love To Hear Your Review':'حابين نسمع رأيك',
+  "Tell us about your PRIMORA experience":'قوليلنا عن تجربتك مع PRIMORA','Send Us Your Feedback':"ابعتيلنا رأيك",
+  "Choose where you'd like to send it":'اختاري تبعتيه فين','WhatsApp':'واتساب','Instagram':'إنستجرام',
+  // Designer Collab
+  'Collaborate With Us':'اتعاوني معانا','Your Name':'اسمك','Your Email':'إيميلك','Describe Your Design':'اوصفي تصميمك',
+  'Upload Your Design':'ارفعي تصميمك','Add Image':'ضيفي صورة','Send My Design':'ابعتي تصميمي',
+  'Your own email app will also open so this comes straight from you to us.':'برنامج الإيميل بتاعك هيفتح كمان عشان الرسالة توصل مننك انتي مباشرة.',
+  'Thank You!':'شكرًا ليكي!',"We've received your design and opened your email app to send it directly. We'll be in touch soon.":'استلمنا تصميمك وفتحنا الإيميل بتاعك عشان تبعتيه على طول. هنتواصل معاكي قريب.',
+  // Search
+  'No pieces found. Try a different word.':'مفيش قطع لقيناها. جربي كلمة تانية.',
+  'Start typing a product name, or browse by category above.':'ابدئي اكتبي اسم قطعة، أو تصفحي حسب التصنيف فوق.',
+  // Account
+  'My Account':'حسابي','Username':'اسم المستخدم','My Orders':'طلباتي','Sign Out':'خروج',
+  'Welcome to PRIMORA':'أهلًا بيكي في PRIMORA','Sign in to save and track your orders':'سجّلي دخول عشان تحفظي وتتابعي طلباتك',
+  'Sign In':'دخول','Sign Up':'حساب جديد','Password':'كلمة السر','At least 6 characters':'6 حروف على الأقل',
+  'Confirm Password':'أكّدي كلمة السر','Repeat password':'اكتبي كلمة السر تاني','Create Account':'اعملي حساب',
+  'No past orders yet.':'لسه مفيش طلبات.',
+  // Footer
+  'Explore':'تصفّحي','Collection':'الكوليكشن','Our Story':'قصتنا','Care Guide':'دليل العناية',
+  'Support':'الدعم','Shipping':'الشحن','Returns':'الاسترجاع','Contact':'تواصلي معانا','FAQ':'الأسئلة الشائعة',
+  'All rights reserved.':'كل الحقوق محفوظة.',
+  // Newsletter
+  'Join PRIMORA':'انضمي لـ PRIMORA','Be The First to Know':'كوني أول وحدة تعرفي',
+  'Early access · New arrivals · Exclusive drops':'دخول مبكر · قطع جديدة · إصدارات حصرية',
+  'Your email address':'إيميلك','Join':'انضمي','Thank you for joining PRIMORA. Watch your inbox for early access.':'شكرًا لانضمامك لـ PRIMORA. تابعي إيميلك للدخول المبكر.',
+  "You're already on the list — thank you!":'انتي مسجلة عندنا بالفعل — شكرًا ليكي!',
+  // FAQ modal
+  'Frequently Asked Questions':'الأسئلة الشائعة','No questions yet.':'لسه مفيش أسئلة.',
+  // Misc system
+  'Added to bag':'اتضافت للشنطة'
+};
+
+/* Translate a fixed UI string. Falls back to the original English if
+   currentLang is 'en' or the string has no Arabic entry (so nothing
+   ever breaks/goes blank — worst case it just stays in English). */
+function t(s){
+  if(currentLang!=='ar') return s;
+  return AR_DICT[s] || s;
+}
+
+function toggleLanguage(){
+  currentLang = currentLang==='ar' ? 'en' : 'ar';
+  try{ localStorage.setItem('primora_lang', currentLang); }catch(e){}
+  document.documentElement.setAttribute('lang', currentLang==='ar'?'ar':'en');
+  document.documentElement.setAttribute('dir', currentLang==='ar'?'rtl':'ltr');
+  const lbl=document.getElementById('langToggleLabel');
+  if(lbl) lbl.textContent = currentLang==='ar' ? 'English' : 'العربية';
+  applyTranslations();
+}
+
+/* Walks every text node and every [placeholder]/[title]/[aria-label]
+   attribute on the page, translating against AR_DICT. The ORIGINAL
+   English is cached the first time an element is seen (data-en-text /
+   data-en-<attr>), so toggling back to English always restores the
+   exact original — nothing is ever permanently overwritten. Anything
+   without a dictionary entry (product names, admin-typed content)
+   passes through untouched by design. Skips containers that hold
+   admin-only UI (never shown to customers) so the dashboard stays
+   English-only regardless of the customer-facing language toggle. */
+const I18N_SKIP_SELECTOR = '.admin-shell, .admin-login, #invoiceTemplate, script, style';
+function applyTranslations(){
+  translateTextNodes();
+  translateAttrs('placeholder');
+  translateAttrs('title');
+  translateAttrs('aria-label');
+}
+function translateTextNodes(){
+  const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+  const nodes=[]; let n;
+  while(n=walker.nextNode()) nodes.push(n);
+  nodes.forEach(node=>{
+    const p=node.parentElement;
+    if(!p || p.closest(I18N_SKIP_SELECTOR)) return;
+    let original = p.getAttribute('data-en-text');
+    if(original==null){
+      original = node.textContent;
+      if(!original.trim()) return;
+      p.setAttribute('data-en-text', original);
+    }
+    const key = original.trim();
+    node.textContent = (currentLang==='ar' && AR_DICT[key]) ? original.replace(key, AR_DICT[key]) : original;
+  });
+}
+function translateAttrs(attr){
+  document.querySelectorAll(`[${attr}]`).forEach(el=>{
+    if(el.closest(I18N_SKIP_SELECTOR))return;
+    const dataKey='data-en-'+attr;
+    let original = el.getAttribute(dataKey);
+    if(original==null){ original = el.getAttribute(attr); el.setAttribute(dataKey, original); }
+    el.setAttribute(attr, (currentLang==='ar' && AR_DICT[original]) ? AR_DICT[original] : original);
+  });
+}
+/* Any container that gets rebuilt via innerHTML after the initial page
+   load (cart, product grid, modals, search results, account panel…)
+   is watched here — the instant new English text is injected, it gets
+   translated automatically if Arabic is currently active. This means
+   individual render functions never had to be modified one by one. */
+function setupTranslationObserver(){
+  const ids=['productGrid','cartItems','crossSellWrap','coOrderList','accountContent','searchBody','searchCats','bundleModalItems','customBundleModalBody','designsWrap','modalOccasionsText','modalSizes','modalColorWrap','modalStockBadge','modalStockUrgencyWrap','menuPhilList','catTabs','faqList','customBundleModalBody'];
+  const targets = ids.map(id=>document.getElementById(id)).filter(Boolean);
+  const modalBody=document.querySelector('#productModal .modal-body');
+  if(modalBody) targets.push(modalBody);
+  const obs = new MutationObserver(muts=>{
+    if(currentLang!=='ar') return; // no need to react while English is active
+    applyTranslations();
+  });
+  targets.forEach(el=> obs.observe(el, {childList:true, subtree:true}));
+}
 
 /* ════════════════════════════════
    DEEP LINKS — shareable per-product URLs
@@ -3083,11 +3266,12 @@ function renderStockUrgencyWidget(stock, qty){
     return;
   }
   const pct=Math.max(8, Math.min(100, Math.round((qty/10)*100)));
+  const titleText = currentLang==='ar' ? `متبقي ${qty} قطع بس` : `Only ${qty} in stock`;
   wrap.innerHTML=`
     <div class="stock-urgency">
       <div class="stock-urgency-head">
         <span class="stock-urgency-dot"></span>
-        <span class="stock-urgency-title">Only ${qty} in stock</span>
+        <span class="stock-urgency-title" data-en-text="Only ${qty} in stock">${titleText}</span>
       </div>
       <div class="stock-urgency-sub">Low stock, it's out of stock soon</div>
       <div class="stock-urgency-bar-wrap"><div class="stock-urgency-bar" style="width:${pct}%"></div></div>
@@ -4621,12 +4805,18 @@ function setGrid(btn){document.querySelectorAll('.gtoggle').forEach(b=>b.classLi
    BOOT
 ════════════════════════════════ */
 (async()=>{
+  document.documentElement.setAttribute('lang', currentLang==='ar'?'ar':'en');
+  document.documentElement.setAttribute('dir', currentLang==='ar'?'rtl':'ltr');
+  const langLbl=document.getElementById('langToggleLabel');
+  if(langLbl) langLbl.textContent = currentLang==='ar' ? 'English' : 'العربية';
   await loadPersisted();
   renderStore();
   updateCartUI(); // reflect any cart restored from localStorage
   checkURLForProduct(); // deep link: ?product=ID opens straight to that product
   await initAuth();
   if(currentUser) await refreshOrdersForCurrentUser();
+  applyTranslations();       // translate static HTML (nav, footer, checkout form, FAQ modal, etc.)
+  setupTranslationObserver(); // keep translating any content that re-renders after this point
 })();
 </script>
 </body>

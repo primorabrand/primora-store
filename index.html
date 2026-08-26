@@ -1191,6 +1191,7 @@ function trackEvent(name, params){
               <div class="af-group"><label class="af-label">Button Text</label><input class="af-input" id="s-annCta"></div>
             </div>
             <div class="af-group"><div class="a-toggle"><label class="tog-sw"><input type="checkbox" id="s-annVis" checked><span class="tog-sl"></span></label><span style="font-size:12px;color:var(--warm-gray)">Show announcement bar</span></div></div>
+            <div class="af-group"><label class="af-label">Text (Arabic) <span style="text-transform:none;font-weight:400;color:var(--warm-gray)">— optional</span></label><input class="af-input" id="s-annText-ar" dir="rtl" placeholder="مثال: كوليكشن الصيف موجودة دلوقتي"></div>
             <button class="btn-save" id="bsave1" onclick="saveSettings('bsave1','st1')">Save</button>
             <span class="saved-tag" id="st1">✓ Saved</span>
           </div>
@@ -1210,6 +1211,7 @@ function trackEvent(name, params){
             <div style="font-size:11px;color:var(--warm-gray);margin-bottom:16px;line-height:1.7">Lets any visitor submit a design idea (image + description) through its own storefront tab. Their own email client opens pre-filled to send it to you directly, and every submission is also saved under admin → Design Submissions. Requires migration v18.</div>
             <div class="af-group"><label class="af-label">Tab Label</label><input class="af-input" id="s-designTabLabel" placeholder="✎ Designer Collab"></div>
             <div class="af-group"><label class="af-label">Intro Text</label><textarea class="af-input" id="s-designIntro" rows="3"></textarea></div>
+            <div class="af-group"><label class="af-label">Intro Text (Arabic)</label><textarea class="af-input" id="s-designIntro-ar" dir="rtl" rows="3"></textarea></div>
             <div class="af-group"><label class="af-label">Destination Email</label><input class="af-input" type="email" id="s-designEmail" placeholder="hello@primora.com"></div>
             <button class="btn-save" id="bsave15" onclick="saveSettings('bsave15','st15')">Save</button>
             <span class="saved-tag" id="st15">✓ Saved</span>
@@ -1220,6 +1222,10 @@ function trackEvent(name, params){
           <div class="a-section-body">
             <div class="af-group"><label class="af-label">Collection Name</label><input class="af-input" id="s-colTitle"></div>
             <div class="af-group"><label class="af-label">Subtitle</label><input class="af-input" id="s-colSub"></div>
+            <div class="af-row">
+              <div class="af-group"><label class="af-label">Collection Name (Arabic)</label><input class="af-input" id="s-colTitle-ar" dir="rtl"></div>
+              <div class="af-group"><label class="af-label">Subtitle (Arabic)</label><input class="af-input" id="s-colSub-ar" dir="rtl"></div>
+            </div>
             <button class="btn-save" id="bsave2" onclick="saveSettings('bsave2','st2')">Save</button>
             <span class="saved-tag" id="st2">✓ Saved</span>
           </div>
@@ -1239,6 +1245,7 @@ function trackEvent(name, params){
               <div class="af-group"><label class="af-label">Cost (LE · 0 = Free)</label><input class="af-input" type="number" id="s-ship"></div>
               <div class="af-group"><label class="af-label">Delivery Time</label><input class="af-input" id="s-deliv"></div>
             </div>
+            <div class="af-group"><label class="af-label">Delivery Time (Arabic)</label><input class="af-input" id="s-deliv-ar" dir="rtl" placeholder="مثال: من 2 لـ 4 أيام عمل"></div>
             <button class="btn-save" id="bsave4" onclick="saveSettings('bsave4','st4')">Save</button>
             <span class="saved-tag" id="st4">✓ Saved</span>
           </div>
@@ -1251,6 +1258,7 @@ function trackEvent(name, params){
               <div class="af-group"><label class="af-label">Number</label><input class="af-input" type="number" id="s-happyCount"></div>
               <div class="af-group"><label class="af-label">Label</label><input class="af-input" id="s-happyLabel" placeholder="Happy Customers"></div>
             </div>
+            <div class="af-group"><label class="af-label">Label (Arabic)</label><input class="af-input" id="s-happyLabel-ar" dir="rtl" placeholder="مثال: عميلة سعيدة"></div>
             <button class="btn-save" id="bsave11" onclick="saveSettings('bsave11','st11')">Save</button>
             <span class="saved-tag" id="st11">✓ Saved</span>
           </div>
@@ -1274,6 +1282,8 @@ function trackEvent(name, params){
           <div class="a-section-body">
             <div class="af-group"><label class="af-label">Quote</label><textarea class="af-input" id="s-editQuote" rows="4"></textarea></div>
             <div class="af-group"><label class="af-label">Subtitle</label><input class="af-input" id="s-editSub"></div>
+            <div class="af-group"><label class="af-label">Quote (Arabic)</label><textarea class="af-input" id="s-editQuote-ar" dir="rtl" rows="4"></textarea></div>
+            <div class="af-group"><label class="af-label">Subtitle (Arabic)</label><input class="af-input" id="s-editSub-ar" dir="rtl"></div>
             <button class="btn-save" id="bsave6" onclick="saveContent('bsave6','st6')">Save</button>
             <span class="saved-tag" id="st6">✓ Saved</span>
           </div>
@@ -1291,13 +1301,19 @@ function trackEvent(name, params){
         <div class="a-section">
           <div class="a-section-head"><div class="a-section-title">Footer Pages</div></div>
           <div class="a-section-body">
-            <div style="font-size:11px;color:var(--warm-gray);margin-bottom:16px;line-height:1.7">Content shown when a customer clicks Size Guide, Care Guide, Shipping, Returns, or Contact in the footer.</div>
+            <div style="font-size:11px;color:var(--warm-gray);margin-bottom:16px;line-height:1.7">Content shown when a customer clicks Size Guide, Care Guide, Shipping, Returns, or Contact in the footer. Arabic versions are optional — the English text is shown as a fallback if left blank.</div>
             <div class="af-group"><label class="af-label">Size Guide</label><textarea class="af-input" id="fp-sizeGuide" rows="4"></textarea></div>
+            <div class="af-group"><label class="af-label">Size Guide (Arabic)</label><textarea class="af-input" id="fp-sizeGuide-ar" dir="rtl" rows="4"></textarea></div>
             <div class="af-group"><label class="af-label">Care Guide</label><textarea class="af-input" id="fp-careGuide" rows="4"></textarea></div>
+            <div class="af-group"><label class="af-label">Care Guide (Arabic)</label><textarea class="af-input" id="fp-careGuide-ar" dir="rtl" rows="4"></textarea></div>
             <div class="af-group"><label class="af-label">Shipping Info</label><textarea class="af-input" id="fp-shipping" rows="4"></textarea></div>
+            <div class="af-group"><label class="af-label">Shipping Info (Arabic)</label><textarea class="af-input" id="fp-shipping-ar" dir="rtl" rows="4"></textarea></div>
             <div class="af-group"><label class="af-label">Returns Policy</label><textarea class="af-input" id="fp-returns" rows="4"></textarea></div>
+            <div class="af-group"><label class="af-label">Returns Policy (Arabic)</label><textarea class="af-input" id="fp-returns-ar" dir="rtl" rows="4"></textarea></div>
             <div class="af-group"><label class="af-label">Exchange a Size</label><textarea class="af-input" id="fp-exchange" rows="4"></textarea></div>
+            <div class="af-group"><label class="af-label">Exchange a Size (Arabic)</label><textarea class="af-input" id="fp-exchange-ar" dir="rtl" rows="4"></textarea></div>
             <div class="af-group"><label class="af-label">Contact Us</label><textarea class="af-input" id="fp-contact" rows="4"></textarea></div>
+            <div class="af-group"><label class="af-label">Contact Us (Arabic)</label><textarea class="af-input" id="fp-contact-ar" dir="rtl" rows="4"></textarea></div>
             <button class="btn-save" id="bsave8" onclick="saveFooterPages('bsave8','st8')">Save</button>
             <span class="saved-tag" id="st8">✓ Saved</span>
           </div>
@@ -1385,6 +1401,19 @@ function trackEvent(name, params){
     <div class="af-group"><label class="af-label">Search Keywords <span style="text-transform:none;font-weight:400;color:var(--warm-gray)">— common/alternate names customers might search, comma separated</span></label><input class="af-input" id="ap-keywords" placeholder="e.g. abaya, coat, jacket"></div>
     <div class="af-group"><label class="af-label">Occasions <span style="text-transform:none;font-weight:400;color:var(--warm-gray)">— when this piece is perfect to wear</span></label><textarea class="af-input" id="ap-occasions" rows="3" placeholder="e.g. Weddings, brunches, evening outings, Eid celebrations…"></textarea></div>
     <div class="af-group"><label class="af-label">Size Guide for This Piece <span style="text-transform:none;font-weight:400;color:var(--warm-gray)">— leave blank to use the general Size Guide</span></label><textarea class="af-input" id="ap-sizeGuide" rows="4" placeholder="e.g. This piece runs true to size. For an oversized look, size up."></textarea></div>
+
+    <div style="border-top:1px dashed rgba(0,0,0,.15);margin:22px 0 16px;padding-top:16px">
+      <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:4px">🇪🇬 Arabic Translation — Optional</div>
+      <div style="font-size:11px;color:var(--warm-gray);margin-bottom:14px;line-height:1.7">Shown to customers when the site's "العربية" toggle is on. Leave any field blank to fall back to the English version above.</div>
+      <div class="af-group"><label class="af-label">Subtitle (Arabic)</label><input class="af-input" id="ap-desc-ar" dir="rtl" placeholder="مثال: قماش كتان · قصة مريحة"></div>
+      <div class="af-row">
+        <div class="af-group"><label class="af-label">Material (Arabic)</label><input class="af-input" id="ap-mat-ar" dir="rtl" placeholder="مثال: 100% كتان"></div>
+        <div class="af-group"><label class="af-label">Fit (Arabic)</label><input class="af-input" id="ap-fit-ar" dir="rtl" placeholder="مثال: قصة مريحة، واسعة شوية"></div>
+      </div>
+      <div class="af-group"><label class="af-label">Occasions (Arabic)</label><textarea class="af-input" id="ap-occasions-ar" dir="rtl" rows="3" placeholder="مثال: مناسبة للأفراح، البرانش، الخروجات المسائية، العيد…"></textarea></div>
+      <div class="af-group"><label class="af-label">Size Guide for This Piece (Arabic)</label><textarea class="af-input" id="ap-sizeGuide-ar" dir="rtl" rows="4" placeholder="مثال: القطعة دي مقاسها مظبوط. لو عايزة قصة واسعة، خدي مقاس أكبر."></textarea></div>
+    </div>
+
     <div class="af-row">
       <div class="af-group">
         <label class="af-label">Stock Status</label>
@@ -1512,54 +1541,57 @@ function trackEvent(name, params){
 ════════════════════════════════ */
 const S = {
   settings:{
-    annText:'Summer Collection is Now Live',annCta:'Shop Now',annVis:true,
-    colTitle:'Summer Collection',colSub:'10 Signature Pieces · Quiet Luxury · Limited Edition',
-    wa:'201000000000',ship:0,deliv:'2–4 business days',
+    annText:'Summer Collection is Now Live',annTextAr:'',annCta:'Shop Now',annVis:true,
+    colTitle:'Summer Collection',colTitleAr:'',colSub:'10 Signature Pieces · Quiet Luxury · Limited Edition',colSubAr:'',
+    wa:'201000000000',ship:0,deliv:'2–4 business days',delivAr:'',
     marquee:['Quiet Luxury For Her','Summer Collection','From Egypt, For The World','Minimal. Intentional. Timeless.','PRIMORA'],
     editQuote:'"From survival to adaptation.\nFrom connection to creativity.\nFrom necessity to identity."',
+    editQuoteAr:'',
     editSub:'Four stages of human clothing history. One brand born from all of them.',
+    editSubAr:'',
     philosophy:[
-      {roman:'I',   title:'Primitive',   text:'The origin. Clothing as pure necessity.'},
-      {roman:'II',  title:'Adaptation',  text:"Evolution of form. Humanity shaped cloth around the body's needs."},
-      {roman:'III', title:'Connection',  text:'The Silk Road era. Fabric became a language that traveled continents.'},
-      {roman:'IV',  title:'Visionaries', text:'Creativity unleashed. Clothing became a statement of identity.'}
+      {roman:'I',   title:'Primitive',   titleAr:'', text:'The origin. Clothing as pure necessity.', textAr:''},
+      {roman:'II',  title:'Adaptation',  titleAr:'', text:"Evolution of form. Humanity shaped cloth around the body's needs.", textAr:''},
+      {roman:'III', title:'Connection',  titleAr:'', text:'The Silk Road era. Fabric became a language that traveled continents.', textAr:''},
+      {roman:'IV',  title:'Visionaries', titleAr:'', text:'Creativity unleashed. Clothing became a statement of identity.', textAr:''}
     ],
     footerPages:{
-      sizeGuide:{title:'Size Guide', content:'XS — Bust 78–82cm, Waist 60–64cm\nS — Bust 83–87cm, Waist 65–69cm\nM — Bust 88–92cm, Waist 70–74cm\nL — Bust 93–98cm, Waist 75–80cm\n\nAll pieces are cut for a relaxed, effortless fit. If you prefer a closer fit, we recommend sizing down.'},
-      careGuide:{title:'Care Guide', content:'Hand wash cold or gentle machine cycle.\nDo not bleach.\nDry flat in shade — avoid direct sunlight.\nIron on low heat if needed.\nStore folded to preserve shape.'},
-      shipping:{title:'Shipping Info', content:'We deliver across Egypt within 2–4 business days.\nCash on delivery is available everywhere.\nYou will receive a confirmation call before dispatch.'},
-      returns:{title:'Returns Policy', content:'Items may be returned within 3 days of delivery if unworn, unwashed, and with tags attached.\nMessage us on WhatsApp to arrange a pickup.\nRefunds are processed after the item is inspected.'},
-      exchange:{title:'Size Exchange', content:'Ordered the wrong size? No problem.\nMessage us on WhatsApp within 3 days of delivery to arrange a free size exchange.\nThe piece must be unworn, unwashed, and with tags attached.'},
-      contact:{title:'Contact Us', content:'WhatsApp: +20 100 000 0000\nEmail: hello@primora.com\n\nWe usually respond within a few hours.'}
+      sizeGuide:{title:'Size Guide', content:'XS — Bust 78–82cm, Waist 60–64cm\nS — Bust 83–87cm, Waist 65–69cm\nM — Bust 88–92cm, Waist 70–74cm\nL — Bust 93–98cm, Waist 75–80cm\n\nAll pieces are cut for a relaxed, effortless fit. If you prefer a closer fit, we recommend sizing down.', contentAr:''},
+      careGuide:{title:'Care Guide', content:'Hand wash cold or gentle machine cycle.\nDo not bleach.\nDry flat in shade — avoid direct sunlight.\nIron on low heat if needed.\nStore folded to preserve shape.', contentAr:''},
+      shipping:{title:'Shipping Info', content:'We deliver across Egypt within 2–4 business days.\nCash on delivery is available everywhere.\nYou will receive a confirmation call before dispatch.', contentAr:''},
+      returns:{title:'Returns Policy', content:'Items may be returned within 3 days of delivery if unworn, unwashed, and with tags attached.\nMessage us on WhatsApp to arrange a pickup.\nRefunds are processed after the item is inspected.', contentAr:''},
+      exchange:{title:'Size Exchange', content:'Ordered the wrong size? No problem.\nMessage us on WhatsApp within 3 days of delivery to arrange a free size exchange.\nThe piece must be unworn, unwashed, and with tags attached.', contentAr:''},
+      contact:{title:'Contact Us', content:'WhatsApp: +20 100 000 0000\nEmail: hello@primora.com\n\nWe usually respond within a few hours.', contentAr:''}
     },
     faq:[
-      {q:'Do you ship across all of Egypt?', a:'Yes — we deliver nationwide within 2–4 business days.'},
-      {q:'Is cash on delivery available?', a:'Yes, COD is available on every order, everywhere in Egypt.'},
-      {q:'Can I exchange a size?', a:'Yes, just message us on WhatsApp within 3 days of delivery.'}
+      {q:'Do you ship across all of Egypt?', qAr:'', a:'Yes — we deliver nationwide within 2–4 business days.', aAr:''},
+      {q:'Is cash on delivery available?', qAr:'', a:'Yes, COD is available on every order, everywhere in Egypt.', aAr:''},
+      {q:'Can I exchange a size?', qAr:'', a:'Yes, just message us on WhatsApp within 3 days of delivery.', aAr:''}
     ],
     socials:[
       {label:'Instagram', url:'https://instagram.com/primora'},
       {label:'TikTok', url:'https://tiktok.com/@primora'}
     ],
     happyCount:500,
-    happyLabel:'Happy Customers',
+    happyLabel:'Happy Customers',happyLabelAr:'',
     customBundleDiscount:300,
     tabOrder:['categories','bestsellers','lowstock','bundles'],
     designTabLabel:'✎ Designer Collab',
     designIntro:"Are you a designer? Send us any design you'd love to see made real. Upload your idea below — if it's a hit, we'll bring it to life and share the success with you.",
+    designIntroAr:'',
     designEmail:'hello@primora.com'
   },
   products:[
-    {name:'The Ivory Shift',  desc:'Linen Blend · Relaxed Fit',   price:1250,mat:'100% Linen',       fit:'Relaxed, oversized',   sizes:['XS','S','M','L'],vis:true, stock:'in_stock', category:'Ladies', keywords:'', occasions:'', sizeGuide:'', colors:[{name:'Ivory',hex:'#C8BBA0',images:[],stock:'in_stock'}]},
-    {name:'The Sage Drape',   desc:'Fluid Fabric · Editorial',    price:1450,mat:'Viscose Blend',    fit:'Draped, fluid',        sizes:['XS','S','M','L'],vis:true, stock:'in_stock', category:'Ladies', keywords:'', occasions:'', sizeGuide:'', colors:[{name:'Sage',hex:'#6B8070',images:[],stock:'in_stock'}]},
-    {name:'The Bone Coat',    desc:'Structured · Long Silhouette',price:1850,mat:'Wool Blend',       fit:'Structured, tailored', sizes:['XS','S','M','L'],vis:true, stock:'in_stock', category:'Ladies', keywords:'', occasions:'', sizeGuide:'', colors:[{name:'Bone',hex:'#BBA888',images:[],stock:'in_stock'}]},
-    {name:'The Muted Column', desc:'Minimal Cut · Column Dress',  price:1350,mat:'Cotton Blend',    fit:'Column, minimal',      sizes:['XS','S','M','L'],vis:true, stock:'in_stock', category:'Ladies', keywords:'', occasions:'', sizeGuide:'', colors:[{name:'Stone',hex:'#A09888',images:[],stock:'in_stock'}]},
-    {name:'The Sand Layer',   desc:'Co-ord Set · Linen',          price:1650,mat:'100% Linen',      fit:'Relaxed matching set', sizes:['XS','S','M','L'],vis:true, stock:'in_stock', category:'Ladies', keywords:'', occasions:'', sizeGuide:'', colors:[{name:'Sand',hex:'#C0A880',images:[],stock:'in_stock'}]},
-    {name:'The Rose Slip',    desc:'Satin · Midi Length',         price:1550,mat:'Satin Blend',     fit:'Slip, relaxed',        sizes:['XS','S','M','L'],vis:true, stock:'in_stock', category:'Ladies', keywords:'', occasions:'', sizeGuide:'', colors:[{name:'Dusty Rose',hex:'#C09898',images:[],stock:'in_stock'}]},
-    {name:'The Terracotta Set',desc:'Cotton Co-ord · Warm Tone',  price:1750,mat:'Premium Cotton',  fit:'Relaxed matching set', sizes:['XS','S','M','L'],vis:true, stock:'in_stock', category:'Ladies', keywords:'', occasions:'', sizeGuide:'', colors:[{name:'Terracotta',hex:'#B08870',images:[],stock:'in_stock'}]},
-    {name:'The Dark Sage Coat',desc:'Oversized · Editorial',      price:2100,mat:'Wool Blend',      fit:'Oversized, structured',sizes:['XS','S','M','L'],vis:true, stock:'in_stock', category:'Ladies', keywords:'', occasions:'', sizeGuide:'', colors:[{name:'Dark Sage',hex:'#506058',images:[],stock:'in_stock'}]},
-    {name:'The Slate Column', desc:'Minimal Dress · Slate Grey',  price:1400,mat:'Viscose Modal',   fit:'Column, minimal',      sizes:['XS','S','M','L'],vis:true, stock:'in_stock', category:'Ladies', keywords:'', occasions:'', sizeGuide:'', colors:[{name:'Slate',hex:'#909498',images:[],stock:'in_stock'}]},
-    {name:'The Gold Drape',   desc:'Fluid · Warm Gold Tone',      price:1900,mat:'Satin Crepe',   fit:'Draped, asymmetric',   sizes:['XS','S','M','L'],vis:true, stock:'in_stock', category:'Ladies', keywords:'', occasions:'', sizeGuide:'', colors:[{name:'Gold',hex:'#B0A060',images:[],stock:'in_stock'}]},
+    {name:'The Ivory Shift',  desc:'Linen Blend · Relaxed Fit',   price:1250,mat:'100% Linen',       fit:'Relaxed, oversized',   sizes:['XS','S','M','L'],vis:true, stock:'in_stock', category:'Ladies', keywords:'', occasions:'', sizeGuide:'', descAr:'', matAr:'', fitAr:'', occasionsAr:'', sizeGuideAr:'', colors:[{name:'Ivory',hex:'#C8BBA0',images:[],stock:'in_stock'}]},
+    {name:'The Sage Drape',   desc:'Fluid Fabric · Editorial',    price:1450,mat:'Viscose Blend',    fit:'Draped, fluid',        sizes:['XS','S','M','L'],vis:true, stock:'in_stock', category:'Ladies', keywords:'', occasions:'', sizeGuide:'', descAr:'', matAr:'', fitAr:'', occasionsAr:'', sizeGuideAr:'', colors:[{name:'Sage',hex:'#6B8070',images:[],stock:'in_stock'}]},
+    {name:'The Bone Coat',    desc:'Structured · Long Silhouette',price:1850,mat:'Wool Blend',       fit:'Structured, tailored', sizes:['XS','S','M','L'],vis:true, stock:'in_stock', category:'Ladies', keywords:'', occasions:'', sizeGuide:'', descAr:'', matAr:'', fitAr:'', occasionsAr:'', sizeGuideAr:'', colors:[{name:'Bone',hex:'#BBA888',images:[],stock:'in_stock'}]},
+    {name:'The Muted Column', desc:'Minimal Cut · Column Dress',  price:1350,mat:'Cotton Blend',    fit:'Column, minimal',      sizes:['XS','S','M','L'],vis:true, stock:'in_stock', category:'Ladies', keywords:'', occasions:'', sizeGuide:'', descAr:'', matAr:'', fitAr:'', occasionsAr:'', sizeGuideAr:'', colors:[{name:'Stone',hex:'#A09888',images:[],stock:'in_stock'}]},
+    {name:'The Sand Layer',   desc:'Co-ord Set · Linen',          price:1650,mat:'100% Linen',      fit:'Relaxed matching set', sizes:['XS','S','M','L'],vis:true, stock:'in_stock', category:'Ladies', keywords:'', occasions:'', sizeGuide:'', descAr:'', matAr:'', fitAr:'', occasionsAr:'', sizeGuideAr:'', colors:[{name:'Sand',hex:'#C0A880',images:[],stock:'in_stock'}]},
+    {name:'The Rose Slip',    desc:'Satin · Midi Length',         price:1550,mat:'Satin Blend',     fit:'Slip, relaxed',        sizes:['XS','S','M','L'],vis:true, stock:'in_stock', category:'Ladies', keywords:'', occasions:'', sizeGuide:'', descAr:'', matAr:'', fitAr:'', occasionsAr:'', sizeGuideAr:'', colors:[{name:'Dusty Rose',hex:'#C09898',images:[],stock:'in_stock'}]},
+    {name:'The Terracotta Set',desc:'Cotton Co-ord · Warm Tone',  price:1750,mat:'Premium Cotton',  fit:'Relaxed matching set', sizes:['XS','S','M','L'],vis:true, stock:'in_stock', category:'Ladies', keywords:'', occasions:'', sizeGuide:'', descAr:'', matAr:'', fitAr:'', occasionsAr:'', sizeGuideAr:'', colors:[{name:'Terracotta',hex:'#B08870',images:[],stock:'in_stock'}]},
+    {name:'The Dark Sage Coat',desc:'Oversized · Editorial',      price:2100,mat:'Wool Blend',      fit:'Oversized, structured',sizes:['XS','S','M','L'],vis:true, stock:'in_stock', category:'Ladies', keywords:'', occasions:'', sizeGuide:'', descAr:'', matAr:'', fitAr:'', occasionsAr:'', sizeGuideAr:'', colors:[{name:'Dark Sage',hex:'#506058',images:[],stock:'in_stock'}]},
+    {name:'The Slate Column', desc:'Minimal Dress · Slate Grey',  price:1400,mat:'Viscose Modal',   fit:'Column, minimal',      sizes:['XS','S','M','L'],vis:true, stock:'in_stock', category:'Ladies', keywords:'', occasions:'', sizeGuide:'', descAr:'', matAr:'', fitAr:'', occasionsAr:'', sizeGuideAr:'', colors:[{name:'Slate',hex:'#909498',images:[],stock:'in_stock'}]},
+    {name:'The Gold Drape',   desc:'Fluid · Warm Gold Tone',      price:1900,mat:'Satin Crepe',   fit:'Draped, asymmetric',   sizes:['XS','S','M','L'],vis:true, stock:'in_stock', category:'Ladies', keywords:'', occasions:'', sizeGuide:'', descAr:'', matAr:'', fitAr:'', occasionsAr:'', sizeGuideAr:'', colors:[{name:'Gold',hex:'#B0A060',images:[],stock:'in_stock'}]},
   ],
   orders:[],
   subscribers:[],
@@ -1684,6 +1716,18 @@ function t(s){
   return AR_DICT[s] || s;
 }
 
+/* Translate ADMIN-AUTHORED free text — product descriptions, FAQ,
+   footer pages (shipping/returns/size guide/etc), brand story, editorial
+   copy, announcement bar, collection header… Unlike t() (which looks up
+   a fixed dictionary of interface labels), this simply prefers the
+   admin's own Arabic version of a field when Arabic is active, and
+   silently falls back to the English text if no Arabic version has been
+   written yet — so nothing is ever blank on the storefront. */
+function tf(en, ar){
+  if(currentLang==='ar' && ar && String(ar).trim()) return ar;
+  return en||'';
+}
+
 function toggleLanguage(){
   currentLang = currentLang==='ar' ? 'en' : 'ar';
   try{ localStorage.setItem('primora_lang', currentLang); }catch(e){}
@@ -1692,6 +1736,28 @@ function toggleLanguage(){
   const lbl=document.getElementById('langToggleLabel');
   if(lbl) lbl.textContent = currentLang==='ar' ? 'English' : 'العربية';
   applyTranslations();
+  refreshFreeTextForLanguage();
+}
+
+/* Re-renders every piece of ADMIN-AUTHORED free text (product fields,
+   footer pages, FAQ, brand story, editorial copy, announcement bar…)
+   for whichever language is now active. This is needed alongside
+   applyTranslations() because tf() picks the right field at render
+   time — it isn't a live dictionary swap like t() — so anything
+   already drawn on screen has to be rebuilt when the toggle fires
+   mid-session (e.g. a product modal or FAQ page already open). */
+function refreshFreeTextForLanguage(){
+  renderStore(); // header, editorial, philosophy, happy stat, product grid/cards
+  if(document.getElementById('productModal').classList.contains('open') && curProd!=null){
+    openModal(curProd, false);
+  }
+  if(document.getElementById('infoOverlay').classList.contains('open') && currentInfoKey){
+    if(currentInfoKey==='__productSizeGuide') openProductSizeGuide();
+    else openInfoPage(currentInfoKey);
+  }
+  if(document.getElementById('faqOverlay').classList.contains('open')){
+    openFaqPage();
+  }
 }
 
 /* Walks every text node and every [placeholder]/[title]/[aria-label]
@@ -2075,22 +2141,29 @@ async function loadPersisted(){
 
     if(setRow){
       S.settings.annText  = setRow.ann_text ?? S.settings.annText;
+      S.settings.annTextAr= setRow.ann_text_ar ?? S.settings.annTextAr;
       S.settings.annCta   = setRow.ann_cta ?? S.settings.annCta;
       S.settings.annVis   = setRow.ann_vis ?? S.settings.annVis;
       S.settings.colTitle = setRow.col_title ?? S.settings.colTitle;
+      S.settings.colTitleAr = setRow.col_title_ar ?? S.settings.colTitleAr;
       S.settings.colSub   = setRow.col_sub ?? S.settings.colSub;
+      S.settings.colSubAr = setRow.col_sub_ar ?? S.settings.colSubAr;
       S.settings.wa       = setRow.whatsapp ?? S.settings.wa;
       S.settings.ship     = setRow.shipping ?? S.settings.ship;
       S.settings.deliv    = setRow.delivery_time ?? S.settings.deliv;
+      S.settings.delivAr  = setRow.delivery_time_ar ?? S.settings.delivAr;
       S.settings.marquee  = setRow.marquee ?? S.settings.marquee;
       S.settings.editQuote= setRow.edit_quote ?? S.settings.editQuote;
+      S.settings.editQuoteAr = setRow.edit_quote_ar ?? S.settings.editQuoteAr;
       S.settings.editSub  = setRow.edit_sub ?? S.settings.editSub;
+      S.settings.editSubAr = setRow.edit_sub_ar ?? S.settings.editSubAr;
       S.settings.philosophy = (setRow.philosophy && setRow.philosophy.length) ? setRow.philosophy : S.settings.philosophy;
       S.settings.footerPages = {...S.settings.footerPages, ...(setRow.footer_pages||{})};
       S.settings.faq = (setRow.faq && setRow.faq.length) ? setRow.faq : S.settings.faq;
       S.settings.socials = (setRow.socials && setRow.socials.length) ? setRow.socials : S.settings.socials;
       S.settings.happyCount = setRow.happy_count ?? S.settings.happyCount;
       S.settings.happyLabel = setRow.happy_label ?? S.settings.happyLabel;
+      S.settings.happyLabelAr = setRow.happy_label_ar ?? S.settings.happyLabelAr;
       S.settings.customBundleDiscount = setRow.custom_bundle_discount ?? S.settings.customBundleDiscount;
       {
         const savedOrder = (setRow.tab_order && setRow.tab_order.length) ? setRow.tab_order : S.settings.tabOrder;
@@ -2100,6 +2173,7 @@ async function loadPersisted(){
       }
       S.settings.designTabLabel = setRow.design_tab_label ?? S.settings.designTabLabel;
       S.settings.designIntro = setRow.design_intro ?? S.settings.designIntro;
+      S.settings.designIntroAr = setRow.design_intro_ar ?? S.settings.designIntroAr;
       S.settings.designEmail = setRow.design_email ?? S.settings.designEmail;
     }
 
@@ -2121,6 +2195,8 @@ async function loadPersisted(){
           isBestSeller: !!r.is_best_seller,
           garmentType: r.garment_type||'',
           isNew: !!r.is_new,
+          descAr:r.description_ar||'', matAr:r.material_ar||'', fitAr:r.fit_ar||'',
+          occasionsAr:r.occasions_ar||'', sizeGuideAr:r.size_guide_ar||'',
         };
       });
     } else {
@@ -2204,7 +2280,8 @@ async function seedDefaultProducts(){
   const rows = S.products.map((p,i)=>({
     name:p.name, description:p.desc, price:p.price, material:p.mat, fit:p.fit,
     sizes:p.sizes, images:[], visible:true, sort_order:i, stock_status:p.stock||'in_stock', category:p.category||'Ladies', keywords:p.keywords||'',
-    occasions:p.occasions||'', size_guide:p.sizeGuide||'', colors:p.colors||[]
+    occasions:p.occasions||'', size_guide:p.sizeGuide||'', colors:p.colors||[],
+    description_ar:p.descAr||'', material_ar:p.matAr||'', fit_ar:p.fitAr||'', occasions_ar:p.occasionsAr||'', size_guide_ar:p.sizeGuideAr||''
   }));
   const {data,error} = await sbClient.from('products').insert(rows).select();
   if(!error && data){
@@ -2218,6 +2295,8 @@ async function seedDefaultProducts(){
       isBestSeller: !!r.is_best_seller,
       garmentType: r.garment_type||'',
       isNew: !!r.is_new,
+      descAr:r.description_ar||'', matAr:r.material_ar||'', fitAr:r.fit_ar||'',
+      occasionsAr:r.occasions_ar||'', sizeGuideAr:r.size_guide_ar||'',
     }));
   }
 }
@@ -2226,15 +2305,15 @@ async function seedDefaultProducts(){
 async function persistSettings(){
   if(!sbClient)return false;
   const {error} = await sbClient.from('settings').update({
-    ann_text:S.settings.annText, ann_cta:S.settings.annCta, ann_vis:S.settings.annVis,
-    col_title:S.settings.colTitle, col_sub:S.settings.colSub, whatsapp:S.settings.wa,
-    shipping:S.settings.ship, delivery_time:S.settings.deliv, marquee:S.settings.marquee,
-    edit_quote:S.settings.editQuote, edit_sub:S.settings.editSub, philosophy:S.settings.philosophy,
+    ann_text:S.settings.annText, ann_text_ar:S.settings.annTextAr, ann_cta:S.settings.annCta, ann_vis:S.settings.annVis,
+    col_title:S.settings.colTitle, col_title_ar:S.settings.colTitleAr, col_sub:S.settings.colSub, col_sub_ar:S.settings.colSubAr, whatsapp:S.settings.wa,
+    shipping:S.settings.ship, delivery_time:S.settings.deliv, delivery_time_ar:S.settings.delivAr, marquee:S.settings.marquee,
+    edit_quote:S.settings.editQuote, edit_quote_ar:S.settings.editQuoteAr, edit_sub:S.settings.editSub, edit_sub_ar:S.settings.editSubAr, philosophy:S.settings.philosophy,
     footer_pages:S.settings.footerPages, faq:S.settings.faq, socials:S.settings.socials,
-    happy_count:S.settings.happyCount, happy_label:S.settings.happyLabel,
+    happy_count:S.settings.happyCount, happy_label:S.settings.happyLabel, happy_label_ar:S.settings.happyLabelAr,
     custom_bundle_discount:S.settings.customBundleDiscount,
     tab_order:S.settings.tabOrder,
-    design_tab_label:S.settings.designTabLabel, design_intro:S.settings.designIntro, design_email:S.settings.designEmail
+    design_tab_label:S.settings.designTabLabel, design_intro:S.settings.designIntro, design_intro_ar:S.settings.designIntroAr, design_email:S.settings.designEmail
   }).eq('id',1);
   if(error){ console.warn('Settings save error',error); setConnStatus('error'); return false; }
   setConnStatus('connected');
@@ -2245,7 +2324,7 @@ async function persistSettings(){
 async function persistProduct(idx){
   if(!sbClient)return false;
   const p=S.products[idx];
-  const payload={name:p.name, description:p.desc, price:p.price, original_price: (p.originalPrice!=null && p.originalPrice!=='') ? p.originalPrice : null, material:p.mat, fit:p.fit, sizes:p.sizes, visible:p.vis, stock_status:p.stock||'in_stock', category:p.category||'Ladies', garment_type:p.garmentType||'', keywords:p.keywords||'', occasions:p.occasions||'', size_guide:p.sizeGuide||'', colors:p.colors||[], sort_order: typeof p.sort==='number'?p.sort:idx, is_best_seller: !!p.isBestSeller, is_new: !!p.isNew};
+  const payload={name:p.name, description:p.desc, price:p.price, original_price: (p.originalPrice!=null && p.originalPrice!=='') ? p.originalPrice : null, material:p.mat, fit:p.fit, sizes:p.sizes, visible:p.vis, stock_status:p.stock||'in_stock', category:p.category||'Ladies', garment_type:p.garmentType||'', keywords:p.keywords||'', occasions:p.occasions||'', size_guide:p.sizeGuide||'', colors:p.colors||[], sort_order: typeof p.sort==='number'?p.sort:idx, is_best_seller: !!p.isBestSeller, is_new: !!p.isNew, description_ar:p.descAr||'', material_ar:p.matAr||'', fit_ar:p.fitAr||'', occasions_ar:p.occasionsAr||'', size_guide_ar:p.sizeGuideAr||''};
   if(p.id){
     const {error}=await sbClient.from('products').update(payload).eq('id',p.id);
     if(error){ console.warn(error); setConnStatus('error'); return false; }
@@ -2438,14 +2517,14 @@ async function uploadReviewImage(blob){
 function renderStore(){
   const st=S.settings;
   document.getElementById('annBar').style.display=st.annVis?'':'none';
-  document.getElementById('annText').textContent=st.annText;
+  document.getElementById('annText').textContent=tf(st.annText,st.annTextAr);
   document.getElementById('annCta').textContent=st.annCta;
-  document.getElementById('colTitle').textContent=st.colTitle;
-  document.getElementById('colSub').textContent=st.colSub;
+  document.getElementById('colTitle').textContent=tf(st.colTitle,st.colTitleAr);
+  document.getElementById('colSub').textContent=tf(st.colSub,st.colSubAr);
   const items=[...st.marquee,...st.marquee];
   document.getElementById('marqueeTrack').innerHTML=items.map(t=>`<span class="m-item">${t} <span class="m-dot">·</span></span>`).join('');
-  document.getElementById('editQuote').innerHTML=st.editQuote.replace(/\n/g,'<br>');
-  document.getElementById('editSub').textContent=st.editSub;
+  document.getElementById('editQuote').innerHTML=tf(st.editQuote,st.editQuoteAr).replace(/\n/g,'<br>');
+  document.getElementById('editSub').textContent=tf(st.editSub,st.editSubAr);
   renderPhilosophy();
   renderFooterSocials();
   renderHappyStat();
@@ -2456,13 +2535,13 @@ function renderPhilosophy(){
   const el=document.getElementById('philosophyContainer');
   if(!el)return;
   el.innerHTML=S.settings.philosophy.map(ph=>
-    `<div class="phil"><div class="phil-n">${ph.roman}</div><div class="phil-t">${ph.title}</div><div class="phil-d">${ph.text}</div></div>`
+    `<div class="phil"><div class="phil-n">${ph.roman}</div><div class="phil-t">${tf(ph.title,ph.titleAr)}</div><div class="phil-d">${tf(ph.text,ph.textAr)}</div></div>`
   ).join('');
   // Also refresh the menu drawer's copy if it exists
   const menuEl=document.getElementById('menuPhilList');
   if(menuEl){
     menuEl.innerHTML=S.settings.philosophy.map(ph=>
-      `<div class="menu-phil-item"><div class="menu-phil-num">${ph.roman}</div><div><div class="menu-phil-title">${ph.title}</div><div class="menu-phil-text">${ph.text}</div></div></div>`
+      `<div class="menu-phil-item"><div class="menu-phil-num">${ph.roman}</div><div><div class="menu-phil-title">${tf(ph.title,ph.titleAr)}</div><div class="menu-phil-text">${tf(ph.text,ph.textAr)}</div></div></div>`
     ).join('');
   }
 }
@@ -2474,7 +2553,7 @@ function renderHappyStat(){
   const numEl=document.getElementById('happyNum');
   const labelEl=document.getElementById('happyLabelText');
   if(numEl) numEl.textContent = `${Number(S.settings.happyCount||0).toLocaleString()}+`;
-  if(labelEl) labelEl.textContent = S.settings.happyLabel||'Happy Customers';
+  if(labelEl) labelEl.textContent = tf(S.settings.happyLabel||'Happy Customers', S.settings.happyLabelAr);
 }
 
 /* ════════════════════════════════
@@ -2519,21 +2598,27 @@ function renderFooterSocials(){
   ).join('');
 }
 
+let currentInfoKey=null;
 function openInfoPage(key){
   const page=S.settings.footerPages[key];
   if(!page)return;
+  currentInfoKey=key;
   document.getElementById('infoTitle').textContent=page.title;
-  document.getElementById('infoContent').textContent=page.content;
+  document.getElementById('infoContent').textContent=tf(page.content,page.contentAr);
   document.getElementById('infoOverlay').classList.add('open');
 }
-function closeInfoPage(){document.getElementById('infoOverlay').classList.remove('open');}
+function closeInfoPage(){document.getElementById('infoOverlay').classList.remove('open');currentInfoKey=null;}
 
 function openProductSizeGuide(){
   const p=S.products[curProd];
   if(!p)return;
+  currentInfoKey='__productSizeGuide';
   const hasOwn = p.sizeGuide && p.sizeGuide.trim();
-  const content = hasOwn ? p.sizeGuide : (S.settings.footerPages.sizeGuide ? S.settings.footerPages.sizeGuide.content : '');
-  document.getElementById('infoTitle').textContent = `Size Guide — ${p.name}`;
+  const content = hasOwn ? tf(p.sizeGuide,p.sizeGuideAr) : tf(
+    S.settings.footerPages.sizeGuide ? S.settings.footerPages.sizeGuide.content : '',
+    S.settings.footerPages.sizeGuide ? S.settings.footerPages.sizeGuide.contentAr : ''
+  );
+  document.getElementById('infoTitle').textContent = `${t('Size Guide')} — ${p.name}`;
   document.getElementById('infoContent').textContent = content;
   document.getElementById('infoOverlay').classList.add('open');
 }
@@ -2541,7 +2626,7 @@ function openProductSizeGuide(){
 function openFaqPage(){
   const list=document.getElementById('faqList');
   list.innerHTML=(S.settings.faq||[]).map(item=>
-    `<details class="faq-item"><summary>${item.q}</summary><p>${item.a}</p></details>`
+    `<details class="faq-item"><summary>${tf(item.q,item.qAr)}</summary><p>${tf(item.a,item.aAr)}</p></details>`
   ).join('') || '<div class="no-items">No questions yet.</div>';
   document.getElementById('faqOverlay').classList.add('open');
 }
@@ -2612,7 +2697,7 @@ function doSearch(query, catBtn, catValue){
   } else if(q){
     results = S.products.filter(p=>{
       if(!p.vis)return false;
-      const hay=[p.name,p.desc,p.category,p.keywords||''].join(' ').toLowerCase();
+      const hay=[p.name,p.desc,p.descAr||'',p.category,p.keywords||'',p.occasionsAr||''].join(' ').toLowerCase();
       return hay.includes(q);
     });
     document.querySelectorAll('#searchCats .cat-tab').forEach(b=>b.classList.remove('active'));
@@ -2733,7 +2818,7 @@ function renderProductCardsGrid(grid, list){
       <div class="p-info">
         ${bestSellerTag}
         <div class="p-name">${p.name}</div>
-        <div class="p-desc">${p.desc}</div>
+        <div class="p-desc">${tf(p.desc,p.descAr)}</div>
         ${colorCount}
         <div class="p-price">${priceDisplayHTML(p)}</div>
       </div>
@@ -3097,7 +3182,7 @@ function renderDesignCollabPage(grid){
       <div style="text-align:center;margin-bottom:36px">
         <div style="font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:14px">Collaborate With Us</div>
         <h2 style="font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:300;margin-bottom:14px">${escapeAttr((S.settings.designTabLabel||'Designer Collab').replace(/^[✎\s]+/,''))}</h2>
-        <p style="font-size:13px;color:var(--warm-gray);line-height:1.9">${escapeAttr(S.settings.designIntro||'')}</p>
+        <p style="font-size:13px;color:var(--warm-gray);line-height:1.9">${escapeAttr(tf(S.settings.designIntro||'', S.settings.designIntroAr||''))}</p>
       </div>
       <div id="designFormBody">
         <label class="af-label" style="display:block;margin-bottom:8px">Your Name</label>
@@ -3187,17 +3272,18 @@ function openModal(idx, updateUrl){
   trackEvent('ViewContent', {content_name:p.name, content_ids:[p.id||idx], content_type:'product', value:p.price, currency:'EGP'});
   document.getElementById('modalName').textContent=p.name;
   document.getElementById('modalPrice').innerHTML=priceDisplayHTML(p);
-  document.getElementById('modalDesc').textContent=`A signature piece from PRIMORA. ${p.desc}.`;
-  document.getElementById('modalMat').textContent=p.mat;
-  document.getElementById('modalFit').textContent=p.fit;
-  document.getElementById('modalDeliv').textContent=S.settings.deliv;
+  const sigPrefix = currentLang==='ar' ? 'قطعة مميزة من PRIMORA.' : 'A signature piece from PRIMORA.';
+  document.getElementById('modalDesc').textContent=`${sigPrefix} ${tf(p.desc,p.descAr)}.`;
+  document.getElementById('modalMat').textContent=tf(p.mat,p.matAr);
+  document.getElementById('modalFit').textContent=tf(p.fit,p.fitAr);
+  document.getElementById('modalDeliv').textContent=tf(S.settings.deliv,S.settings.delivAr);
   document.getElementById('qtyNum').textContent=1;
   document.getElementById('modalSizes').innerHTML=p.sizes.map(s=>`<button class="modal-sz" onclick="selSz(this,'${s}')">${s}</button>`).join('');
 
   const occWrap=document.getElementById('modalOccasionsWrap');
   if(p.occasions && p.occasions.trim()){
     occWrap.style.display='block';
-    document.getElementById('modalOccasionsText').textContent=p.occasions;
+    document.getElementById('modalOccasionsText').textContent=tf(p.occasions,p.occasionsAr);
   } else {
     occWrap.style.display='none';
   }
@@ -3766,6 +3852,8 @@ async function reloadAdminData(){
           isBestSeller: !!r.is_best_seller,
           garmentType: r.garment_type||'',
           isNew: !!r.is_new,
+          descAr:r.description_ar||'', matAr:r.material_ar||'', fitAr:r.fit_ar||'',
+          occasionsAr:r.occasions_ar||'', sizeGuideAr:r.size_guide_ar||'',
         };
       });
     }
@@ -4080,7 +4168,7 @@ async function toggleBestSeller(i){
   renderAdminProducts();renderProducts();
 }
 async function addNewProduct(){
-  S.products.push({name:'New Product',desc:'Description here',price:0,mat:'',fit:'',sizes:['XS','S','M','L'],vis:true,ph:phForIndex(S.products.length),stock:'in_stock',category:'Ladies', keywords:'', occasions:'', sizeGuide:'', colors:[{name:'Default',hex:'#B0A388',images:[],stock:'in_stock'}]});
+  S.products.push({name:'New Product',desc:'Description here',price:0,mat:'',fit:'',sizes:['XS','S','M','L'],vis:true,ph:phForIndex(S.products.length),stock:'in_stock',category:'Ladies', keywords:'', occasions:'', sizeGuide:'', descAr:'', matAr:'', fitAr:'', occasionsAr:'', sizeGuideAr:'', colors:[{name:'Default',hex:'#B0A388',images:[],stock:'in_stock'}]});
   const idx=S.products.length-1;
   await persistProduct(idx);
   renderAdminProducts();
@@ -4107,6 +4195,11 @@ function openApanel(idx){
   document.getElementById('ap-keywords').value=p.keywords||'';
   document.getElementById('ap-occasions').value=p.occasions||'';
   document.getElementById('ap-sizeGuide').value=p.sizeGuide||'';
+  document.getElementById('ap-desc-ar').value=p.descAr||'';
+  document.getElementById('ap-mat-ar').value=p.matAr||'';
+  document.getElementById('ap-fit-ar').value=p.fitAr||'';
+  document.getElementById('ap-occasions-ar').value=p.occasionsAr||'';
+  document.getElementById('ap-sizeGuide-ar').value=p.sizeGuideAr||'';
   document.getElementById('ap-stock').value=p.stock||'in_stock';
   document.getElementById('ap-category').value=p.category||'Ladies';
   document.getElementById('ap-garmentType').value=p.garmentType||'';
@@ -4511,6 +4604,11 @@ async function saveProduct(){
     keywords:document.getElementById('ap-keywords').value,
     occasions:document.getElementById('ap-occasions').value,
     sizeGuide:document.getElementById('ap-sizeGuide').value,
+    descAr:document.getElementById('ap-desc-ar').value,
+    matAr:document.getElementById('ap-mat-ar').value,
+    fitAr:document.getElementById('ap-fit-ar').value,
+    occasionsAr:document.getElementById('ap-occasions-ar').value,
+    sizeGuideAr:document.getElementById('ap-sizeGuide-ar').value,
     stock:document.getElementById('ap-stock').value,
     category:document.getElementById('ap-category').value,
     garmentType:document.getElementById('ap-garmentType').value,
@@ -4553,15 +4651,23 @@ function loadAdminForms(){
     const el=document.getElementById('s-'+k);if(el)el.value=st[k];
   });
   document.getElementById('s-annVis').checked=st.annVis;
+  document.getElementById('s-annText-ar').value=st.annTextAr||'';
+  document.getElementById('s-colTitle-ar').value=st.colTitleAr||'';
+  document.getElementById('s-colSub-ar').value=st.colSubAr||'';
+  document.getElementById('s-deliv-ar').value=st.delivAr||'';
   document.getElementById('s-ship').value=st.ship||0;
   document.getElementById('s-marquee').value=st.marquee.join('\n');
   document.getElementById('s-editQuote').value=st.editQuote;
   document.getElementById('s-editSub').value=st.editSub;
+  document.getElementById('s-editQuote-ar').value=st.editQuoteAr||'';
+  document.getElementById('s-editSub-ar').value=st.editSubAr||'';
   document.getElementById('s-happyCount').value=st.happyCount||0;
   document.getElementById('s-happyLabel').value=st.happyLabel||'';
+  document.getElementById('s-happyLabel-ar').value=st.happyLabelAr||'';
   document.getElementById('s-customBundleDiscount').value=st.customBundleDiscount??300;
   document.getElementById('s-designTabLabel').value=st.designTabLabel||'';
   document.getElementById('s-designIntro').value=st.designIntro||'';
+  document.getElementById('s-designIntro-ar').value=st.designIntroAr||'';
   document.getElementById('s-designEmail').value=st.designEmail||'';
   renderTabOrderList();
   renderPhilEditFields();
@@ -4615,13 +4721,18 @@ function renderPhilEditFields(){
         <div class="af-group" style="margin-bottom:8px"><label class="af-label">Title</label><input class="af-input" id="phil-title-${i}" value="${ph.title}"></div>
       </div>
       <label class="af-label">Text</label><textarea class="af-input" id="phil-text-${i}" rows="2">${ph.text}</textarea>
+      <div style="border-top:1px dashed rgba(0,0,0,.12);margin:12px 0 10px"></div>
+      <div class="af-group" style="margin-bottom:8px"><label class="af-label">Title (Arabic)</label><input class="af-input" id="phil-title-ar-${i}" dir="rtl" value="${escapeAttr(ph.titleAr||'')}"></div>
+      <label class="af-label">Text (Arabic)</label><textarea class="af-input" id="phil-text-ar-${i}" dir="rtl" rows="2">${ph.textAr||''}</textarea>
     </div>`).join('');
 }
 async function savePhilosophy(btnId,pillId){
   S.settings.philosophy = S.settings.philosophy.map((ph,i)=>({
     roman: document.getElementById(`phil-roman-${i}`).value,
     title: document.getElementById(`phil-title-${i}`).value,
-    text:  document.getElementById(`phil-text-${i}`).value
+    text:  document.getElementById(`phil-text-${i}`).value,
+    titleAr: document.getElementById(`phil-title-ar-${i}`).value,
+    textAr:  document.getElementById(`phil-text-ar-${i}`).value
   }));
   const btn=document.getElementById(btnId);
   const orig=btn.textContent; btn.textContent='Saving…'; btn.disabled=true;
@@ -4639,17 +4750,25 @@ function renderFooterPageFields(){
   Object.keys(map).forEach(key=>{
     const el=document.getElementById(map[key]);
     if(el && fp[key]) el.value=fp[key].content;
+    const elAr=document.getElementById(map[key]+'-ar');
+    if(elAr && fp[key]) elAr.value=fp[key].contentAr||'';
   });
 }
 async function saveFooterPages(btnId,pillId){
   const fp=S.settings.footerPages;
   fp.sizeGuide.content = document.getElementById('fp-sizeGuide').value;
+  fp.sizeGuide.contentAr = document.getElementById('fp-sizeGuide-ar').value;
   fp.careGuide.content = document.getElementById('fp-careGuide').value;
+  fp.careGuide.contentAr = document.getElementById('fp-careGuide-ar').value;
   fp.shipping.content  = document.getElementById('fp-shipping').value;
+  fp.shipping.contentAr = document.getElementById('fp-shipping-ar').value;
   fp.returns.content   = document.getElementById('fp-returns').value;
+  fp.returns.contentAr = document.getElementById('fp-returns-ar').value;
   if(!fp.exchange) fp.exchange = {title:'Size Exchange', content:''}; // stores saved before this field existed
   fp.exchange.content  = document.getElementById('fp-exchange').value;
+  fp.exchange.contentAr = document.getElementById('fp-exchange-ar').value;
   fp.contact.content   = document.getElementById('fp-contact').value;
+  fp.contact.contentAr = document.getElementById('fp-contact-ar').value;
   const btn=document.getElementById(btnId);
   const orig=btn.textContent; btn.textContent='Saving…'; btn.disabled=true;
   const ok = await persistSettings();
@@ -4668,10 +4787,13 @@ function renderFaqEditFields(){
       <button class="btn-danger" style="position:absolute;top:12px;right:12px" onclick="removeFaqItem(${i})">Remove</button>
       <div class="af-group" style="margin-bottom:8px;padding-right:90px"><label class="af-label">Question</label><input class="af-input" id="faq-q-${i}" value="${escapeAttr(item.q)}"></div>
       <label class="af-label">Answer</label><textarea class="af-input" id="faq-a-${i}" rows="2">${item.a||''}</textarea>
+      <div style="border-top:1px dashed rgba(0,0,0,.12);margin:12px 0 10px"></div>
+      <div class="af-group" style="margin-bottom:8px"><label class="af-label">Question (Arabic)</label><input class="af-input" id="faq-q-ar-${i}" dir="rtl" value="${escapeAttr(item.qAr||'')}"></div>
+      <label class="af-label">Answer (Arabic)</label><textarea class="af-input" id="faq-a-ar-${i}" dir="rtl" rows="2">${item.aAr||''}</textarea>
     </div>`).join('');
 }
 function addFaqItem(){
-  S.settings.faq.push({q:'',a:''});
+  S.settings.faq.push({q:'',a:'',qAr:'',aAr:''});
   renderFaqEditFields();
 }
 function removeFaqItem(i){
@@ -4681,8 +4803,10 @@ function removeFaqItem(i){
 async function saveFaq(btnId,pillId){
   S.settings.faq = S.settings.faq.map((_,i)=>({
     q:document.getElementById(`faq-q-${i}`).value.trim(),
-    a:document.getElementById(`faq-a-${i}`).value.trim()
-  })).filter(item=>item.q||item.a);
+    a:document.getElementById(`faq-a-${i}`).value.trim(),
+    qAr:document.getElementById(`faq-q-ar-${i}`).value.trim(),
+    aAr:document.getElementById(`faq-a-ar-${i}`).value.trim()
+  })).filter(item=>item.q||item.a||item.qAr||item.aAr);
   const btn=document.getElementById(btnId);
   const orig=btn.textContent; btn.textContent='Saving…'; btn.disabled=true;
   const ok = await persistSettings();
@@ -4731,18 +4855,24 @@ async function saveSocials(btnId,pillId){
 async function saveSettings(btnId,pillId){
   const st=S.settings;
   st.annText=document.getElementById('s-annText').value;
+  st.annTextAr=document.getElementById('s-annText-ar').value;
   st.annCta=document.getElementById('s-annCta').value;
   st.annVis=document.getElementById('s-annVis').checked;
   st.colTitle=document.getElementById('s-colTitle').value;
+  st.colTitleAr=document.getElementById('s-colTitle-ar').value;
   st.colSub=document.getElementById('s-colSub').value;
+  st.colSubAr=document.getElementById('s-colSub-ar').value;
   st.wa=document.getElementById('s-wa').value;
   st.ship=parseInt(document.getElementById('s-ship').value)||0;
   st.deliv=document.getElementById('s-deliv').value;
+  st.delivAr=document.getElementById('s-deliv-ar').value;
   st.happyCount=parseInt(document.getElementById('s-happyCount').value)||0;
   st.happyLabel=document.getElementById('s-happyLabel').value;
+  st.happyLabelAr=document.getElementById('s-happyLabel-ar').value;
   st.customBundleDiscount=Math.max(0,parseFloat(document.getElementById('s-customBundleDiscount').value)||0);
   st.designTabLabel=document.getElementById('s-designTabLabel').value.trim()||'✎ Designer Collab';
   st.designIntro=document.getElementById('s-designIntro').value;
+  st.designIntroAr=document.getElementById('s-designIntro-ar').value;
   st.designEmail=document.getElementById('s-designEmail').value.trim();
   const btn=document.getElementById(btnId);
   const orig=btn.textContent; btn.textContent='Saving…'; btn.disabled=true;
@@ -4750,10 +4880,10 @@ async function saveSettings(btnId,pillId){
   btn.textContent=orig; btn.disabled=false;
   if(!ok){ alert("Couldn't save — check your connection and try again."); return; }
   document.getElementById('annBar').style.display=st.annVis?'':'none';
-  document.getElementById('annText').textContent=st.annText;
+  document.getElementById('annText').textContent=tf(st.annText,st.annTextAr);
   document.getElementById('annCta').textContent=st.annCta;
-  document.getElementById('colTitle').textContent=st.colTitle;
-  document.getElementById('colSub').textContent=st.colSub;
+  document.getElementById('colTitle').textContent=tf(st.colTitle,st.colTitleAr);
+  document.getElementById('colSub').textContent=tf(st.colSub,st.colSubAr);
   renderHappyStat();
   showSaved(pillId,btnId);
 }
@@ -4761,6 +4891,8 @@ async function saveContent(btnId,pillId){
   S.settings.marquee=document.getElementById('s-marquee').value.split('\n').map(s=>s.trim()).filter(Boolean);
   S.settings.editQuote=document.getElementById('s-editQuote').value;
   S.settings.editSub=document.getElementById('s-editSub').value;
+  S.settings.editQuoteAr=document.getElementById('s-editQuote-ar').value;
+  S.settings.editSubAr=document.getElementById('s-editSub-ar').value;
   const btn=document.getElementById(btnId);
   const orig=btn.textContent; btn.textContent='Saving…'; btn.disabled=true;
   const ok = await persistSettings();
@@ -4768,8 +4900,8 @@ async function saveContent(btnId,pillId){
   if(!ok){ alert("Couldn't save — check your connection and try again."); return; }
   const items=[...S.settings.marquee,...S.settings.marquee];
   document.getElementById('marqueeTrack').innerHTML=items.map(t=>`<span class="m-item">${t} <span class="m-dot">·</span></span>`).join('');
-  document.getElementById('editQuote').innerHTML=S.settings.editQuote.replace(/\n/g,'<br>');
-  document.getElementById('editSub').textContent=S.settings.editSub;
+  document.getElementById('editQuote').innerHTML=tf(S.settings.editQuote,S.settings.editQuoteAr).replace(/\n/g,'<br>');
+  document.getElementById('editSub').textContent=tf(S.settings.editSub,S.settings.editSubAr);
   showSaved(pillId,btnId);
 }
 

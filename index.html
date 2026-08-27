@@ -23,6 +23,7 @@ nav{background:var(--cream);border-bottom:1px solid rgba(0,0,0,.08);padding:0 24
 .nav-icon{background:none;border:none;cursor:pointer;color:var(--black);padding:5px;display:flex;align-items:center;opacity:.75;transition:opacity .2s}
 .lang-toggle-btn{display:flex;align-items:center;gap:5px;background:none;border:1px solid rgba(0,0,0,.18);border-radius:20px;padding:5px 10px;cursor:pointer;color:var(--black);font-family:'Jost',sans-serif;font-size:10px;letter-spacing:.5px;transition:all .2s}
 .lang-toggle-btn:hover{border-color:var(--black);background:rgba(0,0,0,.03)}
+.mobile-lang-bar{display:none}
 .nav-icon:hover{opacity:1}
 .nav-logo{font-family:'Cormorant Garamond',serif;font-size:21px;font-weight:400;letter-spacing:7px;text-transform:uppercase;color:var(--black);text-decoration:none;position:absolute;left:50%;transform:translateX(-50%);cursor:pointer;user-select:none}
 
@@ -43,6 +44,11 @@ nav{background:var(--cream);border-bottom:1px solid rgba(0,0,0,.08);padding:0 24
   .trust-item{font-size:9px;letter-spacing:1px}
   .trust-item span{white-space:nowrap}
   .trust-dot{display:none}
+  /* On phones the nav-right pill sat right beside the centered logo and
+     often overlapped it — hide that copy here and show the full-width
+     bar below the nav instead, safely clear of the logo. */
+  .nav-lang-toggle{display:none !important}
+  .mobile-lang-bar{display:flex;align-items:center;justify-content:center;gap:8px;background:var(--cream);border-bottom:1px solid rgba(0,0,0,.08);padding:9px 14px}
 }
 .filter-label{font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:var(--black-s);display:flex;align-items:center;gap:7px;opacity:.7}
 .grid-toggles{display:flex;gap:8px}
@@ -634,14 +640,27 @@ function trackEvent(name, params){
   </div>
   <a href="#" class="nav-logo" id="navLogo" onclick="logoClick(event)">PRIMORA</a>
   <div class="nav-right">
-    <button class="lang-toggle-btn" id="langToggleBtn" onclick="toggleLanguage()" aria-label="Switch language">
+    <button class="lang-toggle-btn nav-lang-toggle" id="langToggleBtn" onclick="toggleLanguage()" aria-label="Switch language">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M4 5h11M9.5 3v2M6 5c0 5 3 8.5 7 10M13 8c-1 3-4 6.5-9 8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M17 12l4.5 10M17 12l-4.5 10M13.7 19h6.6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      <span id="langToggleLabel">العربية</span>
+      <span class="lang-toggle-label" id="langToggleLabel">العربية</span>
     </button>
     <button class="nav-icon" id="accountIconBtn" onclick="openAccount()" style="position:relative"><svg width="18" height="20" viewBox="0 0 18 20" fill="none"><circle cx="9" cy="6" r="4.5" stroke="currentColor" stroke-width="1.2"/><path d="M1 19c0-4.418 3.582-8 8-8s8 3.582 8 8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg><span id="accountDot" style="display:none;position:absolute;top:2px;right:2px;width:7px;height:7px;border-radius:50%;background:var(--sage)"></span></button>
     <button class="nav-icon" onclick="openCart()"><svg width="18" height="20" viewBox="0 0 18 20" fill="none"><rect x="1" y="6" width="16" height="13" rx="1" stroke="currentColor" stroke-width="1.2"/><path d="M6 9V5a3 3 0 016 0v4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></button>
   </div>
 </nav>
+
+<!-- MOBILE-ONLY LANGUAGE BAR — on phones the nav-right pill sits right next
+     to the centered logo and can overlap it, so on small screens we hide
+     that copy (see .nav-lang-toggle media rule) and show this full-width
+     bar instead, safely clear of the logo. Both buttons call the same
+     toggleLanguage() and share the .lang-toggle-label class so their text
+     always stays in sync. -->
+<div class="mobile-lang-bar" id="mobileLangBar">
+  <button class="lang-toggle-btn" onclick="toggleLanguage()" aria-label="Switch language">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M4 5h11M9.5 3v2M6 5c0 5 3 8.5 7 10M13 8c-1 3-4 6.5-9 8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M17 12l4.5 10M17 12l-4.5 10M13.7 19h6.6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <span class="lang-toggle-label">العربية</span>
+  </button>
+</div>
 
 <div class="trust-bar" id="trustBar">
   <button class="trust-item" onclick="openInfoPage('shipping')">
@@ -1733,8 +1752,7 @@ function toggleLanguage(){
   try{ localStorage.setItem('primora_lang', currentLang); }catch(e){}
   document.documentElement.setAttribute('lang', currentLang==='ar'?'ar':'en');
   document.documentElement.setAttribute('dir', currentLang==='ar'?'rtl':'ltr');
-  const lbl=document.getElementById('langToggleLabel');
-  if(lbl) lbl.textContent = currentLang==='ar' ? 'English' : 'العربية';
+  document.querySelectorAll('.lang-toggle-label').forEach(el=>{ el.textContent = currentLang==='ar' ? 'English' : 'العربية'; });
   applyTranslations();
   refreshFreeTextForLanguage();
 }
@@ -4941,6 +4959,7 @@ function setGrid(btn){document.querySelectorAll('.gtoggle').forEach(b=>b.classLi
   document.documentElement.setAttribute('dir', currentLang==='ar'?'rtl':'ltr');
   const langLbl=document.getElementById('langToggleLabel');
   if(langLbl) langLbl.textContent = currentLang==='ar' ? 'English' : 'العربية';
+  document.querySelectorAll('.lang-toggle-label').forEach(el=>{ el.textContent = currentLang==='ar' ? 'English' : 'العربية'; });
   await loadPersisted();
   renderStore();
   updateCartUI(); // reflect any cart restored from localStorage

@@ -1786,8 +1786,23 @@ function refreshFreeTextForLanguage(){
    without a dictionary entry (product names, admin-typed content)
    passes through untouched by design. Skips containers that hold
    admin-only UI (never shown to customers) so the dashboard stays
-   English-only regardless of the customer-facing language toggle. */
-const I18N_SKIP_SELECTOR = '.admin-shell, .admin-login, #invoiceTemplate, script, style';
+   English-only regardless of the customer-facing language toggle.
+
+   Also skips a specific list of PERSISTENT elements whose text is set
+   directly via tf() (product description/material/fit/delivery time,
+   footer-page content, announcement bar, collection header, editorial
+   copy…) rather than looked up in AR_DICT. These divs are never
+   recreated — the same DOM node is reused and its textContent simply
+   reassigned each time (e.g. every time a different product's modal
+   opens). If the generic walker below were allowed to touch them, it
+   would cache whichever text it saw FIRST as "the original" on that
+   node, and then reapply that first-seen text forever afterward on any
+   later mutation — which is exactly what caused every product's modal
+   to show the very first product's Arabic description. tf() already
+   fully resolves the right text for the right instance at render time,
+   so these elements simply don't need (and must not get) the generic
+   dictionary pass. */
+const I18N_SKIP_SELECTOR = '.admin-shell, .admin-login, #invoiceTemplate, script, style, #modalDesc, #modalMat, #modalFit, #modalDeliv, #modalOccasionsText, #infoContent, #infoTitle, #annText, #colTitle, #colSub, #editQuote, #editSub, #happyLabelText';
 function applyTranslations(){
   translateTextNodes();
   translateAttrs('placeholder');

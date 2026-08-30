@@ -176,6 +176,8 @@ nav{background:var(--cream);border-bottom:1px solid rgba(0,0,0,.08);padding:0 24
 .m-thumb .ph-mini{width:100%;height:100%}
 .modal-body{padding:36px 30px;display:flex;flex-direction:column;overflow-y:auto}
 .modal-close{position:absolute;top:12px;right:16px;background:rgba(255,255,255,.9);border:none;font-size:18px;cursor:pointer;color:var(--black);opacity:.7;z-index:20;width:32px;height:32px;display:flex;align-items:center;justify-content:center}
+.modal-share-btn{position:absolute;top:12px;left:16px;background:rgba(255,255,255,.9);border:none;cursor:pointer;color:var(--black);opacity:.7;z-index:20;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;transition:opacity .2s}
+.modal-share-btn:hover{opacity:1}
 .modal-tag{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--sage);margin-bottom:8px}
 .modal-name{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300;margin-bottom:5px}
 .modal-price{font-size:16px;color:var(--black-s);margin-bottom:20px}
@@ -307,6 +309,24 @@ footer{background:var(--black);color:rgba(255,255,255,.45);padding:56px 28px 28p
 .bag-count{position:absolute;top:-3px;right:-3px;background:var(--sage);color:white;width:18px;height:18px;border-radius:50%;font-size:10px;display:flex;align-items:center;justify-content:center}
 .toast{position:fixed;bottom:85px;right:22px;background:var(--black);color:var(--ivory);padding:12px 20px;font-size:11px;letter-spacing:2px;text-transform:uppercase;z-index:800;opacity:0;transform:translateY(10px);transition:all .3s ease;pointer-events:none}
 .toast.show{opacity:1;transform:translateY(0)}
+
+/* ── WELCOME BACK CARD — reminds a returning visitor of the last product
+   they opened. Always docked to the physical right edge of the screen
+   (not flipped for RTL) so it slides in from the same side as the
+   floating bag button, consistent regardless of language. ── */
+.welcome-back-card{position:fixed;top:84px;right:20px;width:270px;background:#fff;border:1px solid rgba(0,0,0,.1);box-shadow:0 14px 44px rgba(0,0,0,.14);z-index:450;overflow:hidden;display:none;transform:translateX(130%);transition:transform .5s cubic-bezier(.16,1,.3,1)}
+.welcome-back-card.show{display:block}
+.welcome-back-card.slide-in{transform:translateX(0)}
+.wb-close{position:absolute;top:8px;right:8px;background:rgba(255,255,255,.85);border:none;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:12px;z-index:2;opacity:.8}
+.wb-close:hover{opacity:1}
+.wb-img{width:100%;aspect-ratio:4/3;overflow:hidden;background:var(--cream)}
+.wb-img img{width:100%;height:100%;object-fit:cover;display:block}
+.wb-body{padding:14px 16px 16px}
+.wb-label{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--sage);margin-bottom:6px}
+.wb-name{font-family:'Cormorant Garamond',serif;font-size:16px;margin-bottom:3px;line-height:1.25}
+.wb-price{font-size:12px;color:var(--warm-gray);margin-bottom:12px}
+.wb-btn{display:block;width:100%;background:var(--black);color:var(--ivory);border:none;padding:11px;font-family:'Jost',sans-serif;font-size:10px;letter-spacing:2.5px;text-transform:uppercase;cursor:pointer;text-align:center}
+@media(max-width:480px){.welcome-back-card{width:auto;left:16px;right:16px;top:72px}}
 
 /* ── NEW ORDER ALERT ── */
 .order-alert{position:fixed;top:20px;right:20px;background:var(--black);color:#fff;padding:18px 20px;z-index:6000;max-width:320px;box-shadow:0 10px 40px rgba(0,0,0,.35);display:none;animation:slideIn .3s ease}
@@ -591,6 +611,7 @@ html[dir="rtl"] .co-wa{flex-direction:row-reverse}
 html[dir="rtl"] .ci-row,html[dir="rtl"] .cart-item,html[dir="rtl"] .bundle-item-row,
 html[dir="rtl"] .apc{direction:rtl}
 html[dir="rtl"] .modal-close,html[dir="rtl"] .co-close{left:16px;right:auto}
+html[dir="rtl"] .modal-share-btn{right:16px;left:auto}
 html[dir="rtl"] .new-badge,html[dir="rtl"] .stock-badge,html[dir="rtl"] .bundle-badge{left:auto;right:14px}
 html[dir="rtl"] .img-count-badge{right:auto;left:14px}
 </style>
@@ -746,6 +767,10 @@ function trackEvent(name, params){
   <span class="bag-count" id="bagCount">0</span>
 </button>
 <div class="toast" id="toast">Added to bag</div>
+
+<!-- WELCOME BACK CARD — populated by JS when a returning visitor's last-
+     viewed product is found in localStorage (see maybeShowWelcomeBackCard) -->
+<div class="welcome-back-card" id="welcomeBackCard"></div>
 
 <!-- NEW ORDER ALERT (admin) -->
 <div class="order-alert" id="orderAlert">
@@ -908,6 +933,9 @@ function trackEvent(name, params){
     </div>
     <div class="modal-body">
       <button class="modal-close" onclick="closeModal()">✕</button>
+      <button class="modal-share-btn" onclick="shareProduct()" aria-label="Share" title="Share">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><circle cx="18" cy="5" r="2.7" stroke="currentColor" stroke-width="1.6"/><circle cx="6" cy="12" r="2.7" stroke="currentColor" stroke-width="1.6"/><circle cx="18" cy="19" r="2.7" stroke="currentColor" stroke-width="1.6"/><path d="M8.4 10.7l7.2-4.1M8.4 13.3l7.2 4.1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      </button>
       <div class="modal-tag">Summer Collection</div>
       <div id="modalStockBadge"></div>
       <div class="modal-name" id="modalName"></div>
@@ -1724,7 +1752,9 @@ const AR_DICT = {
   // FAQ modal
   'Frequently Asked Questions':'الأسئلة الشائعة','No questions yet.':'لسه مفيش أسئلة.',
   // Misc system
-  'Added to bag':'اتضافت للشنطة'
+  'Added to bag':'اتضافت للشنطة','Link copied':'اتنسخ اللينك',
+  // Welcome-back / share
+  'Welcome Back':'منورانا تاني','Check It Out':'اتفرجي عليها','Share':'مشاركة','Copy this link:':'انسخي اللينك ده:'
 };
 
 /* Translate a fixed UI string. Falls back to the original English if
@@ -1802,7 +1832,7 @@ function refreshFreeTextForLanguage(){
    fully resolves the right text for the right instance at render time,
    so these elements simply don't need (and must not get) the generic
    dictionary pass. */
-const I18N_SKIP_SELECTOR = '.admin-shell, .admin-login, #invoiceTemplate, script, style, #modalDesc, #modalMat, #modalFit, #modalDeliv, #modalOccasionsText, #infoContent, #infoTitle, #annText, #colTitle, #colSub, #editQuote, #editSub, #happyLabelText';
+const I18N_SKIP_SELECTOR = '.admin-shell, .admin-login, #invoiceTemplate, script, style, #modalDesc, #modalMat, #modalFit, #modalDeliv, #modalOccasionsText, #infoContent, #infoTitle, #annText, #colTitle, #colSub, #editQuote, #editSub, #happyLabelText, #toast, #welcomeBackCard';
 function applyTranslations(){
   translateTextNodes();
   translateAttrs('placeholder');
@@ -1905,6 +1935,98 @@ async function copyProductLink(idx){
   }
   const btn=document.getElementById('copyLinkBtn-'+idx);
   if(btn){ const orig=btn.textContent; btn.textContent='✓ Copied'; setTimeout(()=>{btn.textContent=orig;},1800); }
+}
+
+/* ════════════════════════════════
+   CUSTOMER-FACING SHARE — the arrow icon inside a product's modal.
+   Uses the same deep-link URL system as the admin's "Copy Link", but
+   triggers the device's native share sheet (like sharing any social
+   media post) when available, so a customer can send the exact product
+   straight to a friend on WhatsApp, Instagram, Messages, etc. Falls
+   back to copying the link when Web Share isn't supported (desktop
+   browsers mostly).
+════════════════════════════════ */
+async function shareProduct(){
+  const p=S.products[curProd];
+  if(!p) return;
+  if(!p.id){ return; } // shouldn't happen for a live, openable product
+  const link = productShareURL(p.id);
+  const shareText = `${p.name} — LE ${p.price.toLocaleString()} · PRIMORA`;
+  if(navigator.share){
+    try{
+      await navigator.share({ title:`PRIMORA — ${p.name}`, text:shareText, url:link });
+    }catch(e){ /* user closed the native share sheet — nothing to do */ }
+    return;
+  }
+  try{
+    await navigator.clipboard.writeText(link);
+    showToast(t('Link copied'));
+  }catch(e){
+    prompt(t('Copy this link:'), link);
+  }
+}
+
+/* ════════════════════════════════
+   WELCOME BACK CARD — reminds a returning visitor of the last product
+   they opened, so they can pick up right where they left off. Every
+   time a product modal opens we remember it in localStorage; on the
+   NEXT visit (a fresh page load, not just re-opening the modal in the
+   same session) we surface a small card sliding in from the right with
+   that product, so the visitor can jump straight back in.
+════════════════════════════════ */
+const LAST_VIEWED_KEY = 'primora_last_viewed_product';
+const WELCOME_BACK_SHOWN_KEY = 'primora_welcome_back_shown'; // sessionStorage — once per visit
+
+function recordLastViewedProduct(p){
+  if(!p || !p.id) return;
+  try{ localStorage.setItem(LAST_VIEWED_KEY, JSON.stringify({id:p.id, ts:Date.now()})); }catch(e){}
+}
+
+function maybeShowWelcomeBackCard(){
+  try{
+    if(sessionStorage.getItem(WELCOME_BACK_SHOWN_KEY)) return; // already surfaced this visit
+    const raw = localStorage.getItem(LAST_VIEWED_KEY);
+    if(!raw) return; // nothing remembered — first-time visitor, or cleared storage
+    const saved = JSON.parse(raw);
+    if(!saved || !saved.id) return;
+    // Skip if we're already deep-linking straight into that exact product
+    const params = new URLSearchParams(window.location.search);
+    if(params.get('product') && String(params.get('product'))===String(saved.id)) return;
+    const p = S.products.find(pp=>String(pp.id)===String(saved.id) && pp.vis);
+    if(!p) return; // that product was removed or hidden since the last visit
+    renderWelcomeBackCard(p);
+  }catch(e){ console.warn('Welcome-back card skipped', e); }
+}
+
+function renderWelcomeBackCard(p){
+  const card=document.getElementById('welcomeBackCard');
+  if(!card) return;
+  const idx=S.products.indexOf(p);
+  const c0=firstColor(p);
+  const imgHtml=(c0.images&&c0.images[0])
+    ? `<img src="${c0.images[0]}" alt="${p.name}">`
+    : `<div class="p-ph ${p.ph}" style="height:100%"></div>`;
+  card.innerHTML=`
+    <button class="wb-close" onclick="dismissWelcomeBackCard()" aria-label="Close">✕</button>
+    <div class="wb-img">${imgHtml}</div>
+    <div class="wb-body">
+      <div class="wb-label">${t('Welcome Back')}</div>
+      <div class="wb-name">${p.name}</div>
+      <div class="wb-price">LE ${p.price.toLocaleString()}</div>
+      <button class="wb-btn" onclick="openModal(${idx});dismissWelcomeBackCard()">${t('Check It Out')}</button>
+    </div>`;
+  card.classList.add('show');
+  requestAnimationFrame(()=> requestAnimationFrame(()=> card.classList.add('slide-in') ));
+  try{ sessionStorage.setItem(WELCOME_BACK_SHOWN_KEY,'1'); }catch(e){}
+  clearTimeout(card._autoHideTimer);
+  card._autoHideTimer=setTimeout(()=>dismissWelcomeBackCard(), 14000);
+}
+function dismissWelcomeBackCard(){
+  const card=document.getElementById('welcomeBackCard');
+  if(!card) return;
+  clearTimeout(card._autoHideTimer);
+  card.classList.remove('slide-in');
+  setTimeout(()=>card.classList.remove('show'), 500);
 }
 
 /* ════════════════════════════════
@@ -3303,6 +3425,7 @@ function openModal(idx, updateUrl){
   if(!p)return;
   curProd=idx; curQty=1; curSize=null; galIdx=0; curColorIdx=0;
   trackEvent('ViewContent', {content_name:p.name, content_ids:[p.id||idx], content_type:'product', value:p.price, currency:'EGP'});
+  recordLastViewedProduct(p);
   document.getElementById('modalName').textContent=p.name;
   document.getElementById('modalPrice').innerHTML=priceDisplayHTML(p);
   const sigPrefix = currentLang==='ar' ? 'قطعة مميزة من PRIMORA.' : 'A signature piece from PRIMORA.';
@@ -3594,7 +3717,7 @@ function cqty(i,d){cart[i].qty+=d;if(cart[i].qty<=0)cart.splice(i,1);updateCartU
 function cremove(i){cart.splice(i,1);updateCartUI();}
 function openCart(){document.getElementById('cartDrawer').classList.add('open');document.getElementById('cartOverlay').classList.add('open');}
 function closeCart(){document.getElementById('cartDrawer').classList.remove('open');document.getElementById('cartOverlay').classList.remove('open');}
-function showToast(){const t=document.getElementById('toast');t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200);}
+function showToast(msg){const el=document.getElementById('toast');el.textContent = msg || t('Added to bag');el.classList.add('show');clearTimeout(el._hideTimer);el._hideTimer=setTimeout(()=>el.classList.remove('show'),2200);}
 
 /* ════════════════════════════════
    CHECKOUT
@@ -4983,6 +5106,7 @@ function setGrid(btn){document.querySelectorAll('.gtoggle').forEach(b=>b.classLi
   if(currentUser) await refreshOrdersForCurrentUser();
   applyTranslations();       // translate static HTML (nav, footer, checkout form, FAQ modal, etc.)
   setupTranslationObserver(); // keep translating any content that re-renders after this point
+  setTimeout(maybeShowWelcomeBackCard, 1400); // give the page a moment to settle before sliding it in
 })();
 </script>
 </body>

@@ -1076,7 +1076,7 @@ function trackEvent(name, params){
       <div class="asb-divider"></div>
       <div class="asb-section">Store</div>
       <div class="asb-item" onclick="showPanel('products',this)">◇ Products</div>
-      <div class="asb-item" onclick="showPanel('bundles',this)">⬢ Bundles</div>
+      <div class="asb-item" onclick="showPanel('bundles',this)">🏷️ Offers &amp; Sale</div>
       <div class="asb-item" onclick="showPanel('reviews',this)">✦ Client Reviews</div>
       <div class="asb-item" onclick="showPanel('designs',this)">✎ Design Submissions <span class="asb-badge" id="designBadge">0</span></div>
       <div class="asb-item" onclick="showPanel('store',this)">◎ Settings</div>
@@ -1177,20 +1177,20 @@ function trackEvent(name, params){
       <div class="a-panel" id="panel-bundles">
         <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap">
           <div>
-            <div class="a-page-title">Bundles</div>
-            <div class="a-page-sub" style="margin-bottom:0">Pair any two products together at a fixed bundle price. Appears as its own "Bundles" tab on the storefront automatically.</div>
+            <div class="a-page-title">Offers &amp; Sale</div>
+            <div class="a-page-sub" style="margin-bottom:0">Pair any two products together at a fixed offer price. Appears as its own "Offers &amp; Sale" tab on the storefront automatically.</div>
           </div>
-          <button class="btn-save" onclick="openBundlePanel(null)" style="white-space:nowrap;margin-top:2px">+ Add New Bundle</button>
+          <button class="btn-save" onclick="openBundlePanel(null)" style="white-space:nowrap;margin-top:2px">+ Add New Offer</button>
         </div>
         <div style="height:20px"></div>
         <div id="bundlesSetupNotice" style="display:none;background:#fff8e6;border:1px solid #f0d98c;padding:16px 18px;font-size:12px;color:#8a6d1a;line-height:1.8;margin-bottom:18px">
-          Bundles aren't set up in your database yet. Run <strong>supabase_migration_v12_bundles.sql</strong> once in the Supabase SQL Editor, then refresh this page.
+          Offers &amp; Sale aren't set up in your database yet. Run <strong>supabase_migration_v12_bundles.sql</strong> once in the Supabase SQL Editor, then refresh this page.
         </div>
 
         <div class="a-section">
-          <div class="a-section-head"><div class="a-section-title">Build Your Own Bundle</div></div>
+          <div class="a-section-head"><div class="a-section-title">Build Your Own Offer</div></div>
           <div class="a-section-body">
-            <div style="font-size:11px;color:var(--warm-gray);margin-bottom:16px;line-height:1.7">Lets shoppers pick ANY 2 pieces from the whole catalog themselves and get this discount automatically at checkout. Shown as a card at the top of the storefront's Bundles tab. Requires migration v13.</div>
+            <div style="font-size:11px;color:var(--warm-gray);margin-bottom:16px;line-height:1.7">Lets shoppers pick ANY 2 pieces from the whole catalog themselves and get this discount automatically at checkout. Shown as a card at the top of the storefront's Offers &amp; Sale tab. Requires migration v13.</div>
             <div class="af-group" style="max-width:260px"><label class="af-label">Discount Amount (LE)</label><input class="af-input" type="number" id="s-customBundleDiscount" placeholder="300"></div>
             <button class="btn-save" id="bsave13" onclick="saveSettings('bsave13','st13')">Save</button>
             <span class="saved-tag" id="st13">✓ Saved</span>
@@ -1246,7 +1246,7 @@ function trackEvent(name, params){
         <div class="a-section">
           <div class="a-section-head"><div class="a-section-title">Filter Tab Order</div></div>
           <div class="a-section-body">
-            <div style="font-size:11px;color:var(--warm-gray);margin-bottom:16px;line-height:1.7">Controls the order of the tabs shown above the collection (Categories, Best Sellers, Almost Sold Out, Bundles, Client Reviews). A tab only appears on the storefront once it has something to show (e.g. "Best Sellers" stays hidden until at least one product is marked as a best seller).</div>
+            <div style="font-size:11px;color:var(--warm-gray);margin-bottom:16px;line-height:1.7">Controls the order of the tabs shown above the collection (Categories, Best Sellers, Almost Sold Out, Offers &amp; Sale, Client Reviews). A tab only appears on the storefront once it has something to show (e.g. "Best Sellers" stays hidden until at least one product is marked as a best seller).</div>
             <div id="tabOrderList"></div>
             <button class="btn-save" id="bsave14" onclick="saveTabOrder('bsave14','st14')" style="margin-top:10px">Save</button>
             <span class="saved-tag" id="st14">✓ Saved</span>
@@ -1519,9 +1519,9 @@ function trackEvent(name, params){
 <div class="apanel-overlay" id="bundlePanelOverlay" onclick="if(event.target===this)closeBundlePanel()">
   <div class="apanel-box">
     <button class="apanel-close" onclick="closeBundlePanel()">✕</button>
-    <div class="apanel-title" id="bpTitle">New Bundle</div>
+    <div class="apanel-title" id="bpTitle">New Offer</div>
     <input type="hidden" id="bp-id">
-    <div class="af-group"><label class="af-label">Bundle Name</label><input class="af-input" id="bp-name" placeholder="e.g. The Weekend Duo"></div>
+    <div class="af-group"><label class="af-label">Offer Name</label><input class="af-input" id="bp-name" placeholder="e.g. The Weekend Duo"></div>
     <div class="af-group">
       <label class="af-label">Product 1</label>
       <select class="af-input" id="bp-product1"></select>
@@ -1531,7 +1531,7 @@ function trackEvent(name, params){
       <select class="af-input" id="bp-product2"></select>
     </div>
     <div class="af-group" id="bp-origPriceHint" style="font-size:11px;color:var(--warm-gray)"></div>
-    <div class="af-group"><label class="af-label">Bundle Price (LE) <span style="text-transform:none;font-weight:400;color:var(--warm-gray)">— the fixed total price for both pieces together</span></label><input class="af-input" type="number" id="bp-price" placeholder="e.g. 1800"></div>
+    <div class="af-group"><label class="af-label">Offer Price (LE) <span style="text-transform:none;font-weight:400;color:var(--warm-gray)">— the fixed total price for both pieces together</span></label><input class="af-input" type="number" id="bp-price" placeholder="e.g. 1800"></div>
     <div class="af-group">
       <div class="a-toggle">
         <label class="tog-sw"><input type="checkbox" id="bp-vis" checked><span class="tog-sl"></span></label>
@@ -1539,10 +1539,10 @@ function trackEvent(name, params){
       </div>
     </div>
     <div style="display:flex;gap:10px;margin-top:20px;flex-wrap:wrap">
-      <button class="btn-save" id="bp-savebtn" onclick="saveBundle()">Save Bundle</button>
+      <button class="btn-save" id="bp-savebtn" onclick="saveBundle()">Save Offer</button>
       <button class="btn-outline" onclick="closeBundlePanel()">Cancel</button>
     </div>
-    <span class="saved-tag" id="bp-saved">✓ Bundle Saved</span>
+    <span class="saved-tag" id="bp-saved">✓ Offer Saved</span>
   </div>
 </div>
 
@@ -1551,11 +1551,11 @@ function trackEvent(name, params){
   <div class="modal" style="grid-template-columns:1fr;height:auto;max-height:90vh;display:block;overflow-y:auto">
     <div class="modal-body" style="height:auto;padding:32px 28px">
       <button class="modal-close" onclick="closeBundleModal()">✕</button>
-      <div class="modal-tag">Bundle</div>
+      <div class="modal-tag">Offer</div>
       <div class="modal-name" id="bundleModalName"></div>
       <div class="modal-price" id="bundleModalPrice"></div>
       <div id="bundleModalItems"></div>
-      <button class="modal-add-btn" id="bundleModalAddBtn" onclick="addBundleToCart()" style="margin-top:14px">Add Bundle to Bag</button>
+      <button class="modal-add-btn" id="bundleModalAddBtn" onclick="addBundleToCart()" style="margin-top:14px">Add Offer to Bag</button>
     </div>
   </div>
 </div>
@@ -1565,7 +1565,7 @@ function trackEvent(name, params){
   <div class="modal" style="grid-template-columns:1fr;height:auto;max-height:90vh;display:block;overflow-y:auto;background:var(--black)">
     <div class="modal-body" style="height:auto;padding:32px 28px;background:var(--black)">
       <button class="modal-close" onclick="closeCustomBundlePicker()">✕</button>
-      <div class="modal-tag" style="color:var(--gold)">Build Your Own Bundle</div>
+      <div class="modal-tag" style="color:var(--gold)">Build Your Own Offer</div>
       <div class="modal-name" style="color:var(--ivory)">Pick Any 2 Pieces</div>
       <div id="customBundleModalBody" style="margin-top:16px"></div>
     </div>
@@ -1692,7 +1692,7 @@ const AR_DICT = {
   'Shop Now':'اتسوقي دلوقتي',
   // Collection header / filters
   'All':'الكل','Ladies':'حريمي','Men':'رجالي','Sets':'أطقم','Blouses':'بلايز','Pants':'بناطيل',
-  '⬢ Bundles':'⬢ بندلات','★ Best Sellers':'★ الأكتر مبيعًا','⚠ Almost Sold Out':'⚠ شبه خلصان',
+  '🏷️ Offers & Sale':'🏷️ عروض وتخفيضات','★ Best Sellers':'★ الأكتر مبيعًا','⚠ Almost Sold Out':'⚠ شبه خلصان',
   // Product card / badges
   'Add to Bag':'ضيفيها للشنطة','Sold Out':'خلصت','New':'جديد','Best Seller':'الأكتر مبيعًا',
   'Almost Sold Out':'شبه خلصان','Colors':'ألوان','Color':'لون',
@@ -1717,10 +1717,10 @@ const AR_DICT = {
   "We'll confirm your order within 24 hours.":'هنأكد طلبك خلال 24 ساعة.','Pay Online':'ادفعي أونلاين',
   'Prefer to pay now instead of cash on delivery?':'تفضّلي تدفعي دلوقتي بدل الدفع عند الاستلام؟',
   // Bundles
-  'Bundle':'بندل','View Bundle':'شوفي البندل','Unavailable':'مش متاحة','Add Bundle to Bag':'ضيفي البندل للشنطة',
-  'Save LE':'وفّري جنيه','Build Your Own Bundle':'اعملي بندل بنفسك','Pick Any 2 Pieces':'اختاري أي قطعتين',
+  'Offer':'عرض','View Offer':'شوفي العرض','Unavailable':'مش متاحة','Add Offer to Bag':'ضيفي العرض للشنطة',
+  'Save LE':'وفّري جنيه','Build Your Own Offer':'اعملي عرض بنفسك','Pick Any 2 Pieces':'اختاري أي قطعتين',
   'pieces selected — pick any 2':'قطع مختارة — اختاري 2','Choose a size for each piece':'اختاري مقاس لكل قطعة',
-  'No bundles available right now.':'مفيش بندلات متاحة دلوقتي.','No curated bundles yet — but you can build your own above.':'لسه مفيش بندلات جاهزة، بس تقدري تعملي واحدة بنفسك فوق.',
+  'No offers available right now.':'مفيش عروض متاحة دلوقتي.','No curated offers yet — but you can build your own above.':'لسه مفيش عروض جاهزة، بس تقدري تعملي واحدة بنفسك فوق.',
   // Reviews
   'Client Reviews':'آراء العملاء','No client reviews posted yet.':'لسه مفيش آراء عملاء متنشورة.',
   'Your Voice Matters':'رأيك يهمنا','We\'d Love To Hear Your Review':'حابين نسمع رأيك',
@@ -2895,7 +2895,7 @@ function renderCatTabs(){
       ? `<button class="cat-tab ${activeCategory==='BestSellers'?'active':''}" onclick="setCategory('BestSellers')">★ Best Sellers</button>` : '',
     lowstock: ()=> hasLowStock
       ? `<button class="cat-tab ${activeCategory==='LowStock'?'active':''}" onclick="setCategory('LowStock')">⚠ Almost Sold Out</button>` : '',
-    bundles: ()=> `<button class="cat-tab ${activeCategory==='Bundles'?'active':''}" onclick="setCategory('Bundles')">⬢ Bundles</button>`
+    bundles: ()=> `<button class="cat-tab ${activeCategory==='Bundles'?'active':''}" onclick="setCategory('Bundles')">🏷️ Offers &amp; Sale</button>`
   };
 
   const order = (S.settings.tabOrder && S.settings.tabOrder.length) ? S.settings.tabOrder : ['categories','bestsellers','lowstock','bundles'];
@@ -3017,7 +3017,7 @@ function renderBundleGrid(grid){
   const visible = (S.bundles||[]).filter(b=>b.vis);
   const customCard = renderCustomBundleCard();
   if(!visible.length){
-    grid.innerHTML = customCard + `<div class="no-items" style="grid-column:1/-1;padding:60px 20px">No curated bundles yet — but you can build your own above.</div>`;
+    grid.innerHTML = customCard + `<div class="no-items" style="grid-column:1/-1;padding:60px 20px">No curated offers yet — but you can build your own above.</div>`;
     return;
   }
   grid.innerHTML = customCard + visible.map(b=>{
@@ -3034,12 +3034,12 @@ function renderBundleGrid(grid){
     }).join('');
     const bothInStock = members.every(p=>productOverallStock(p)!=='sold_out');
     const addBtn = bothInStock
-      ? `<button class="add-bag-btn" onclick="openBundleModal(${idx})">View Bundle</button>`
+      ? `<button class="add-bag-btn" onclick="openBundleModal(${idx})">View Offer</button>`
       : `<button class="add-bag-btn" disabled>Unavailable</button>`;
     return `<div class="p-card" onclick="openBundleModal(${idx})">
       <div class="p-img" style="display:flex">
         <div class="bundle-thumb-pair" style="width:100%;height:100%;grid-template-columns:1fr 1fr">${imgsHtml}</div>
-        <div class="bundle-badge">Bundle</div>
+        <div class="bundle-badge">Offer</div>
       </div>
       <div class="p-info">
         <div class="p-name">${b.name}</div>
@@ -3071,7 +3071,7 @@ function renderCustomBundleCard(){
       </div>
     </div>
     <div class="p-info">
-      <div class="p-name">Build Your Own Bundle</div>
+      <div class="p-name">Build Your Own Offer</div>
       <div class="p-desc">Pick any 2 pieces from the whole collection</div>
     </div>
     <div class="p-actions" onclick="event.stopPropagation()">
@@ -3128,7 +3128,7 @@ function renderCustomBundlePickerContent(){
       <span style="font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.6)">Total</span>
       <span><span class="bundle-orig-price" style="color:rgba(255,255,255,.4)">LE ${sum.toLocaleString()}</span> &nbsp; <span style="font-family:'Cormorant Garamond',serif;font-size:22px">LE ${finalPrice.toLocaleString()}</span></span>
     </div>
-    <button class="modal-add-btn" onclick="addCustomBundleToCart()" style="margin-top:14px">Add Bundle to Bag — Save LE ${discount.toLocaleString()}</button>`;
+    <button class="modal-add-btn" onclick="addCustomBundleToCart()" style="margin-top:14px">Add Offer to Bag — Save LE ${discount.toLocaleString()}</button>`;
   }
 
   document.getElementById('customBundleModalBody').innerHTML = `
@@ -3169,11 +3169,11 @@ function addCustomBundleToCart(){
   }));
   cart.push({
     isBundle:true, isCustom:true, bundleId:null,
-    name:'Build Your Own Bundle', price:finalPrice, qty:1,
+    name:'Build Your Own Offer', price:finalPrice, qty:1,
     img: members.find(m=>m.img)?.img || null, ph: members[0].ph,
     members
   });
-  trackEvent('AddToCart', {content_name:'Build Your Own Bundle', content_type:'product_group', value:finalPrice, currency:'EGP'});
+  trackEvent('AddToCart', {content_name:'Build Your Own Offer', content_type:'product_group', value:finalPrice, currency:'EGP'});
   updateCartUI(); showToast();
   closeCustomBundlePicker();
   openCart();
@@ -3638,7 +3638,7 @@ function updateCartUI(){
     <div class="cart-item">
       <div class="cart-item-img">${it.img?`<img src="${it.img}" alt="" style="width:100%;height:100%;object-fit:cover">`:`<div class="p-ph ${it.ph||'ph-1'}" style="width:100%;height:100%"></div>`}</div>
       <div class="cart-item-info">
-        <span class="ci-bundle-tag">Bundle</span>
+        <span class="ci-bundle-tag">Offer</span>
         <div class="ci-name">${it.name}</div>
         <div class="ci-meta">${it.members.map(m=>`${m.name} (${m.color?m.color+', ':''}${m.size})`).join(' + ')}</div>
         <div class="ci-row">
@@ -3727,7 +3727,7 @@ function openCheckout(){
   const total=cart.reduce((s,i)=>s+i.price*i.qty,0)+(S.settings.ship||0);
   trackEvent('InitiateCheckout', {value:total, currency:'EGP', num_items:cart.reduce((s,i)=>s+i.qty,0)});
   document.getElementById('coOrderList').innerHTML=cart.map(i=>{
-    const label = i.isBundle ? `${i.name} (Bundle: ${i.members.map(m=>`${m.name} ${m.size}`).join(' + ')})` : `${i.name} (${i.color?i.color+', ':''}${i.size})`;
+    const label = i.isBundle ? `${i.name} (Offer: ${i.members.map(m=>`${m.name} ${m.size}`).join(' + ')})` : `${i.name} (${i.color?i.color+', ':''}${i.size})`;
     return `<div class="co-order-item"><span>${label} ×${i.qty}</span><span>LE ${(i.price*i.qty).toLocaleString()}</span></div>`;
   }).join('');
   document.getElementById('coTotal').textContent=`LE ${total.toLocaleString()}`;
@@ -3783,7 +3783,7 @@ async function submitOrder(){
 function waOrder(){
   const total=cart.reduce((s,i)=>s+i.price*i.qty,0);
   const lines=cart.map(i=>{
-    const label = i.isBundle ? `${i.name} [Bundle: ${i.members.map(m=>`${m.name} ${m.size}`).join(' + ')}]` : `${i.name} (${i.color?i.color+', ':''}${i.size})`;
+    const label = i.isBundle ? `${i.name} [Offer: ${i.members.map(m=>`${m.name} ${m.size}`).join(' + ')}]` : `${i.name} (${i.color?i.color+', ':''}${i.size})`;
     return `• ${label} ×${i.qty} — LE ${(i.price*i.qty).toLocaleString()}`;
   }).join('\n');
   window.open(`https://wa.me/${S.settings.wa}?text=${encodeURIComponent(`Hello PRIMORA 👋\nOrder:\n${lines}\nTotal: LE ${total.toLocaleString()}`)}`,'_blank');
@@ -4192,7 +4192,7 @@ async function generateInvoicePDF(i){
       const memberTxt = (it.members||[]).map(m=>`${escapeAttr(m.name)} (${m.color?escapeAttr(m.color)+', ':''}${escapeAttr(m.size)})`).join(' + ');
       return `<tr style="border-bottom:1px solid #eee;">
       <td dir="auto" style="padding:10px 8px 10px 0;">🔗 ${escapeAttr(it.name)} — <span style="color:#888;font-size:11px">${memberTxt}</span></td>
-      <td style="padding:10px 8px;">Bundle</td>
+      <td style="padding:10px 8px;">Offer</td>
       <td style="padding:10px 8px;text-align:center;">${Number(it.qty)||0}</td>
       <td style="padding:10px 0 10px 8px;text-align:right;">LE ${(it.price*it.qty).toLocaleString()}</td>
     </tr>`;
@@ -4395,7 +4395,7 @@ function renderAdminBundles(){
   if(!S.bundles){ S.bundles=[]; }
   if(notice) notice.style.display='none';
   if(!S.bundles.length){
-    wrap.innerHTML = `<div class="no-items">No bundles yet — click "+ Add New Bundle" above. (If you just added migration v12, refresh this page first.)</div>`;
+    wrap.innerHTML = `<div class="no-items">No offers yet — click "+ Add New Offer" above. (If you just added migration v12, refresh this page first.)</div>`;
     return;
   }
   wrap.innerHTML = S.bundles.map((b,i)=>{
@@ -4434,7 +4434,7 @@ function openBundlePanel(idx){
   document.getElementById('bp-saved').classList.remove('show');
 
   if(idx===null){
-    document.getElementById('bpTitle').textContent='New Bundle';
+    document.getElementById('bpTitle').textContent='New Offer';
     document.getElementById('bp-id').value='';
     document.getElementById('bp-name').value='';
     document.getElementById('bp-product1').value='';
@@ -4479,10 +4479,10 @@ async function saveBundle(){
   const price = parseFloat(document.getElementById('bp-price').value)||0;
   const vis = document.getElementById('bp-vis').checked;
 
-  if(!name){ alert('Please give this bundle a name.'); return; }
-  if(!id1 || !id2){ alert('Please choose both products for the bundle.'); return; }
+  if(!name){ alert('Please give this offer a name.'); return; }
+  if(!id1 || !id2){ alert('Please choose both products for the offer.'); return; }
   if(id1===id2){ alert('Please choose two different products.'); return; }
-  if(price<=0){ alert('Please set a bundle price greater than 0.'); return; }
+  if(price<=0){ alert('Please set an offer price greater than 0.'); return; }
 
   const bundleObj = { name, productIds:[id1,id2], price, vis, sort: idx===null ? S.bundles.length : S.bundles[idx].sort };
 
@@ -4504,7 +4504,7 @@ async function saveBundle(){
 }
 
 async function removeBundle(i){
-  if(!confirm(`Delete the "${S.bundles[i].name}" bundle? This cannot be undone.`))return;
+  if(!confirm(`Delete the "${S.bundles[i].name}" offer? This cannot be undone.`))return;
   const b=S.bundles[i];
   if(b.id && sbClient){
     const {error}=await sbClient.from('bundles').delete().eq('id',b.id);
@@ -4797,7 +4797,7 @@ function orderItemLabel(it, escape){
   const esc = escape ? escapeAttr : (s=>s);
   if(it.bundle){
     const members=(it.members||[]).map(m=>`${esc(m.name)} (${m.color?esc(m.color)+', ':''}${esc(m.size)})`).join(' + ');
-    return `[Bundle] ${esc(it.name)}: ${members}`;
+    return `[Offer] ${esc(it.name)}: ${members}`;
   }
   return `${esc(it.name)} (${it.color?esc(it.color)+', ':''}${esc(it.size)})`;
 }
@@ -4835,7 +4835,7 @@ const TAB_ORDER_LABELS = {
   categories: 'Categories (Ladies, Men, etc.)',
   bestsellers: '★ Best Sellers',
   lowstock: '⚠ Almost Sold Out',
-  bundles: '⬢ Bundles'
+  bundles: '🏷️ Offers &amp; Sale'
 };
 function renderTabOrderList(){
   const container=document.getElementById('tabOrderList');

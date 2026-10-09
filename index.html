@@ -328,6 +328,35 @@ footer{background:var(--black);color:rgba(255,255,255,.45);padding:56px 28px 28p
 .wb-btn{display:block;width:100%;background:var(--black);color:var(--ivory);border:none;padding:11px;font-family:'Jost',sans-serif;font-size:10px;letter-spacing:2.5px;text-transform:uppercase;cursor:pointer;text-align:center}
 @media(max-width:480px){.welcome-back-card{width:auto;left:16px;right:16px;top:72px}}
 
+/* ── NOTIFICATIONS (bell + drawer) ── */
+.notif-bell{position:relative}
+.notif-badge{position:absolute;top:-3px;right:-6px;min-width:16px;height:16px;padding:0 4px;border-radius:8px;background:#d92d20;color:#fff;font-size:9px;font-weight:500;display:none;align-items:center;justify-content:center;font-family:'Jost',sans-serif;line-height:1;letter-spacing:0}
+.notif-badge.show{display:flex}
+.notif-drawer{position:fixed;top:0;right:-440px;width:100%;max-width:440px;height:100vh;background:var(--cream);z-index:700;display:flex;flex-direction:column;transition:right .35s ease;box-shadow:-4px 0 30px rgba(0,0,0,.12)}
+.notif-drawer.open{right:0}
+.notif-head{padding:20px 22px;border-bottom:1px solid rgba(0,0,0,.08);display:flex;align-items:center;justify-content:space-between}
+.notif-title{font-family:'Jost',sans-serif;font-size:15px;font-weight:500;letter-spacing:2px;text-transform:uppercase}
+.notif-body{flex:1;overflow-y:auto}
+.notif-item{display:flex;gap:14px;padding:18px 22px 18px 26px;border-bottom:1px solid rgba(0,0,0,.08);cursor:pointer;align-items:flex-start;position:relative;transition:background .2s}
+.notif-item:hover{background:rgba(0,0,0,.025)}
+.notif-item.unread::before{content:'';position:absolute;top:24px;left:10px;width:6px;height:6px;border-radius:50%;background:#d92d20}
+.notif-thumb{width:64px;height:64px;flex-shrink:0;border-radius:8px;overflow:hidden;background:var(--ivory);display:flex;align-items:center;justify-content:center;color:var(--sage)}
+.notif-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.notif-text{flex:1;min-width:0}
+.notif-item-title{font-size:14px;font-weight:500;margin-bottom:4px;line-height:1.4}
+.notif-item-body{font-size:12px;color:var(--warm-gray);line-height:1.7;margin-bottom:8px}
+.notif-link{font-size:12px;color:var(--black);text-decoration:underline;text-underline-offset:3px}
+.notif-chev{align-self:center;color:var(--warm-gray);font-size:20px}
+.notif-empty{text-align:center;padding:90px 24px;color:var(--warm-gray)}
+.notif-empty svg{opacity:.45;margin-bottom:16px}
+.notif-empty-title{font-size:16px;font-weight:500;color:var(--black);margin-bottom:6px}
+.notif-empty-sub{font-size:12px}
+html[dir="rtl"] .notif-item{direction:rtl;padding:18px 26px 18px 22px}
+html[dir="rtl"] .notif-item.unread::before{left:auto;right:10px}
+html[dir="rtl"] .notif-chev{transform:scaleX(-1)}
+html[dir="rtl"] .notif-title,html[dir="rtl"] .notif-item *{letter-spacing:0}
+@media(max-width:640px){.nav-left{gap:12px}.nav-logo{font-size:19px;letter-spacing:5px}}
+
 /* ── NEW ORDER ALERT ── */
 .order-alert{position:fixed;top:20px;right:20px;background:var(--black);color:#fff;padding:18px 20px;z-index:6000;max-width:320px;box-shadow:0 10px 40px rgba(0,0,0,.35);display:none;animation:slideIn .3s ease}
 .order-alert.show{display:block}
@@ -658,6 +687,7 @@ function trackEvent(name, params){
   <div class="nav-left">
     <button class="nav-icon" onclick="openMenu()" aria-label="Menu"><svg width="20" height="14" viewBox="0 0 20 14" fill="none"><line x1="0" y1="1" x2="20" y2="1" stroke="currentColor" stroke-width="1.2"/><line x1="0" y1="7" x2="14" y2="7" stroke="currentColor" stroke-width="1.2"/><line x1="0" y1="13" x2="20" y2="13" stroke="currentColor" stroke-width="1.2"/></svg></button>
     <button class="nav-icon" onclick="openSearch()" aria-label="Search"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="7.5" cy="7.5" r="6" stroke="currentColor" stroke-width="1.2"/><line x1="12" y1="12" x2="17" y2="17" stroke="currentColor" stroke-width="1.2"/></svg></button>
+    <button class="nav-icon notif-bell" id="notifBellBtn" onclick="openNotifications()" aria-label="Notifications"><svg width="19" height="20" viewBox="0 0 24 24" fill="none"><path d="M6 9a6 6 0 1112 0c0 6.5 2.5 8 2.5 8h-17S6 15.5 6 9z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M10.3 20.5a2 2 0 003.4 0" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg><span class="notif-badge" id="notifBadge">0</span></button>
   </div>
   <a href="#" class="nav-logo" id="navLogo" onclick="logoClick(event)">PRIMORA</a>
   <div class="nav-right">
@@ -845,6 +875,7 @@ function trackEvent(name, params){
 </div>
 <input type="file" id="imgFileInput" accept="image/*" style="display:none" onchange="handleImgUpload(event)">
 <input type="file" id="reviewFileInput" accept="image/*" style="display:none" onchange="handleReviewImgUpload(event)">
+<input type="file" id="notifFileInput" accept="image/*" style="display:none" onchange="handleNotifImgUpload(event)">
 <input type="file" id="designImageFileInput" accept="image/*" style="display:none" onchange="handleDesignImageUpload(event)">
 
 <!-- MENU DRAWER — Brand Story + Suggestions -->
@@ -999,6 +1030,12 @@ function trackEvent(name, params){
 </div>
 
 <!-- CART -->
+<!-- NOTIFICATIONS DRAWER -->
+<div class="cart-overlay" id="notifOverlay" onclick="closeNotifications()"></div>
+<div class="notif-drawer" id="notifDrawer">
+  <div class="notif-head"><div class="notif-title">Notifications</div><button class="cart-close-btn" onclick="closeNotifications()">✕</button></div>
+  <div class="notif-body" id="notifList"></div>
+</div>
 <div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
 <div class="cart-drawer" id="cartDrawer">
   <div class="cart-head"><div class="cart-head-title">Your Bag</div><button class="cart-close-btn" onclick="closeCart()">✕</button></div>
@@ -1078,6 +1115,7 @@ function trackEvent(name, params){
       <div class="asb-item" onclick="showPanel('products',this)">◇ Products</div>
       <div class="asb-item" onclick="showPanel('bundles',this)">🏷️ Offers &amp; Sale</div>
       <div class="asb-item" onclick="showPanel('reviews',this)">✦ Client Reviews</div>
+      <div class="asb-item" onclick="showPanel('notifications',this)">🔔 Notifications <span class="asb-badge" id="notifAdminBadge">0</span></div>
       <div class="asb-item" onclick="showPanel('designs',this)">✎ Design Submissions <span class="asb-badge" id="designBadge">0</span></div>
       <div class="asb-item" onclick="showPanel('store',this)">◎ Settings</div>
       <div class="asb-item" onclick="showPanel('content',this)">◈ Content</div>
@@ -1201,6 +1239,22 @@ function trackEvent(name, params){
       </div>
 
       <!-- CLIENT REVIEWS -->
+      <!-- NOTIFICATIONS -->
+      <div class="a-panel" id="panel-notifications">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap">
+          <div>
+            <div class="a-page-title">Notifications</div>
+            <div class="a-page-sub" style="margin-bottom:0">Messages shown to visitors when they tap the bell 🔔 in the header — discounts, new drops, offers. A red badge shows how many they haven't seen yet. Add, edit, reorder, hide, or delete anytime.</div>
+          </div>
+          <button class="btn-save" onclick="openNotifPanel(null)" style="white-space:nowrap;margin-top:2px">+ Add Notification</button>
+        </div>
+        <div style="height:20px"></div>
+        <div id="notifSetupNotice" style="display:none;background:#fff8e6;border:1px solid #f0d98c;padding:16px 18px;font-size:12px;color:#8a6d1a;line-height:1.8;margin-bottom:18px">
+          Notifications aren't set up in your database yet. Run <strong>supabase_migration_v20_notifications.sql</strong> once in the Supabase SQL Editor, then refresh this page.
+        </div>
+        <div class="apc-list" id="adminNotifList"></div>
+      </div>
+
       <div class="a-panel" id="panel-reviews">
         <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap">
           <div>
@@ -1515,6 +1569,55 @@ function trackEvent(name, params){
   </div>
 </div>
 
+<!-- NOTIFICATION EDIT PANEL -->
+<div class="apanel-overlay" id="notifPanelOverlay" onclick="if(event.target===this)closeNotifPanel()">
+  <div class="apanel-box">
+    <button class="apanel-close" onclick="closeNotifPanel()">✕</button>
+    <div class="apanel-title" id="npTitle">New Notification</div>
+    <input type="hidden" id="np-idx">
+    <div class="img-upload-section">
+      <label class="img-upload-label">Image <span style="text-transform:none;font-weight:400;color:var(--warm-gray)">— optional, small square thumbnail</span></label>
+      <div style="display:flex;gap:12px;align-items:center">
+        <div id="np-imgPreview" style="width:72px;height:72px;background:#f0ece4;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--warm-gray)">None</div>
+        <button class="btn-outline" onclick="document.getElementById('notifFileInput').click()">Upload</button>
+        <button class="btn-danger" onclick="clearNotifImage()">Remove</button>
+      </div>
+    </div>
+    <div class="af-group"><label class="af-label">Title</label><input class="af-input" id="np-title" placeholder="e.g. Buy 2 Get 1 FREE — live now!"></div>
+    <div class="af-group"><label class="af-label">Title (Arabic)</label><input class="af-input" id="np-title-ar" dir="rtl" placeholder="مثال: اشتري 2 وخدي 1 ببلاش!"></div>
+    <div class="af-group"><label class="af-label">Message</label><textarea class="af-input" id="np-body" rows="3" placeholder="e.g. Buy 2 Get 1 FREE. Limited pieces."></textarea></div>
+    <div class="af-group"><label class="af-label">Message (Arabic)</label><textarea class="af-input" id="np-body-ar" dir="rtl" rows="3"></textarea></div>
+    <div class="af-row">
+      <div class="af-group"><label class="af-label">Link Text</label><input class="af-input" id="np-linkLabel" placeholder="Shop SALE"></div>
+      <div class="af-group"><label class="af-label">Link Text (Arabic)</label><input class="af-input" id="np-linkLabel-ar" dir="rtl" placeholder="تسوقي العروض"></div>
+    </div>
+    <div class="af-group">
+      <label class="af-label">When tapped, it opens…</label>
+      <select class="af-input" id="np-action" onchange="onNotifActionChange()">
+        <option value="none">Nothing (message only)</option>
+        <option value="offers">Offers &amp; Sale tab</option>
+        <option value="shop">All products</option>
+        <option value="product">A specific product</option>
+        <option value="url">A custom link</option>
+      </select>
+    </div>
+    <div class="af-group" id="np-productWrap" style="display:none"><label class="af-label">Product</label><select class="af-input" id="np-product"></select></div>
+    <div class="af-group" id="np-urlWrap" style="display:none"><label class="af-label">Link (https://…)</label><input class="af-input" id="np-url" placeholder="https://instagram.com/primora"></div>
+    <div class="af-group"><label class="af-label">Auto-hide after <span style="text-transform:none;font-weight:400;color:var(--warm-gray)">— optional, leave empty to keep it up</span></label><input class="af-input" type="date" id="np-expires"></div>
+    <div class="af-group">
+      <div class="a-toggle">
+        <label class="tog-sw"><input type="checkbox" id="np-vis" checked><span class="tog-sl"></span></label>
+        <span style="font-size:12px;color:var(--warm-gray)">Visible to customers</span>
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:20px;flex-wrap:wrap">
+      <button class="btn-save" id="np-savebtn" onclick="saveNotification()">Save Notification</button>
+      <button class="btn-outline" onclick="closeNotifPanel()">Cancel</button>
+    </div>
+    <span class="saved-tag" id="np-saved">✓ Saved</span>
+  </div>
+</div>
+
 <!-- BUNDLE EDIT PANEL -->
 <div class="apanel-overlay" id="bundlePanelOverlay" onclick="if(event.target===this)closeBundlePanel()">
   <div class="apanel-box">
@@ -1754,7 +1857,7 @@ const AR_DICT = {
   // Misc system
   'Added to bag':'اتضافت للشنطة','Link copied':'اتنسخ اللينك',
   // Welcome-back / share
-  'Welcome Back':'منورانا تاني','Check It Out':'اتفرجي عليها','Share':'مشاركة','Copy this link:':'انسخي اللينك ده:'
+  'Welcome Back':'منورانا تاني','Check It Out':'اتفرجي عليها','Share':'مشاركة','Copy this link:':'انسخي اللينك ده:','Notifications':'الإشعارات','You are all caught up':'انتي متابعة كل حاجة','New drops and offers will show up here.':'القطع الجديدة والعروض هتظهر هنا.'
 };
 
 /* Translate a fixed UI string. Falls back to the original English if
@@ -1796,6 +1899,7 @@ function toggleLanguage(){
    mid-session (e.g. a product modal or FAQ page already open). */
 function refreshFreeTextForLanguage(){
   renderStore(); // header, editorial, philosophy, happy stat, product grid/cards
+  renderNotifications();
   if(document.getElementById('productModal').classList.contains('open') && curProd!=null){
     openModal(curProd, false);
   }
@@ -1832,7 +1936,7 @@ function refreshFreeTextForLanguage(){
    fully resolves the right text for the right instance at render time,
    so these elements simply don't need (and must not get) the generic
    dictionary pass. */
-const I18N_SKIP_SELECTOR = '.admin-shell, .admin-login, #invoiceTemplate, script, style, #modalDesc, #modalMat, #modalFit, #modalDeliv, #modalOccasionsText, #infoContent, #infoTitle, #annText, #colTitle, #colSub, #editQuote, #editSub, #happyLabelText, #toast, #welcomeBackCard';
+const I18N_SKIP_SELECTOR = '.admin-shell, .admin-login, #invoiceTemplate, script, style, #modalDesc, #modalMat, #modalFit, #modalDeliv, #modalOccasionsText, #infoContent, #infoTitle, #annText, #colTitle, #colSub, #editQuote, #editSub, #happyLabelText, #toast, #welcomeBackCard, #notifList';
 function applyTranslations(){
   translateTextNodes();
   translateAttrs('placeholder');
@@ -1964,6 +2068,284 @@ async function shareProduct(){
   }catch(e){
     prompt(t('Copy this link:'), link);
   }
+}
+
+/* ════════════════════════════════
+   NOTIFICATIONS — bell in the header + slide-in drawer.
+   Admin manages them from Dashboard → Notifications. Each visitor's
+   "seen" state lives in their own browser (localStorage): the red badge
+   counts notifications they haven't opened yet, and re-appears if the
+   admin later edits one. Titles/messages use tf() so the Arabic version
+   shows when the language toggle is on; #notifList is excluded from the
+   dictionary walker (see I18N_SKIP_SELECTOR) for the same reason as
+   other tf()-driven content.
+════════════════════════════════ */
+const NOTIF_READ_KEY='primora_notif_read';
+function notifKey(n){ return n.id+':'+(n.updatedAt||''); }
+function getReadNotifSet(){
+  try{ return new Set(JSON.parse(localStorage.getItem(NOTIF_READ_KEY)||'[]')); }catch(e){ return new Set(); }
+}
+function notifIsExpired(n){
+  return !!n.expiresAt && new Date(n.expiresAt+'T23:59:59').getTime() < Date.now();
+}
+function activeNotifications(){
+  return (S.notifications||[]).filter(n=>n.vis && !notifIsExpired(n)).sort((a,b)=>(a.sort||0)-(b.sort||0));
+}
+function updateNotifBadge(){
+  const el=document.getElementById('notifBadge');
+  if(!el) return;
+  const read=getReadNotifSet();
+  const unread=activeNotifications().filter(n=>!read.has(notifKey(n))).length;
+  el.textContent = unread>9 ? '9+' : String(unread);
+  el.classList.toggle('show', unread>0);
+}
+function renderNotifications(){
+  const wrap=document.getElementById('notifList');
+  if(!wrap) return;
+  const list=activeNotifications();
+  const read=getReadNotifSet();
+  if(!list.length){
+    wrap.innerHTML=`<div class="notif-empty">
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none"><path d="M6 9a6 6 0 1112 0c0 6.5 2.5 8 2.5 8h-17S6 15.5 6 9z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M10.3 20.5a2 2 0 003.4 0" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+      <div class="notif-empty-title">${t('You are all caught up')}</div>
+      <div class="notif-empty-sub">${t('New drops and offers will show up here.')}</div>
+    </div>`;
+    updateNotifBadge();
+    return;
+  }
+  wrap.innerHTML=list.map(n=>{
+    const title=escapeAttr(tf(n.title,n.titleAr));
+    const body=escapeAttr(tf(n.body,n.bodyAr));
+    const link=escapeAttr(tf(n.linkLabel,n.linkLabelAr));
+    const thumb=n.imageUrl
+      ? `<img src="${escapeAttr(n.imageUrl)}" alt="" loading="lazy">`
+      : `<svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M6 9a6 6 0 1112 0c0 6.5 2.5 8 2.5 8h-17S6 15.5 6 9z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M10.3 20.5a2 2 0 003.4 0" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>`;
+    const clickable = n.actionType && n.actionType!=='none';
+    return `<div class="notif-item ${read.has(notifKey(n))?'':'unread'}" onclick="notifAction(${n.id})">
+      <div class="notif-thumb">${thumb}</div>
+      <div class="notif-text">
+        <div class="notif-item-title">${title}</div>
+        ${body?`<div class="notif-item-body">${body}</div>`:''}
+        ${link?`<span class="notif-link">${link}</span>`:''}
+      </div>
+      ${clickable?'<div class="notif-chev">›</div>':''}
+    </div>`;
+  }).join('');
+  updateNotifBadge();
+}
+function openNotifications(){
+  renderNotifications(); // draws the unread dots using the CURRENT seen-state
+  document.getElementById('notifDrawer').classList.add('open');
+  document.getElementById('notifOverlay').classList.add('open');
+  // Opening the panel counts as seeing everything in it → clear the badge
+  const read=getReadNotifSet();
+  activeNotifications().forEach(n=>read.add(notifKey(n)));
+  try{ localStorage.setItem(NOTIF_READ_KEY, JSON.stringify([...read])); }catch(e){}
+  updateNotifBadge();
+}
+function closeNotifications(){
+  document.getElementById('notifDrawer').classList.remove('open');
+  document.getElementById('notifOverlay').classList.remove('open');
+}
+function notifAction(id){
+  const n=(S.notifications||[]).find(x=>x.id===id);
+  if(!n) return;
+  const type=n.actionType||'none';
+  if(type==='none') return;
+  closeNotifications();
+  const goToCollection=()=>{ const c=document.getElementById('collection'); if(c) c.scrollIntoView({behavior:'smooth'}); };
+  if(type==='offers'){ setCategory('Bundles'); goToCollection(); }
+  else if(type==='shop'){ setCategory('All'); goToCollection(); }
+  else if(type==='product'){
+    const idx=S.products.findIndex(p=>p.id===n.actionProduct && p.vis);
+    if(idx>=0) openModal(idx);
+  }
+  else if(type==='url'){
+    if(/^https?:\/\//i.test(n.actionUrl||'')) window.open(n.actionUrl,'_blank','noopener');
+  }
+}
+async function loadNotifications(){
+  if(!sbClient) return;
+  try{
+    const {data,error}=await sbClient.from('notifications').select('*').order('sort_order',{ascending:true});
+    if(error) throw error;
+    S.notifications=(data||[]).map(r=>({
+      id:r.id, title:r.title||'', titleAr:r.title_ar||'', body:r.body||'', bodyAr:r.body_ar||'',
+      linkLabel:r.link_label||'', linkLabelAr:r.link_label_ar||'',
+      actionType:r.action_type||'none', actionProduct:r.action_product_id!=null?Number(r.action_product_id):null,
+      actionUrl:r.action_url||'', imageUrl:r.image_url||'', vis:r.visible!==false,
+      sort:r.sort_order||0, expiresAt:r.expires_at||'', updatedAt:r.updated_at||r.created_at||''
+    }));
+    window._notifTableMissing=false;
+  }catch(e){
+    console.warn('Notifications load skipped (run supabase_migration_v20_notifications.sql to enable it):', e.message||e);
+    S.notifications=[];
+    window._notifTableMissing=true;
+  }
+  updateNotifBadge();
+  renderNotifications();
+}
+
+/* ── ADMIN: notifications CRUD ── */
+let notifPanelImage='';
+function renderAdminNotifications(){
+  const wrap=document.getElementById('adminNotifList');
+  if(!wrap) return;
+  const notice=document.getElementById('notifSetupNotice');
+  if(notice) notice.style.display = window._notifTableMissing ? 'block' : 'none';
+  const list=S.notifications||[];
+  const badge=document.getElementById('notifAdminBadge');
+  if(badge) badge.textContent=activeNotifications().length;
+  if(!list.length){
+    wrap.innerHTML=`<div class="no-items">No notifications yet — click "+ Add Notification" above.</div>`;
+    return;
+  }
+  const actionLabel={none:'Message only',offers:'Opens Offers & Sale',shop:'Opens All products',product:'Opens a product',url:'Opens a link'};
+  wrap.innerHTML=list.map((n,i)=>{
+    const expired=notifIsExpired(n);
+    const thumb=n.imageUrl?`<img src="${escapeAttr(n.imageUrl)}" alt="" style="width:100%;height:100%;object-fit:cover">`:`<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:24px;opacity:.35">🔔</div>`;
+    return `<div class="apc">
+      <div class="apc-reorder">
+        <button class="reorder-btn" onclick="moveNotif(${i},-1)" ${i===0?'disabled':''} title="Move up">▲</button>
+        <button class="reorder-btn" onclick="moveNotif(${i},1)" ${i===list.length-1?'disabled':''} title="Move down">▼</button>
+      </div>
+      <div class="apc-thumb">${thumb}</div>
+      <div>
+        <div class="apc-n">${escapeAttr(n.title)||'(untitled)'}</div>
+        <div class="apc-d">${escapeAttr((n.body||'').slice(0,90))}</div>
+        <div class="apc-p">${actionLabel[n.actionType]||''}${n.expiresAt?` · until ${escapeAttr(n.expiresAt)}`:''}${expired?' · <span style="color:#7a1f1f">Expired</span>':''}</div>
+      </div>
+      <div class="apc-btns">
+        <button class="vis-tag ${n.vis?'':'off'}" onclick="toggleNotifVis(${i})">${n.vis?'● Visible':'○ Hidden'}</button>
+        <button class="btn-outline" onclick="openNotifPanel(${i})">Edit</button>
+        <button class="btn-danger" onclick="removeNotification(${i})">Delete</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+function onNotifActionChange(){
+  const v=document.getElementById('np-action').value;
+  document.getElementById('np-productWrap').style.display = v==='product'?'block':'none';
+  document.getElementById('np-urlWrap').style.display = v==='url'?'block':'none';
+}
+function setNotifPreview(url){
+  const el=document.getElementById('np-imgPreview');
+  el.innerHTML = url ? `<img src="${escapeAttr(url)}" alt="" style="width:100%;height:100%;object-fit:cover">` : 'None';
+}
+function openNotifPanel(idx){
+  const sel=document.getElementById('np-product');
+  sel.innerHTML=S.products.map(p=>`<option value="${p.id}">${escapeAttr(p.name)}</option>`).join('');
+  document.getElementById('np-saved').classList.remove('show');
+  const n = idx===null ? null : S.notifications[idx];
+  document.getElementById('npTitle').textContent = n ? 'Edit Notification' : 'New Notification';
+  document.getElementById('np-idx').value = idx===null ? '' : idx;
+  document.getElementById('np-title').value = n?n.title:'';
+  document.getElementById('np-title-ar').value = n?n.titleAr:'';
+  document.getElementById('np-body').value = n?n.body:'';
+  document.getElementById('np-body-ar').value = n?n.bodyAr:'';
+  document.getElementById('np-linkLabel').value = n?n.linkLabel:'';
+  document.getElementById('np-linkLabel-ar').value = n?n.linkLabelAr:'';
+  document.getElementById('np-action').value = n?(n.actionType||'none'):'offers';
+  if(n && n.actionProduct!=null) sel.value=String(n.actionProduct);
+  document.getElementById('np-url').value = n?n.actionUrl:'';
+  document.getElementById('np-expires').value = n?n.expiresAt:'';
+  document.getElementById('np-vis').checked = n?n.vis:true;
+  notifPanelImage = n?n.imageUrl:'';
+  setNotifPreview(notifPanelImage);
+  onNotifActionChange();
+  document.getElementById('notifPanelOverlay').classList.add('open');
+}
+function closeNotifPanel(){ document.getElementById('notifPanelOverlay').classList.remove('open'); renderAdminNotifications(); }
+function clearNotifImage(){ notifPanelImage=''; setNotifPreview(''); }
+async function handleNotifImgUpload(e){
+  const file=e.target.files[0];
+  if(!file) return;
+  e.target.value='';
+  document.getElementById('np-imgPreview').textContent='…';
+  const blob=await compressImage(file, 600, 0.85);
+  if(!sbClient){ alert("Can't reach the server."); setNotifPreview(notifPanelImage); return; }
+  const path=`notifications/${Date.now()}-${Math.random().toString(36).slice(2,8)}.jpg`;
+  const {error}=await sbClient.storage.from(IMAGE_BUCKET).upload(path, blob, {upsert:true, contentType:'image/jpeg'});
+  if(error){ console.warn(error); alert('Image upload failed. Please try again.'); setNotifPreview(notifPanelImage); return; }
+  notifPanelImage=sbClient.storage.from(IMAGE_BUCKET).getPublicUrl(path).data.publicUrl;
+  setNotifPreview(notifPanelImage);
+}
+async function saveNotification(){
+  const idxVal=document.getElementById('np-idx').value;
+  const idx = idxVal==='' ? null : parseInt(idxVal);
+  const title=document.getElementById('np-title').value.trim();
+  if(!title){ alert('Please add a title.'); return; }
+  const action=document.getElementById('np-action').value;
+  const url=document.getElementById('np-url').value.trim();
+  if(action==='url' && !/^https?:\/\//i.test(url)){ alert('Please enter a full link starting with https://'); return; }
+  const prodVal=parseInt(document.getElementById('np-product').value);
+  if(action==='product' && !prodVal){ alert('Please choose a product.'); return; }
+  const minSort=(S.notifications||[]).reduce((m,n)=>Math.min(m,n.sort||0),0);
+  const obj={
+    title, titleAr:document.getElementById('np-title-ar').value.trim(),
+    body:document.getElementById('np-body').value.trim(), bodyAr:document.getElementById('np-body-ar').value.trim(),
+    linkLabel:document.getElementById('np-linkLabel').value.trim(), linkLabelAr:document.getElementById('np-linkLabel-ar').value.trim(),
+    actionType:action, actionProduct:action==='product'?prodVal:null, actionUrl:action==='url'?url:'',
+    imageUrl:notifPanelImage, vis:document.getElementById('np-vis').checked,
+    expiresAt:document.getElementById('np-expires').value||'',
+    sort: idx===null ? minSort-1 : S.notifications[idx].sort,
+    updatedAt:new Date().toISOString()
+  };
+  const btn=document.getElementById('np-savebtn');
+  const orig=btn.textContent; btn.textContent='Saving…'; btn.disabled=true;
+  const payload={
+    title:obj.title, title_ar:obj.titleAr, body:obj.body, body_ar:obj.bodyAr,
+    link_label:obj.linkLabel, link_label_ar:obj.linkLabelAr, action_type:obj.actionType,
+    action_product_id:obj.actionProduct, action_url:obj.actionUrl, image_url:obj.imageUrl,
+    visible:obj.vis, sort_order:obj.sort, expires_at:obj.expiresAt||null, updated_at:obj.updatedAt
+  };
+  let ok=false;
+  if(sbClient){
+    if(idx===null){
+      const {data,error}=await sbClient.from('notifications').insert(payload).select().single();
+      if(!error && data){ obj.id=data.id; S.notifications=[obj,...(S.notifications||[])]; ok=true; }
+      else console.warn(error);
+    } else {
+      const {error}=await sbClient.from('notifications').update(payload).eq('id',S.notifications[idx].id);
+      if(!error){ S.notifications[idx]={...S.notifications[idx],...obj}; ok=true; }
+      else console.warn(error);
+    }
+  }
+  btn.textContent=orig; btn.disabled=false;
+  if(!ok){ alert("Couldn't save — check your connection, or run supabase_migration_v20_notifications.sql if you haven't yet."); return; }
+  window._notifTableMissing=false;
+  renderAdminNotifications(); renderNotifications();
+  const pill=document.getElementById('np-saved');
+  pill.classList.add('show'); setTimeout(()=>pill.classList.remove('show'),2000);
+}
+async function persistNotifRow(n){
+  if(!sbClient||!n.id) return;
+  const {error}=await sbClient.from('notifications').update({visible:n.vis, sort_order:n.sort}).eq('id',n.id);
+  if(error) console.warn(error);
+}
+async function toggleNotifVis(i){
+  const n=S.notifications[i];
+  n.vis=!n.vis;
+  await persistNotifRow(n);
+  renderAdminNotifications(); renderNotifications();
+}
+async function moveNotif(i,dir){
+  const j=i+dir;
+  if(j<0||j>=S.notifications.length) return;
+  [S.notifications[i],S.notifications[j]]=[S.notifications[j],S.notifications[i]];
+  S.notifications.forEach((n,idx)=>n.sort=idx);
+  renderAdminNotifications(); renderNotifications();
+  await Promise.all(S.notifications.map(persistNotifRow));
+}
+async function removeNotification(i){
+  const n=S.notifications[i];
+  if(!confirm(`Delete "${n.title}"? This cannot be undone.`)) return;
+  if(n.id && sbClient){
+    const {error}=await sbClient.from('notifications').delete().eq('id',n.id);
+    if(error){ console.warn(error); alert("Couldn't delete — check your connection and try again."); return; }
+  }
+  S.notifications.splice(i,1);
+  renderAdminNotifications(); renderNotifications();
 }
 
 /* ════════════════════════════════
@@ -2373,6 +2755,7 @@ async function loadPersisted(){
   // (table doesn't exist), this must never break the rest of the storefront.
   await loadBundles();
   await loadReviews();
+  await loadNotifications();
 }
 
 async function loadBundles(){
@@ -4020,13 +4403,14 @@ async function reloadAdminData(){
   }
   await loadBundles();
   await loadReviews();
+  await loadNotifications();
   await loadDesignSubmissions();
 }
 
 async function openAdmin(){
   document.getElementById('adminShell').classList.add('open');
   await reloadAdminData();
-  loadAdminForms();renderAdminProducts();renderAdminBundles();renderAdminReviews();renderAdminDesignSubmissions();renderOrders();refreshDash();
+  loadAdminForms();renderAdminProducts();renderAdminBundles();renderAdminReviews();renderAdminNotifications();renderAdminDesignSubmissions();renderOrders();refreshDash();
   await loadSubscribers();
   renderSubscribers();
   await loadCustomers();
@@ -4037,7 +4421,7 @@ async function manualRefreshOrders(){
   const btn=document.getElementById('ordersRefreshBtn');
   const orig=btn.textContent; btn.textContent='Refreshing…'; btn.disabled=true;
   await reloadAdminData();
-  renderOrders(); renderAdminProducts(); renderAdminBundles(); renderAdminReviews(); renderAdminDesignSubmissions(); refreshDash();
+  renderOrders(); renderAdminProducts(); renderAdminBundles(); renderAdminReviews(); renderAdminNotifications(); renderAdminDesignSubmissions(); refreshDash();
   btn.textContent=orig; btn.disabled=false;
 }
 function closeAdmin(){

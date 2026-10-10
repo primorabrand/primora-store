@@ -61,6 +61,44 @@ nav{background:var(--cream);border-bottom:1px solid rgba(0,0,0,.08);padding:0 24
 .g4{display:grid;grid-template-columns:1fr 1fr;gap:2px;width:13px;height:13px}
 .g4 span{background:var(--black);display:block}
 .g1{width:13px;height:13px;border:1.5px solid var(--black)}
+.g9{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.5px;width:13px;height:13px}
+.g9 span{background:var(--black);display:block}
+.filter-btn{background:none;border:none;cursor:pointer;font-family:'Jost',sans-serif;padding:4px 0;transition:opacity .2s}
+.filter-btn:hover{opacity:1}
+.filter-count{font-size:10px;letter-spacing:0}
+/* 3 view modes — Large / Standard / Compact (phone | desktop columns: 1|2, 2|3, 3|4) */
+.product-grid.view-1{grid-template-columns:1fr}
+.product-grid.view-2{grid-template-columns:1fr 1fr}
+.product-grid.view-3{grid-template-columns:repeat(3,1fr)}
+@media(min-width:900px){
+  .product-grid.view-1{grid-template-columns:1fr 1fr}
+  .product-grid.view-2{grid-template-columns:repeat(3,1fr)}
+  .product-grid.view-3{grid-template-columns:repeat(4,1fr)}
+}
+.product-grid.view-3 .p-actions,.product-grid.view-3 .p-desc,.product-grid.view-3 .best-seller-tag{display:none}
+.product-grid.view-3 .p-info{padding:10px 8px 12px}
+.product-grid.view-3 .p-name{font-size:12px;line-height:1.3}
+.product-grid.view-3 .p-price{font-size:11px}
+.product-grid.view-3 .new-badge,.product-grid.view-3 .stock-badge,.product-grid.view-3 .bundle-badge{font-size:7px;padding:3px 6px;top:8px;left:8px}
+.product-grid.view-1 .p-name{font-size:19px}
+.product-grid.view-1 .p-price{font-size:15px}
+/* filter drawer */
+.f-section{padding:18px 22px;border-bottom:1px solid rgba(0,0,0,.08)}
+.f-label{font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:var(--warm-gray);margin-bottom:12px}
+.f-chips{display:flex;flex-wrap:wrap;gap:8px}
+.f-chip{border:1px solid rgba(0,0,0,.18);background:none;padding:8px 14px;font-family:'Jost',sans-serif;font-size:12px;cursor:pointer;color:var(--black);transition:all .2s}
+.f-chip.on{background:var(--black);color:#fff;border-color:var(--black)}
+.f-swatch{width:30px;height:30px;border-radius:50%;border:2px solid var(--cream);box-shadow:0 0 0 1px rgba(0,0,0,.18);cursor:pointer;padding:0}
+.f-swatch.on{box-shadow:0 0 0 2px var(--black)}
+.f-row{display:flex;justify-content:space-between;align-items:center;font-size:13px;padding:6px 0}
+.f-price{display:flex;gap:10px}
+.f-price input{flex:1;min-width:0}
+.filter-foot{padding:16px 22px;border-top:1px solid rgba(0,0,0,.08);display:flex;gap:10px}
+.f-apply{flex:1;background:var(--black);color:var(--ivory);border:none;padding:14px;font-family:'Jost',sans-serif;font-size:11px;letter-spacing:2.5px;text-transform:uppercase;cursor:pointer}
+.f-clear{background:none;border:1px solid rgba(0,0,0,.2);padding:14px 18px;font-family:'Jost',sans-serif;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;color:var(--black)}
+html[dir="rtl"] .f-label,html[dir="rtl"] .f-apply,html[dir="rtl"] .f-clear{letter-spacing:0}
+html[dir="rtl"] .f-section,html[dir="rtl"] .f-row{direction:rtl}
+
 
 /* ── PRODUCT GRID ── */
 .product-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(0,0,0,.07)}
@@ -744,13 +782,14 @@ function trackEvent(name, params){
   <div class="col-sub" id="colSub">10 Signature Pieces · Quiet Luxury · Limited Edition</div>
 </div>
 <div class="filter-row">
-  <div class="filter-label">
+  <button class="filter-label filter-btn" id="filterBtn" onclick="openFilter()">
     <svg width="14" height="12" viewBox="0 0 14 12" fill="none"><line x1="0" y1="2" x2="14" y2="2" stroke="currentColor" stroke-width="1"/><line x1="3" y1="6" x2="11" y2="6" stroke="currentColor" stroke-width="1"/><line x1="5" y1="10" x2="9" y2="10" stroke="currentColor" stroke-width="1"/></svg>
-    Filter
-  </div>
+    <span>Filter</span><span class="filter-count" id="filterCount"></span>
+  </button>
   <div class="grid-toggles">
-    <button class="gtoggle active" onclick="setGrid(this)"><div class="g4"><span></span><span></span><span></span><span></span></div></button>
-    <button class="gtoggle" onclick="setGrid(this)"><div class="g1"></div></button>
+    <button class="gtoggle" data-mode="1" onclick="setGridMode(1)" aria-label="Large view"><div class="g1"></div></button>
+    <button class="gtoggle" data-mode="2" onclick="setGridMode(2)" aria-label="Standard view"><div class="g4"><span></span><span></span><span></span><span></span></div></button>
+    <button class="gtoggle" data-mode="3" onclick="setGridMode(3)" aria-label="Compact view"><div class="g9"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div></button>
   </div>
 </div>
 <div class="reviews-label-wrap" id="reviewsLabelWrap" style="display:none">
@@ -1034,6 +1073,13 @@ function trackEvent(name, params){
 </div>
 
 <!-- CART -->
+<!-- FILTER DRAWER -->
+<div class="cart-overlay" id="filterOverlay" onclick="closeFilter()"></div>
+<div class="notif-drawer" id="filterDrawer">
+  <div class="notif-head"><div class="notif-title">Filter &amp; Sort</div><button class="cart-close-btn" onclick="closeFilter()">✕</button></div>
+  <div class="notif-body" id="filterBody"></div>
+  <div class="filter-foot"><button class="f-clear" id="filterClearBtn" onclick="clearFilters()"></button><button class="f-apply" id="filterApplyBtn" onclick="closeFilter()"></button></div>
+</div>
 <!-- NOTIFICATIONS DRAWER -->
 <div class="cart-overlay" id="notifOverlay" onclick="closeNotifications()"></div>
 <div class="notif-drawer" id="notifDrawer">
@@ -1861,7 +1907,12 @@ const AR_DICT = {
   // Misc system
   'Added to bag':'اتضافت للشنطة','Link copied':'اتنسخ اللينك',
   // Welcome-back / share
-  'Welcome Back':'منورانا تاني','Check It Out':'اتفرجي عليها','Share':'مشاركة','Copy this link:':'انسخي اللينك ده:','Notifications':'الإشعارات','You are all caught up':'انتي متابعة كل حاجة','New drops and offers will show up here.':'القطع الجديدة والعروض هتظهر هنا.'
+  'Welcome Back':'منورانا تاني','Check It Out':'اتفرجي عليها','Share':'مشاركة','Copy this link:':'انسخي اللينك ده:','Notifications':'الإشعارات','You are all caught up':'انتي متابعة كل حاجة','New drops and offers will show up here.':'القطع الجديدة والعروض هتظهر هنا.',
+  'Filter & Sort':'فلتر وترتيب','Sort by':'رتّبي حسب','Featured':'المميزة',
+  'Price: Low to High':'السعر: من الأقل للأعلى','Price: High to Low':'السعر: من الأعلى للأقل','New arrivals first':'الجديد الأول',
+  'Size':'المقاس','Color':'اللون','Availability':'التوفر','In stock only':'المتاح بس','On sale only':'عليها خصم بس',
+  'Price (LE)':'السعر (جنيه)','Min':'الأقل','Max':'الأعلى','Clear all':'مسح الكل','View results':'شوفي النتايج',
+  'No pieces match your filters.':'مفيش قطع بتطابق الفلتر ده.','Clear filters':'امسحي الفلتر'
 };
 
 /* Translate a fixed UI string. Falls back to the original English if
@@ -1904,6 +1955,7 @@ function toggleLanguage(){
 function refreshFreeTextForLanguage(){
   renderStore(); // header, editorial, philosophy, happy stat, product grid/cards
   renderNotifications();
+  renderFilterPanel();
   if(document.getElementById('productModal').classList.contains('open') && curProd!=null){
     openModal(curProd, false);
   }
@@ -1940,7 +1992,7 @@ function refreshFreeTextForLanguage(){
    fully resolves the right text for the right instance at render time,
    so these elements simply don't need (and must not get) the generic
    dictionary pass. */
-const I18N_SKIP_SELECTOR = '.admin-shell, .admin-login, #invoiceTemplate, script, style, #modalDesc, #modalMat, #modalFit, #modalDeliv, #modalOccasionsText, #infoContent, #infoTitle, #annText, #colTitle, #colSub, #editQuote, #editSub, #happyLabelText, #toast, #welcomeBackCard, #notifList';
+const I18N_SKIP_SELECTOR = '.admin-shell, .admin-login, #invoiceTemplate, script, style, #modalDesc, #modalMat, #modalFit, #modalDeliv, #modalOccasionsText, #infoContent, #infoTitle, #annText, #colTitle, #colSub, #editQuote, #editSub, #happyLabelText, #toast, #welcomeBackCard, #notifList, #filterBody, #filterApplyBtn, #filterClearBtn, #filterCount';
 function applyTranslations(){
   translateTextNodes();
   translateAttrs('placeholder');
@@ -3376,20 +3428,142 @@ function renderProductCardsGrid(grid, list){
 function renderProducts(){
   const grid=document.getElementById('productGrid');
   renderCatTabs();
+  applyGridMode();
+  const fb=document.getElementById('filterBtn');
+  if(fb) fb.style.visibility = ['Bundles','Reviews','DesignCollab'].includes(activeCategory) ? 'hidden' : 'visible';
   if(activeCategory==='Bundles'){ renderBundleGrid(grid); return; }
   if(activeCategory==='Reviews'){ renderReviewsGrid(grid); return; }
   if(activeCategory==='DesignCollab'){ renderDesignCollabPage(grid); return; }
-  if(activeCategory==='BestSellers'){
-    renderProductCardsGrid(grid, S.products.filter(p=>p.vis && p.isBestSeller));
+  const list=applyFilters(baseProductList());
+  if(!list.length && filtersActive()){
+    grid.innerHTML=`<div class="no-items" style="grid-column:1/-1;padding:60px 20px">${t('No pieces match your filters.')}<br><br><button class="btn-outline" onclick="clearFilters()">${t('Clear filters')}</button></div>`;
     return;
   }
-  if(activeCategory==='LowStock'){
-    renderProductCardsGrid(grid, S.products.filter(p=>p.vis && productOverallStock(p)==='low_stock'));
-    return;
-  }
+  renderProductCardsGrid(grid, list);
+}
+function baseProductList(){
+  if(activeCategory==='BestSellers') return S.products.filter(p=>p.vis && p.isBestSeller);
+  if(activeCategory==='LowStock') return S.products.filter(p=>p.vis && productOverallStock(p)==='low_stock');
   let visible=S.products.filter(p=>p.vis);
   if(activeCategory!=='All') visible=visible.filter(p=>(p.category||'Ladies')===activeCategory || p.garmentType===activeCategory);
-  renderProductCardsGrid(grid, visible);
+  return visible;
+}
+
+/* ════════════════════════════════
+   VIEW MODES (3) + FILTER & SORT
+   View: 1 = Large, 2 = Standard, 3 = Compact (saved per device).
+   Filter drawer: sort, size, color, in-stock, on-sale, price range.
+   The drawer body is rebuilt with t() each time (excluded from the
+   dictionary walker, see I18N_SKIP_SELECTOR).
+════════════════════════════════ */
+let gridMode = 2;
+try{ const m=parseInt(localStorage.getItem('primora_grid_mode')); if([1,2,3].includes(m)) gridMode=m; }catch(e){}
+function applyGridMode(){
+  const grid=document.getElementById('productGrid');
+  if(grid){ grid.classList.remove('view-1','view-2','view-3'); grid.classList.add('view-'+gridMode); }
+  document.querySelectorAll('.gtoggle').forEach(b=>b.classList.toggle('active', parseInt(b.dataset.mode)===gridMode));
+}
+function setGridMode(m){
+  gridMode=m;
+  try{ localStorage.setItem('primora_grid_mode', String(m)); }catch(e){}
+  applyGridMode();
+}
+
+const FILTER_DEFAULT={sort:'featured',sizes:[],colors:[],inStock:false,onSale:false,min:'',max:''};
+let FILTER={...FILTER_DEFAULT,sizes:[],colors:[]};
+let _fSizes=[], _fColors=[];
+function filtersActive(){ return filterActiveGroups()>0; }
+function filterActiveGroups(){
+  let n=0;
+  if(FILTER.sort!=='featured') n++;
+  if(FILTER.sizes.length) n++;
+  if(FILTER.colors.length) n++;
+  if(FILTER.inStock) n++;
+  if(FILTER.onSale) n++;
+  if(FILTER.min!==''||FILTER.max!=='') n++;
+  return n;
+}
+function applyFilters(list){
+  const min=FILTER.min===''?null:Number(FILTER.min), max=FILTER.max===''?null:Number(FILTER.max);
+  let out=list.filter(p=>{
+    if(FILTER.sizes.length && !(p.sizes||[]).some(sz=>FILTER.sizes.includes(sz))) return false;
+    if(FILTER.colors.length && !(p.colors||[]).some(c=>FILTER.colors.includes(c.name))) return false;
+    if(FILTER.inStock && productOverallStock(p)==='sold_out') return false;
+    if(FILTER.onSale && !(p.originalPrice && p.originalPrice>p.price)) return false;
+    if(min!==null && p.price<min) return false;
+    if(max!==null && p.price>max) return false;
+    return true;
+  });
+  if(FILTER.sort==='priceAsc') out=[...out].sort((a,b)=>a.price-b.price);
+  else if(FILTER.sort==='priceDesc') out=[...out].sort((a,b)=>b.price-a.price);
+  else if(FILTER.sort==='new') out=[...out].sort((a,b)=>(b.isNew?1:0)-(a.isNew?1:0));
+  return out;
+}
+function filterChanged(rebuildPanel){
+  renderProducts();
+  if(rebuildPanel) renderFilterPanel(); else updateFilterFooter();
+  updateFilterCount();
+}
+function updateFilterCount(){
+  const el=document.getElementById('filterCount');
+  const n=filterActiveGroups();
+  if(el) el.textContent = n ? ` (${n})` : '';
+}
+function updateFilterFooter(){
+  const a=document.getElementById('filterApplyBtn'), c=document.getElementById('filterClearBtn');
+  if(a) a.textContent=`${t('View results')} (${applyFilters(baseProductList()).length})`;
+  if(c) c.textContent=t('Clear all');
+}
+function renderFilterPanel(){
+  const body=document.getElementById('filterBody');
+  if(!body) return;
+  const pool=S.products.filter(p=>p.vis);
+  const order=['XS','S','M','L','XL','XXL'];
+  _fSizes=[...new Set(pool.flatMap(p=>p.sizes||[]))].sort((a,b)=>{
+    const ia=order.indexOf(a), ib=order.indexOf(b);
+    return (ia<0?99:ia)-(ib<0?99:ib) || String(a).localeCompare(String(b));
+  });
+  const seen={}; _fColors=[];
+  pool.forEach(p=>(p.colors||[]).forEach(c=>{ const k=(c.name||'').trim().toLowerCase(); if(k && !seen[k]){ seen[k]=1; _fColors.push({name:c.name,hex:c.hex||'#B0A388'}); } }));
+  const sorts=[['featured','Featured'],['priceAsc','Price: Low to High'],['priceDesc','Price: High to Low'],['new','New arrivals first']];
+  let h=`<div class="f-section"><div class="f-label">${t('Sort by')}</div><div class="f-chips">${
+    sorts.map(([v,l])=>`<button class="f-chip ${FILTER.sort===v?'on':''}" onclick="FILTER.sort='${v}';filterChanged(true)">${t(l)}</button>`).join('')}</div></div>`;
+  if(_fSizes.length) h+=`<div class="f-section"><div class="f-label">${t('Size')}</div><div class="f-chips">${
+    _fSizes.map((sz,i)=>`<button class="f-chip ${FILTER.sizes.includes(sz)?'on':''}" onclick="toggleFilterSize(${i})">${escapeAttr(sz)}</button>`).join('')}</div></div>`;
+  if(_fColors.length) h+=`<div class="f-section"><div class="f-label">${t('Color')}</div><div class="f-chips">${
+    _fColors.map((c,i)=>`<button class="f-swatch ${FILTER.colors.includes(c.name)?'on':''}" style="background:${escapeAttr(c.hex)}" title="${escapeAttr(c.name)}" aria-label="${escapeAttr(c.name)}" onclick="toggleFilterColor(${i})"></button>`).join('')}</div></div>`;
+  h+=`<div class="f-section"><div class="f-label">${t('Availability')}</div>
+    <div class="f-row"><span>${t('In stock only')}</span><label class="tog-sw"><input type="checkbox" ${FILTER.inStock?'checked':''} onchange="FILTER.inStock=this.checked;filterChanged(false)"><span class="tog-sl"></span></label></div>
+    <div class="f-row"><span>${t('On sale only')}</span><label class="tog-sw"><input type="checkbox" ${FILTER.onSale?'checked':''} onchange="FILTER.onSale=this.checked;filterChanged(false)"><span class="tog-sl"></span></label></div></div>`;
+  h+=`<div class="f-section"><div class="f-label">${t('Price (LE)')}</div><div class="f-price">
+    <input class="co-input" type="number" min="0" inputmode="numeric" placeholder="${t('Min')}" value="${escapeAttr(FILTER.min)}" oninput="FILTER.min=this.value;filterChanged(false)">
+    <input class="co-input" type="number" min="0" inputmode="numeric" placeholder="${t('Max')}" value="${escapeAttr(FILTER.max)}" oninput="FILTER.max=this.value;filterChanged(false)"></div></div>`;
+  body.innerHTML=h;
+  updateFilterFooter();
+  updateFilterCount();
+}
+function toggleFilterSize(i){
+  const v=_fSizes[i], k=FILTER.sizes.indexOf(v);
+  if(k>=0) FILTER.sizes.splice(k,1); else FILTER.sizes.push(v);
+  filterChanged(true);
+}
+function toggleFilterColor(i){
+  const v=_fColors[i].name, k=FILTER.colors.indexOf(v);
+  if(k>=0) FILTER.colors.splice(k,1); else FILTER.colors.push(v);
+  filterChanged(true);
+}
+function clearFilters(){
+  FILTER={...FILTER_DEFAULT,sizes:[],colors:[]};
+  filterChanged(true);
+}
+function openFilter(){
+  renderFilterPanel();
+  document.getElementById('filterDrawer').classList.add('open');
+  document.getElementById('filterOverlay').classList.add('open');
+}
+function closeFilter(){
+  document.getElementById('filterDrawer').classList.remove('open');
+  document.getElementById('filterOverlay').classList.remove('open');
 }
 
 /* ════════════════════════════════
@@ -5476,7 +5650,6 @@ function showSaved(pillId,btnId){
   if(pill){pill.classList.add('show');setTimeout(()=>pill.classList.remove('show'),2500);}
   if(btnId){const b=document.getElementById(btnId);if(b){b.classList.add('ok');setTimeout(()=>b.classList.remove('ok'),1500);}}
 }
-function setGrid(btn){document.querySelectorAll('.gtoggle').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
 
 /* ════════════════════════════════
    BOOT

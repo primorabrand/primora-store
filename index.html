@@ -192,6 +192,14 @@ html[dir="rtl"] .f-section,html[dir="rtl"] .f-row{direction:rtl}
 .size-row{display:flex;gap:5px;flex-wrap:wrap}
 .sz{border:1px solid rgba(0,0,0,.18);background:none;padding:4px 9px;font-family:'Jost',sans-serif;font-size:10px;cursor:pointer;color:var(--black);transition:all .2s}
 .sz:hover,.sz.active{background:var(--black);color:#fff;border-color:var(--black)}
+.sz.soldout,.modal-sz.soldout{opacity:.35;text-decoration:line-through;cursor:not-allowed;pointer-events:none}
+.p-swatches{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin:0 0 8px}
+.p-swatch{width:14px;height:14px;border-radius:50%;box-shadow:0 0 0 1px rgba(0,0,0,.22);cursor:pointer;display:inline-block;position:relative;flex-shrink:0}
+.p-swatch.soldout{opacity:.35}
+.p-swatch.soldout::after{content:'';position:absolute;left:50%;top:-2px;width:1px;height:18px;background:#7a1f1f;transform:rotate(45deg)}
+.p-swatch-name{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--warm-gray)}
+.size-stock-note{font-size:11px;color:#B8860B;margin:-10px 0 16px}
+.ss-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:10px}
 .add-bag-btn{background:var(--black);color:var(--ivory);border:none;padding:12px;font-family:'Jost',sans-serif;font-weight:300;font-size:10px;letter-spacing:3px;text-transform:uppercase;cursor:pointer;width:100%;transition:background .2s}
 .add-bag-btn.added{background:var(--sage)}
 
@@ -1023,6 +1031,7 @@ function trackEvent(name, params){
         <a href="javascript:void(0)" onclick="openProductSizeGuide()" style="font-size:10px;letter-spacing:1.5px;text-decoration:underline;color:var(--sage);text-transform:none;font-family:'Jost',sans-serif">Size Guide</a>
       </div>
       <div class="modal-sizes" id="modalSizes"></div>
+      <div class="size-stock-note" id="modalSizeStockNote"></div>
       <div class="modal-label">Quantity</div>
       <div class="modal-qty">
         <button class="qty-btn" onclick="changeQty(-1)">−</button>
@@ -1545,7 +1554,12 @@ function trackEvent(name, params){
       <div class="af-group"><label class="af-label">Material</label><input class="af-input" id="ap-mat"></div>
       <div class="af-group"><label class="af-label">Fit</label><input class="af-input" id="ap-fit"></div>
     </div>
-    <div class="af-group"><label class="af-label">Sizes (comma separated)</label><input class="af-input" id="ap-sizes" placeholder="XS, S, M, L, XL"></div>
+    <div class="af-group"><label class="af-label">Sizes (comma separated)</label><input class="af-input" id="ap-sizes" placeholder="XS, S, M, L, XL" oninput="renderSizeStockEditor()"></div>
+    <div class="af-group">
+      <label class="af-label">Stock per Size <span style="text-transform:none;font-weight:400;color:var(--warm-gray)">— admin only, customers never see these numbers. Blank = unlimited · 0 = sold out in that size · decreases automatically with every order</span></label>
+      <div id="sizeStockNotice" style="display:none;background:#fff8e6;border:1px solid #f0d98c;padding:12px 14px;font-size:12px;color:#8a6d1a;line-height:1.8;margin-bottom:10px">Stock per size isn't set up in your database yet. Run <strong>supabase_migration_v21_size_stock.sql</strong> once in the Supabase SQL Editor, then refresh this page.</div>
+      <div class="ss-grid" id="ap-sizeStock"></div>
+    </div>
     <div class="af-group"><label class="af-label">Search Keywords <span style="text-transform:none;font-weight:400;color:var(--warm-gray)">— common/alternate names customers might search, comma separated</span></label><input class="af-input" id="ap-keywords" placeholder="e.g. abaya, coat, jacket"></div>
     <div class="af-group"><label class="af-label">Occasions <span style="text-transform:none;font-weight:400;color:var(--warm-gray)">— when this piece is perfect to wear</span></label><textarea class="af-input" id="ap-occasions" rows="3" placeholder="e.g. Weddings, brunches, evening outings, Eid celebrations…"></textarea></div>
     <div class="af-group"><label class="af-label">Size Guide for This Piece <span style="text-transform:none;font-weight:400;color:var(--warm-gray)">— leave blank to use the general Size Guide</span></label><textarea class="af-input" id="ap-sizeGuide" rows="4" placeholder="e.g. This piece runs true to size. For an oversized look, size up."></textarea></div>
@@ -2768,7 +2782,7 @@ async function loadPersisted(){
       S.settings.designEmail = setRow.design_email ?? S.settings.designEmail;
     }
 
-    if(prodRows && prodRows.length){
+    if(prodRows && prodRows.length){ S.sizeStockReady = ('size_stock' in prodRows[0]);
       S.products = prodRows.map((r,i)=>{
         const ph = phForIndex(r.sort_order??i);
         let colors = (r.colors && r.colors.length) ? r.colors : null;
@@ -2788,6 +2802,7 @@ async function loadPersisted(){
           isNew: !!r.is_new,
           descAr:r.description_ar||'', matAr:r.material_ar||'', fitAr:r.fit_ar||'',
           occasionsAr:r.occasions_ar||'', sizeGuideAr:r.size_guide_ar||'',
+          sizeStock:(r.size_stock&&typeof r.size_stock==='object')?r.size_stock:{},
         };
       });
     } else {
@@ -2889,6 +2904,7 @@ async function seedDefaultProducts(){
       isNew: !!r.is_new,
       descAr:r.description_ar||'', matAr:r.material_ar||'', fitAr:r.fit_ar||'',
       occasionsAr:r.occasions_ar||'', sizeGuideAr:r.size_guide_ar||'',
+          sizeStock:(r.size_stock&&typeof r.size_stock==='object')?r.size_stock:{},
     }));
   }
 }
@@ -2916,7 +2932,7 @@ async function persistSettings(){
 async function persistProduct(idx){
   if(!sbClient)return false;
   const p=S.products[idx];
-  const payload={name:p.name, description:p.desc, price:p.price, original_price: (p.originalPrice!=null && p.originalPrice!=='') ? p.originalPrice : null, material:p.mat, fit:p.fit, sizes:p.sizes, visible:p.vis, stock_status:p.stock||'in_stock', category:p.category||'Ladies', garment_type:p.garmentType||'', keywords:p.keywords||'', occasions:p.occasions||'', size_guide:p.sizeGuide||'', colors:p.colors||[], sort_order: typeof p.sort==='number'?p.sort:idx, is_best_seller: !!p.isBestSeller, is_new: !!p.isNew, description_ar:p.descAr||'', material_ar:p.matAr||'', fit_ar:p.fitAr||'', occasions_ar:p.occasionsAr||'', size_guide_ar:p.sizeGuideAr||''};
+  const payload={name:p.name, description:p.desc, price:p.price, original_price: (p.originalPrice!=null && p.originalPrice!=='') ? p.originalPrice : null, material:p.mat, fit:p.fit, sizes:p.sizes, visible:p.vis, stock_status:p.stock||'in_stock', category:p.category||'Ladies', garment_type:p.garmentType||'', keywords:p.keywords||'', occasions:p.occasions||'', size_guide:p.sizeGuide||'', colors:p.colors||[], sort_order: typeof p.sort==='number'?p.sort:idx, is_best_seller: !!p.isBestSeller, is_new: !!p.isNew, description_ar:p.descAr||'', material_ar:p.matAr||'', fit_ar:p.fitAr||'', occasions_ar:p.occasionsAr||'', size_guide_ar:p.sizeGuideAr||'', ...(S.sizeStockReady?{size_stock:p.sizeStock||{}}:{})};
   if(p.id){
     const {error}=await sbClient.from('products').update(payload).eq('id',p.id);
     if(error){ console.warn(error); setConnStatus('error'); return false; }
@@ -3006,6 +3022,9 @@ function handleNewOrderRealtime(row){
     if(document.getElementById('adminShell').classList.contains('open')){
       renderOrders(); refreshDash();
     }
+  }
+  if(document.getElementById('adminShell').classList.contains('open')){
+    reloadAdminData().then(()=>{ renderAdminProducts(); refreshDash(); }).catch(()=>{});
   }
   lastAlertOrder=mapped;
   showOrderAlert(mapped);
@@ -3357,7 +3376,33 @@ function setCategory(c){
 
 function firstColor(p){ return (p.colors && p.colors[0]) ? p.colors[0] : {name:'',hex:'#B0A388',images:[],stock:'in_stock'}; }
 function allColorsSoldOut(p){ return p.colors && p.colors.length && p.colors.every(c=>c.stock==='sold_out'); }
+/* ── STOCK PER SIZE ── p.sizeStock = {S:5, M:0}. A size with no entry is
+   "not tracked" (unlimited). 0 = sold out in that size. */
+const LOW_SIZE_QTY=3;
+function sizeQty(p,s){
+  const m=p&&p.sizeStock;
+  if(!m||m[s]===undefined||m[s]===null||m[s]==='') return null;
+  const n=Number(m[s]); return isNaN(n)?null:Math.max(0,n);
+}
+function sizeSoldOut(p,s){ const q=sizeQty(p,s); return q!==null && q<=0; }
+function allSizesSoldOut(p){ return !!(p&&p.sizes&&p.sizes.length&&p.sizes.every(s=>sizeSoldOut(p,s))); }
+function firstAvailableSize(p,preferred){
+  if(!p||!p.sizes||!p.sizes.length) return preferred||null;
+  if(preferred && p.sizes.includes(preferred) && !sizeSoldOut(p,preferred)) return preferred;
+  return p.sizes.find(s=>!sizeSoldOut(p,s))||null;
+}
+function cartQtyOf(idx,size){
+  return (typeof cart!=='undefined'?cart:[]).filter(i=>!i.isBundle&&i.idx===idx&&i.size===size).reduce((a,i)=>a+i.qty,0);
+}
+function sizeRemaining(p,idx,s){ const q=sizeQty(p,s); return q===null?Infinity:Math.max(0,q-cartQtyOf(idx,s)); }
+function sizeMsg(kind,n){
+  const ar=(typeof currentLang!=='undefined'&&currentLang==='ar');
+  if(kind==='soldout') return ar?'المقاس ده خلصان':'This size is sold out';
+  if(kind==='limit') return ar?'الكمية المطلوبة مش متاحة من المقاس ده':'That quantity isn\'t available in this size';
+  return '';
+}
 function productOverallStock(p){
+  if(allSizesSoldOut(p)) return 'sold_out';
   if(!p.colors || !p.colors.length) return p.stock||'in_stock';
   if(allColorsSoldOut(p)) return 'sold_out';
   if(p.colors.some(c=>c.stock==='low_stock')) return 'low_stock';
@@ -3404,18 +3449,19 @@ function renderProductCardsGrid(grid, list){
     const addBtn = isSold
       ? `<button class="add-bag-btn" disabled>Sold Out</button>`
       : `<button class="add-bag-btn" onclick="quickAdd(this,${idx})">Add to Bag</button>`;
-    const colorCount = p.colors && p.colors.length>1 ? `<div class="p-desc" style="margin-top:-4px">${p.colors.length} Colors</div>` : '';
+    const _single=(p.colors&&p.colors.length===1&&p.colors[0].name&&!/^(default|original)$/i.test(p.colors[0].name.trim()))?`<span class="p-swatch-name">${escapeAttr(p.colors[0].name)}</span>`:'';
+    const colorCount = (p.colors&&p.colors.length) ? `<div class="p-swatches" onclick="event.stopPropagation()">${p.colors.map((c,ci)=>`<span class="p-swatch ${c.stock==='sold_out'?'soldout':''}" style="background:${escapeAttr(c.hex||'#B0A388')}" title="${escapeAttr(c.name)}${c.stock==='sold_out'?' — Sold Out':''}" onclick="openModal(${idx});selectModalColor(${ci})"></span>`).join('')}${_single}</div>` : '';
     return `<div class="p-card ${isSold?'is-sold':''}" onclick="openModal(${idx})">
       <div class="p-img">${imgHTML}${countBadge}${topBadge}</div>
       <div class="p-info">
         ${bestSellerTag}
         <div class="p-name">${p.name}</div>
-        <div class="p-desc">${tf(p.desc,p.descAr)}</div>
         ${colorCount}
+        <div class="p-desc">${tf(p.desc,p.descAr)}</div>
         <div class="p-price">${priceDisplayHTML(p)}</div>
       </div>
       <div class="p-actions" onclick="event.stopPropagation()">
-        <div class="size-row">${p.sizes.map(s=>`<button class="sz" onclick="selectSize(this)">${s}</button>`).join('')}</div>
+        <div class="size-row">${p.sizes.map(s=>{const so=sizeSoldOut(p,s);return `<button class="sz ${so?'soldout':''}" ${so?'disabled':''} onclick="selectSize(this)">${s}</button>`;}).join('')}</div>
         ${addBtn}
       </div>
     </div>`;
@@ -3679,7 +3725,7 @@ function renderCustomBundlePickerContent(){
           <div class="bundle-item-thumb">${x.img?`<img src="${x.img}" alt="">`:`<div class="p-ph ${x.ph}"></div>`}</div>
           <div class="bundle-item-info">
             <div class="bundle-item-name" style="color:var(--ivory)">${x.name}</div>
-            <div class="bundle-item-sizes">${x.sizes.map((s,si)=>`<button class="sz" style="border-color:rgba(255,255,255,.3);color:var(--ivory)" onclick="selectCustomBundleSize(${mi},'${s}',this)">${s}</button>`).join('')}</div>
+            <div class="bundle-item-sizes">${x.sizes.map((s,si)=>{const _pp=S.products.find(pp=>pp.id===x.productId);const so=_pp&&sizeSoldOut(_pp,s);return `<button class="sz ${so?'soldout':''}" ${so?'disabled':''} style="border-color:rgba(255,255,255,.3);color:var(--ivory)" onclick="selectCustomBundleSize(${mi},'${s}',this)">${s}</button>`;}).join('')}</div>
           </div>
         </div>`).join('')}
     </div>`;
@@ -3708,7 +3754,7 @@ function toggleCustomBundlePick(productId){
     const c0 = firstColor(p);
     customBundlePicks.push({
       productId:p.id, name:p.name, price:p.price, img:(c0.images&&c0.images[0])||null,
-      ph:p.ph, sizes:p.sizes, size:p.sizes[0]||'M', colorName:c0.name||''
+      ph:p.ph, sizes:p.sizes, size:firstAvailableSize(p,p.sizes[0])||p.sizes[0]||'M', colorName:c0.name||''
     });
   }
   renderCustomBundlePickerContent();
@@ -3754,12 +3800,12 @@ function openBundleModal(bundleIdx){
   document.getElementById('bundleModalItems').innerHTML = members.map((p,mi)=>{
     const c0=firstColor(p);
     const img=(c0.images&&c0.images[0])?`<img src="${c0.images[0]}" alt="${p.name}">`:`<div class="p-ph ${p.ph}"></div>`;
-    bundleSelSizes[mi]=p.sizes[0]||'M';
+    bundleSelSizes[mi]=firstAvailableSize(p,p.sizes[0])||p.sizes[0]||'M';
     return `<div class="bundle-item-row">
       <div class="bundle-item-thumb">${img}</div>
       <div class="bundle-item-info">
         <div class="bundle-item-name">${p.name}</div>
-        <div class="bundle-item-sizes">${p.sizes.map((s,si)=>`<button class="sz ${si===0?'active':''}" onclick="selectBundleSize(${mi},'${s}',this)">${s}</button>`).join('')}</div>
+        <div class="bundle-item-sizes">${p.sizes.map((s,si)=>`<button class="sz ${s===bundleSelSizes[mi]?'active':''} ${sizeSoldOut(p,s)?'soldout':''}" ${sizeSoldOut(p,s)?'disabled':''} onclick="selectBundleSize(${mi},'${s}',this)">${s}</button>`).join('')}</div>
       </div>
     </div>`;
   }).join('');
@@ -3993,7 +4039,8 @@ function openModal(idx, updateUrl){
   document.getElementById('modalFit').textContent=tf(p.fit,p.fitAr);
   document.getElementById('modalDeliv').textContent=tf(S.settings.deliv,S.settings.delivAr);
   document.getElementById('qtyNum').textContent=1;
-  document.getElementById('modalSizes').innerHTML=p.sizes.map(s=>`<button class="modal-sz" onclick="selSz(this,'${s}')">${s}</button>`).join('');
+  document.getElementById('modalSizes').innerHTML=p.sizes.map(s=>{const so=sizeSoldOut(p,s);return `<button class="modal-sz ${so?'soldout':''}" ${so?'disabled':''} onclick="selSz(this,'${s}')">${s}</button>`;}).join('');
+  updateSizeStockNote();
 
   const occWrap=document.getElementById('modalOccasionsWrap');
   if(p.occasions && p.occasions.trim()){
@@ -4124,15 +4171,29 @@ function galNav(dir){
   setGalImg(next);
 }
 
-function selSz(btn,s){document.querySelectorAll('.modal-sz').forEach(b=>b.classList.remove('sel'));btn.classList.add('sel');curSize=s;}
+function selSz(btn,s){
+  document.querySelectorAll('.modal-sz').forEach(b=>b.classList.remove('sel'));btn.classList.add('sel');curSize=s;
+  const p=S.products[curProd]; const rem=sizeRemaining(p,curProd,s);
+  if(rem!==Infinity && curQty>Math.max(1,rem)){ curQty=Math.max(1,rem); document.getElementById('qtyNum').textContent=curQty; }
+  updateSizeStockNote();
+}
+function updateSizeStockNote(){ const el=document.getElementById('modalSizeStockNote'); if(el) el.textContent=''; /* counts are admin-only */ }
 function closeModal(updateUrl){
   if(updateUrl===undefined) updateUrl=true;
   document.getElementById('productModal').classList.remove('open');
   if(updateUrl) clearProductURL();
 }
-function changeQty(d){curQty=Math.max(1,curQty+d);document.getElementById('qtyNum').textContent=curQty;}
+function changeQty(d){
+  let next=Math.max(1,curQty+d);
+  const p=S.products[curProd];
+  if(p&&curSize){ const rem=sizeRemaining(p,curProd,curSize); if(rem!==Infinity && next>Math.max(1,rem)){ next=Math.max(1,rem); if(d>0) showToast(sizeMsg('limit',sizeQty(p,curSize))); } }
+  curQty=next;document.getElementById('qtyNum').textContent=curQty;
+}
 function addFromModal(){
-  addToCart(curProd,curSize||'M',curQty,curColorIdx);
+  const _p=S.products[curProd];
+  const _size=curSize||firstAvailableSize(_p,'M');
+  if(!_size){ showToast(sizeMsg('soldout')); return; }
+  if(!addToCart(curProd,_size,curQty,curColorIdx)) return;
   const btn=document.getElementById('modalAddBtn');btn.textContent='Added ✓';btn.classList.add('added');
   setTimeout(()=>{btn.textContent='Add to Bag';btn.classList.remove('added');closeModal();openCart();},1000);
 }
@@ -4170,18 +4231,25 @@ let cart=loadCartFromStorage();
 function selectSize(btn){btn.closest('.size-row').querySelectorAll('.sz').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
 function quickAdd(btn,idx){
   const sel=btn.closest('.p-actions').querySelector('.sz.active');
-  addToCart(idx,sel?sel.textContent:'M',1,0);
+  const _size=sel?sel.textContent:firstAvailableSize(S.products[idx],'M');
+  if(!_size){ showToast(sizeMsg('soldout')); return; }
+  if(!addToCart(idx,_size,1,0)) return;
   btn.textContent='Added ✓';btn.classList.add('added');
   setTimeout(()=>{btn.textContent='Add to Bag';btn.classList.remove('added');},1800);
 }
 function addToCart(idx,size,qty,colorIdx){
   const p=S.products[idx];
   colorIdx = colorIdx||0;
+  const _rem=sizeRemaining(p,idx,size);
+  if(_rem<=0){ showToast(sizeMsg('soldout')); return false; }
+  let _limitMsg=null;
+  if(qty>_rem){ qty=_rem; _limitMsg=sizeMsg('limit',sizeQty(p,size)); }
   const col=(p.colors&&p.colors[colorIdx])?p.colors[colorIdx]:firstColor(p);
   const ex=cart.find(i=>i.idx===idx&&i.size===size&&i.color===col.name);
   if(ex)ex.qty+=qty;else cart.push({idx,productId:p.id,name:p.name,price:p.price,size,qty,color:col.name,ph:p.ph,img:(col.images&&col.images[0])||null});
   trackEvent('AddToCart', {content_name:p.name, content_ids:[p.id||idx], content_type:'product', value:p.price*qty, currency:'EGP'});
-  updateCartUI();showToast();
+  updateCartUI();showToast(_limitMsg||undefined);
+  return true;
 }
 function updateCartUI(){
   saveCartToStorage();
@@ -4267,12 +4335,15 @@ function renderCrossSell(){
 function viewCrossSellProduct(idx){ closeCart(); openModal(idx); }
 function quickAddFromCrossSell(btn, idx){
   const p=S.products[idx];
-  const size = (p.sizes && p.sizes[0]) || 'M';
-  addToCart(idx, size, 1, 0);
+  const size = firstAvailableSize(p,(p.sizes&&p.sizes[0])||'M');
+  if(!size || !addToCart(idx, size, 1, 0)) return;
   btn.textContent='Added ✓'; btn.classList.add('added');
   setTimeout(()=>{ btn.textContent='+ Add'; btn.classList.remove('added'); }, 1500);
 }
-function cqty(i,d){cart[i].qty+=d;if(cart[i].qty<=0)cart.splice(i,1);updateCartUI();}
+function cqty(i,d){
+  const _it=cart[i];
+  if(d>0 && _it && !_it.isBundle){ const _p=S.products[_it.idx]; if(_p && sizeRemaining(_p,_it.idx,_it.size)<=0){ showToast(sizeMsg('limit',sizeQty(_p,_it.size))); return; } }
+  cart[i].qty+=d;if(cart[i].qty<=0)cart.splice(i,1);updateCartUI();}
 function cremove(i){cart.splice(i,1);updateCartUI();}
 function openCart(){document.getElementById('cartDrawer').classList.add('open');document.getElementById('cartOverlay').classList.add('open');}
 function closeCart(){document.getElementById('cartDrawer').classList.remove('open');document.getElementById('cartOverlay').classList.remove('open');}
@@ -4306,6 +4377,16 @@ async function submitOrder(){
   const gov=document.getElementById('coGov').value.trim();
   if(!name||!phone||!addrLine||!city||!gov){alert('Please fill in your name, phone number, and full delivery address — these are required so we can deliver your order.');return;}
   if(!cart.length){alert('Your bag is empty.');return;}
+  { // stock check per size (carts can be stale from an earlier visit)
+    const _need={};
+    cart.forEach(it=>{ if(it.isBundle){ (it.members||[]).forEach(m=>{const k=m.productId+'|'+m.size;_need[k]=(_need[k]||0)+it.qty;}); } else { const k=it.productId+'|'+it.size;_need[k]=(_need[k]||0)+it.qty; } });
+    for(const k of Object.keys(_need)){
+      const [pid,sz]=[k.slice(0,k.lastIndexOf('|')),k.slice(k.lastIndexOf('|')+1)];
+      const _p=S.products.find(x=>String(x.id)===pid); if(!_p) continue;
+      const q=sizeQty(_p,sz);
+      if(q!==null && _need[k]>q){ alert((currentLang==='ar')?`"${_p.name}" مقاس ${sz}: الكمية المطلوبة مش متاحة. قلّلي الكمية في الشنطة أو اختاري مقاس تاني.`:`"${_p.name}" size ${sz}: the requested quantity isn't available. Please reduce it or pick another size.`); return; }
+    }
+  }
   const submitBtn=document.querySelector('.co-submit');
   const originalText=submitBtn.textContent;
   submitBtn.textContent='Placing order…'; submitBtn.disabled=true;
@@ -4329,6 +4410,12 @@ async function submitOrder(){
     userId: currentUser?currentUser.id:null
   };
   S.orders.unshift(order);
+  // keep on-screen stock in sync (the database trigger does the real decrement)
+  cart.forEach(it=>{
+    const lines = it.isBundle ? (it.members||[]).map(m=>({pid:m.productId,size:m.size,qty:it.qty})) : [{pid:it.productId,size:it.size,qty:it.qty}];
+    lines.forEach(l=>{ const _p=S.products.find(x=>x.id===l.pid); if(_p && sizeQty(_p,l.size)!==null){ _p.sizeStock[l.size]=Math.max(0,sizeQty(_p,l.size)-l.qty); } });
+  });
+  renderProducts();
   trackEvent('Purchase', {
     value: result.data.total, currency:'EGP',
     content_ids: cart.map(i=>i.isBundle?('bundle-'+(i.bundleId||'custom')):i.productId),
@@ -4552,7 +4639,7 @@ async function reloadAdminData(){
       dbId:o.id, id:o.order_ref, date:o.order_date, customer:o.customer_name, phone:o.phone,
       email:o.email, address:o.address, notes:o.notes||'', items:o.items||[], total:Number(o.total)||0, status:o.status, userId:o.user_id
     }));
-    if(prodRows && prodRows.length){
+    if(prodRows && prodRows.length){ S.sizeStockReady = ('size_stock' in prodRows[0]);
       S.products = prodRows.map((r,i)=>{
         const ph = phForIndex(r.sort_order??i);
         let colors = (r.colors && r.colors.length) ? r.colors : null;
@@ -4569,6 +4656,7 @@ async function reloadAdminData(){
           isNew: !!r.is_new,
           descAr:r.description_ar||'', matAr:r.material_ar||'', fitAr:r.fit_ar||'',
           occasionsAr:r.occasions_ar||'', sizeGuideAr:r.size_guide_ar||'',
+          sizeStock:(r.size_stock&&typeof r.size_stock==='object')?r.size_stock:{},
         };
       });
     }
@@ -4852,7 +4940,7 @@ function renderAdminProducts(){
       <div>
         <div class="apc-n">${p.name}</div>
         <div class="apc-d">${p.desc}</div>
-        <div class="apc-p">LE ${p.price.toLocaleString()} · ${totalPhotos?totalPhotos+' photo(s)':'No photos'} · ${colorsTxt} · ${p.sizes.join(', ')} · ${p.category||'Ladies'}${p.garmentType?' · '+p.garmentType:''} · <span style="color:${overallStock==='sold_out'?'#7a1f1f':overallStock==='low_stock'?'#B8860B':'var(--sage)'}">${overallStock==='sold_out'?'Sold Out':overallStock==='low_stock'?'Almost Sold Out':'In Stock'}</span></div>
+        <div class="apc-p">LE ${p.price.toLocaleString()} · ${totalPhotos?totalPhotos+' photo(s)':'No photos'} · ${colorsTxt} · ${p.sizes.map(s=>{const q=sizeQty(p,s);return q===null?s:`${s} (${q})`;}).join(', ')} · ${p.category||'Ladies'}${p.garmentType?' · '+p.garmentType:''} · <span style="color:${overallStock==='sold_out'?'#7a1f1f':overallStock==='low_stock'?'#B8860B':'var(--sage)'}">${overallStock==='sold_out'?'Sold Out':overallStock==='low_stock'?'Almost Sold Out':'In Stock'}</span></div>
       </div>
       <div class="apc-btns" onclick="event.stopPropagation()">
         <button class="vis-tag ${p.vis?'':'off'}" onclick="toggleVis(${i})">${p.vis?'● Visible':'○ Hidden'}</button>
@@ -4897,6 +4985,19 @@ async function removeProduct(i){
   renderAdminProducts();
   renderProducts();
 }
+function renderSizeStockEditor(){
+  const grid=document.getElementById('ap-sizeStock'); if(!grid)return;
+  const idx=parseInt(document.getElementById('ap-idx').value);
+  const p=S.products[idx]||{};
+  const sizes=document.getElementById('ap-sizes').value.split(',').map(x=>x.trim()).filter(Boolean);
+  const typed={}; grid.querySelectorAll('input[data-size]').forEach(inp=>{typed[inp.dataset.size]=inp.value;});
+  const saved=p.sizeStock||{};
+  grid.innerHTML=sizes.map(sz=>{
+    const v=(sz in typed)?typed[sz]:((saved[sz]!==undefined&&saved[sz]!==null)?saved[sz]:'');
+    return `<div><label class="af-label" style="margin-bottom:4px">${escapeAttr(sz)}</label><input class="af-input" type="number" min="0" data-size="${escapeAttr(sz)}" value="${escapeAttr(v)}" placeholder="∞" ${S.sizeStockReady?'':'disabled'}></div>`;
+  }).join('');
+  const n=document.getElementById('sizeStockNotice'); if(n) n.style.display=S.sizeStockReady?'none':'block';
+}
 function openApanel(idx){
   const p=S.products[idx];
   document.getElementById('ap-idx').value=idx;
@@ -4908,6 +5009,8 @@ function openApanel(idx){
   document.getElementById('ap-mat').value=p.mat;
   document.getElementById('ap-fit').value=p.fit;
   document.getElementById('ap-sizes').value=p.sizes.join(', ');
+  document.getElementById('ap-sizeStock').innerHTML='';
+  renderSizeStockEditor();
   document.getElementById('ap-keywords').value=p.keywords||'';
   document.getElementById('ap-occasions').value=p.occasions||'';
   document.getElementById('ap-sizeGuide').value=p.sizeGuide||'';
@@ -5308,8 +5411,13 @@ async function saveProduct(){
       lowStockQty: qtyRaw==='' ? null : Math.max(0, parseInt(qtyRaw)||0)
     };
   });
+  const _sizeStock={};
+  if(S.sizeStockReady){
+    document.querySelectorAll('#ap-sizeStock input[data-size]').forEach(inp=>{ const v=inp.value.trim(); if(v!=='') _sizeStock[inp.dataset.size]=Math.max(0,parseInt(v)||0); });
+  }
   S.products[i]={
     ...p,
+    sizeStock: S.sizeStockReady ? _sizeStock : (p.sizeStock||{}),
     name:document.getElementById('ap-name').value,
     price:parseInt(document.getElementById('ap-price').value)||0,
     originalPrice: (()=>{ const v=document.getElementById('ap-originalPrice').value.trim(); return v===''?null:(parseInt(v)||null); })(),

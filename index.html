@@ -436,6 +436,38 @@ html[dir="rtl"] .notif-title,html[dir="rtl"] .notif-item *{letter-spacing:0}
 .co-input{width:100%;border:1px solid rgba(0,0,0,.15);background:transparent;padding:12px 14px;font-family:'Jost',sans-serif;font-size:13px;font-weight:300;color:var(--black);outline:none}
 .co-input:focus{border-color:var(--black)}
 .co-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.sg-box{background:var(--cream);max-width:680px;width:100%;max-height:92vh;overflow-y:auto;padding:38px 36px 34px;position:relative}
+.sg-title{font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:300;letter-spacing:6px;text-transform:uppercase;text-align:center}
+.sg-sub{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);text-align:center;margin-top:6px}
+.sg-tabs{display:flex;margin:24px 0 26px;border-bottom:1px solid rgba(0,0,0,.1)}
+.sg-tab{flex:1;background:none;border:none;padding:13px 6px;font-family:'Jost',sans-serif;font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:var(--warm-gray);border-bottom:2px solid transparent;margin-bottom:-1px;cursor:pointer;transition:color .2s}
+.sg-tab.active{color:var(--black);border-bottom-color:var(--black)}
+.sg-h{font-size:11px;letter-spacing:3px;text-transform:uppercase;text-align:center;margin-bottom:18px;color:var(--black-s)}
+.sg-diagram{display:flex;justify-content:center;margin-bottom:22px}
+.sg-table{width:100%;border-collapse:collapse}
+.sg-table th{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--warm-gray);text-align:start;padding:12px 10px;border-bottom:1px solid var(--black);font-weight:400}
+.sg-table td{padding:14px 10px;font-size:13px;border-bottom:1px solid rgba(0,0,0,.07);color:var(--black-s)}
+.sg-table tbody tr:nth-child(odd) td{background:rgba(184,168,130,.09)}
+.sg-table td:first-child{font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--black)}
+.sg-table tr.sg-hl td{background:rgba(138,155,142,.28)}
+.sg-note{font-size:11px;color:var(--warm-gray);line-height:1.9;margin-top:16px}
+.sg-field-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.sg-input-wrap{position:relative}
+.sg-input-wrap .co-input{padding-inline-end:46px}
+.sg-unit{position:absolute;inset-inline-end:14px;top:50%;transform:translateY(-50%);font-size:11px;letter-spacing:1px;color:var(--warm-gray)}
+.sg-fit{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.sg-fit button{border:1px solid rgba(0,0,0,.18);background:none;padding:15px 6px;font-family:'Jost',sans-serif;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;color:var(--black);transition:all .2s}
+.sg-fit button.active{background:var(--black);color:var(--ivory);border-color:var(--black)}
+.sg-err{color:#c94141;font-size:11px;margin-top:12px}
+.sg-result{margin-top:22px;text-align:center;padding:24px 18px;background:var(--ivory);border:1px solid rgba(184,168,130,.55)}
+.sg-result-label{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--sage)}
+.sg-result-size{font-family:'Cormorant Garamond',serif;font-size:56px;font-weight:300;line-height:1.1;margin:6px 0 4px}
+.sg-link{background:none;border:none;font-family:'Jost',sans-serif;font-size:11px;letter-spacing:1.5px;text-decoration:underline;color:var(--sage);cursor:pointer;margin-top:12px}
+.sgc-wrap{overflow-x:auto;margin-bottom:4px}
+.sgc-table{border-collapse:collapse}
+.sgc-table td,.sgc-table th{padding:4px 6px;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--warm-gray);font-weight:400;text-align:start;vertical-align:bottom}
+.sgc-table .af-input{min-width:92px;padding:8px 10px}
+@media(max-width:560px){.sg-box{padding:30px 18px 26px}.sg-title{font-size:24px;letter-spacing:4px}.sg-tab{letter-spacing:1.5px;font-size:10px}}
 .co-submit{margin-top:26px;width:100%;background:var(--black);color:var(--ivory);border:none;padding:16px;font-family:'Jost',sans-serif;font-size:11px;letter-spacing:3px;text-transform:uppercase;cursor:pointer}
 .co-wa{margin-top:10px;width:100%;background:none;border:1px solid rgba(0,0,0,.15);color:var(--black);padding:14px;font-family:'Jost',sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .2s}
 .co-wa:hover{background:#25D366;color:#fff;border-color:#25D366}
@@ -831,7 +863,7 @@ function trackEvent(name, params){
 <footer>
   <div class="ft">
     <div><div class="ft-brand">PRIMORA</div><div class="ft-tag">Quiet Luxury For Her</div><div class="ft-desc">A fashion brand born from four stages of human history. Minimal, intentional, timeless.</div></div>
-    <div class="ft-col"><h4>Explore</h4><a href="#collection">Collection</a><a href="#philosophy">Our Story</a><a href="javascript:void(0)" onclick="openInfoPage('sizeGuide')">Size Guide</a><a href="javascript:void(0)" onclick="openInfoPage('careGuide')">Care Guide</a></div>
+    <div class="ft-col"><h4>Explore</h4><a href="#collection">Collection</a><a href="#philosophy">Our Story</a><a href="javascript:void(0)" onclick="openSizeGuide()">Size Guide</a><a href="javascript:void(0)" onclick="openInfoPage('careGuide')">Care Guide</a></div>
     <div class="ft-col"><h4>Support</h4><a href="javascript:void(0)" onclick="openInfoPage('shipping')">Shipping</a><a href="javascript:void(0)" onclick="openInfoPage('returns')">Returns</a><a href="javascript:void(0)" onclick="openInfoPage('contact')">Contact</a><a href="javascript:void(0)" onclick="openFaqPage()">FAQ</a></div>
   </div>
   <div class="ft-bot">
@@ -980,6 +1012,14 @@ function trackEvent(name, params){
     <div class="co-title" id="infoTitle"></div>
     <div class="co-sub" id="infoSub" style="margin-bottom:20px">PRIMORA</div>
     <div id="infoContent" style="font-size:13px;line-height:2;color:var(--black-s);white-space:pre-wrap"></div>
+  </div>
+</div>
+
+<!-- SIZE GUIDE MODAL — chart + recommendation -->
+<div class="checkout-overlay" id="sizeGuideOverlay" onclick="if(event.target===this)closeSizeGuide()">
+  <div class="sg-box">
+    <button class="co-close" onclick="closeSizeGuide()" aria-label="Close">✕</button>
+    <div id="sgContent"></div>
   </div>
 </div>
 
@@ -1477,6 +1517,26 @@ function trackEvent(name, params){
         </div>
 
         <div class="a-section">
+          <div class="a-section-head"><div class="a-section-title">Size Chart — Size Guide Popup</div></div>
+          <div class="a-section-body">
+            <div style="font-size:11px;color:var(--warm-gray);margin-bottom:16px;line-height:1.7">The table customers see in the Size Guide popup (and that the "Size Recommendation" tab highlights). Add measurement columns (Bust, Waist, Length, Hips…) and a row per size. Use standard size names (XS, S, M, L, XL) so the recommendation tool can match them. A product's own "Size Guide for This Piece" text is shown under the table.</div>
+            <div class="af-row">
+              <div class="af-group"><label class="af-label">Title</label><input class="af-input" id="sgc-title"></div>
+              <div class="af-group"><label class="af-label">Title (Arabic)</label><input class="af-input" id="sgc-titleAr" dir="rtl"></div>
+            </div>
+            <div class="sgc-wrap"><div id="sgcEditor"></div></div>
+            <div style="display:flex;gap:10px;margin:12px 0 16px;flex-wrap:wrap">
+              <button class="btn-outline" onclick="sgcAddCol()">+ Add Column</button>
+              <button class="btn-outline" onclick="sgcAddRow()">+ Add Size</button>
+            </div>
+            <div class="af-group"><label class="af-label">Note under the table</label><textarea class="af-input" id="sgc-note" rows="2"></textarea></div>
+            <div class="af-group"><label class="af-label">Note (Arabic)</label><textarea class="af-input" id="sgc-noteAr" dir="rtl" rows="2"></textarea></div>
+            <button class="btn-save" id="bsave15" onclick="saveSizeChart('bsave15','st15')">Save</button>
+            <span class="saved-tag" id="st15">✓ Saved</span>
+          </div>
+        </div>
+
+        <div class="a-section">
           <div class="a-section-head">
             <div class="a-section-title">FAQ</div>
             <button class="btn-outline" onclick="addFaqItem()">+ Add Question</button>
@@ -1767,6 +1827,13 @@ const S = {
       {roman:'IV',  title:'Visionaries', titleAr:'', text:'Creativity unleashed. Clothing became a statement of identity.', textAr:''}
     ],
     footerPages:{
+      sizeChart:{
+        title:'Measurements in cm', titleAr:'المقاسات بالسنتيمتر',
+        cols:[{en:'Bust',ar:'الصدر'},{en:'Waist',ar:'الوسط'}],
+        rows:[{size:'XS',v:['78–82','60–64']},{size:'S',v:['83–87','65–69']},{size:'M',v:['88–92','70–74']},{size:'L',v:['93–98','75–80']}],
+        note:'All pieces are cut for a relaxed, effortless fit. If you prefer a closer fit, we recommend sizing down.',
+        noteAr:'كل القطع بقصّة مريحة. لو بتفضّلي الإحساس الأضيق، اختاري مقاس أصغر.'
+      },
       sizeGuide:{title:'Size Guide', content:'XS — Bust 78–82cm, Waist 60–64cm\nS — Bust 83–87cm, Waist 65–69cm\nM — Bust 88–92cm, Waist 70–74cm\nL — Bust 93–98cm, Waist 75–80cm\n\nAll pieces are cut for a relaxed, effortless fit. If you prefer a closer fit, we recommend sizing down.', contentAr:''},
       careGuide:{title:'Care Guide', content:'Hand wash cold or gentle machine cycle.\nDo not bleach.\nDry flat in shade — avoid direct sunlight.\nIron on low heat if needed.\nStore folded to preserve shape.', contentAr:''},
       shipping:{title:'Shipping Info', content:'We deliver across Egypt within 2–4 business days.\nCash on delivery is available everywhere.\nYou will receive a confirmation call before dispatch.', contentAr:''},
@@ -1923,7 +1990,16 @@ const AR_DICT = {
   'Price: Low to High':'السعر: من الأقل للأعلى','Price: High to Low':'السعر: من الأعلى للأقل','New arrivals first':'الجديد الأول',
   'Size':'المقاس','Color':'اللون','Availability':'التوفر','In stock only':'المتاح بس','On sale only':'عليها خصم بس',
   'Price (LE)':'السعر (جنيه)','Min':'الأقل','Max':'الأعلى','Clear all':'مسح الكل','View results':'شوفي النتايج',
-  'No pieces match your filters.':'مفيش قطع بتطابق الفلتر ده.','Clear filters':'امسحي الفلتر'
+  'No pieces match your filters.':'مفيش قطع بتطابق الفلتر ده.','Clear filters':'امسحي الفلتر',
+  'Size Chart':'جدول المقاسات','Size Recommendation':'اقتراح المقاس','Find Your Size':'اعرفي مقاسك',
+  'Height':'الطول','Weight':'الوزن','cm':'سم','kg':'كجم',
+  'How do you like it to fit?':'بتحبي القطعة تبقى إزاي؟','Snug':'ضيّقة شوية','True to size':'على المقاس','Relaxed':'واسعة',
+  'Find My Size':'اعرفي مقاسي','Your recommended size':'المقاس المناسب ليكي','Select size':'اختاري المقاس',
+  'Enter a valid height (130–210 cm) and weight (30–200 kg).':'اكتبي طولك (130–210 سم) ووزنك (30–200 كجم) بشكل صحيح.',
+  'Your ideal size is currently sold out — this is the closest available.':'مقاسك المثالي خلصان دلوقتي — ده أقرب مقاس متاح.',
+  'Your measurements are outside this piece’s size range. Message us on WhatsApp and we’ll help you choose.':'قياساتك برا مقاسات القطعة دي. ابعتيلنا على واتساب وهنساعدك تختاري.',
+  'A guide only — if you’re between sizes, check the size chart.':'ده اقتراح استرشادي — لو بين مقاسين، راجعي جدول المقاسات.',
+  'View size chart':'شوفي جدول المقاسات'
 };
 
 /* Translate a fixed UI string. Falls back to the original English if
@@ -1977,6 +2053,7 @@ function refreshFreeTextForLanguage(){
   if(document.getElementById('faqOverlay').classList.contains('open')){
     openFaqPage();
   }
+  if(document.getElementById('sizeGuideOverlay').classList.contains('open')) renderSizeGuide();
 }
 
 /* Walks every text node and every [placeholder]/[title]/[aria-label]
@@ -3220,18 +3297,144 @@ function openInfoPage(key){
 }
 function closeInfoPage(){document.getElementById('infoOverlay').classList.remove('open');currentInfoKey=null;}
 
-function openProductSizeGuide(){
-  const p=S.products[curProd];
-  if(!p)return;
-  currentInfoKey='__productSizeGuide';
-  const hasOwn = p.sizeGuide && p.sizeGuide.trim();
-  const content = hasOwn ? tf(p.sizeGuide,p.sizeGuideAr) : tf(
-    S.settings.footerPages.sizeGuide ? S.settings.footerPages.sizeGuide.content : '',
-    S.settings.footerPages.sizeGuide ? S.settings.footerPages.sizeGuide.contentAr : ''
-  );
-  document.getElementById('infoTitle').textContent = `${t('Size Guide')} — ${p.name}`;
-  document.getElementById('infoContent').textContent = content;
-  document.getElementById('infoOverlay').classList.add('open');
+/* ════════════════════════════════
+   SIZE GUIDE — Size Chart + Size Recommendation
+   Chart is managed in Dashboard → Content → Size Chart (stored inside
+   the existing footer_pages settings, so no database change needed).
+════════════════════════════════ */
+const SG_ORDER=['XXS','XS','S','M','L','XL','XXL','XXXL'];
+let sgState={tab:'chart',productIdx:null,height:'',weight:'',fit:'true',result:null,error:''};
+
+function sgChart(){
+  const c=S.settings.footerPages&&S.settings.footerPages.sizeChart;
+  return (c&&c.rows&&c.rows.length&&c.cols&&c.cols.length)?c:null;
+}
+function sgProduct(){ return sgState.productIdx!=null?S.products[sgState.productIdx]:null; }
+function sgSizes(){
+  const p=sgProduct();
+  if(p&&p.sizes&&p.sizes.length) return p.sizes;
+  const c=sgChart(); if(c) return c.rows.map(r=>r.size);
+  return ['XS','S','M','L','XL'];
+}
+function openProductSizeGuide(){ openSizeGuide(curProd); }
+function openSizeGuide(productIdx){
+  sgState={tab:'chart',productIdx:(productIdx==null?null:productIdx),height:'',weight:'',fit:'true',result:null,error:''};
+  renderSizeGuide();
+  document.getElementById('sizeGuideOverlay').classList.add('open');
+}
+function closeSizeGuide(){ document.getElementById('sizeGuideOverlay').classList.remove('open'); }
+function sgSetTab(tab){ sgState.tab=tab; renderSizeGuide(); }
+function sgSetFit(v){ sgState.fit=v; renderSizeGuide(); }
+
+function sgDiagram(c){
+  const a=escapeAttr(tf(c.cols[0].en,c.cols[0].ar));
+  const b=c.cols[1]?escapeAttr(tf(c.cols[1].en,c.cols[1].ar)):'';
+  return `<div class="sg-diagram"><svg width="230" height="170" viewBox="0 0 230 170" fill="none" aria-hidden="true">
+    <path d="M78 22 L98 12 Q115 30 132 12 L152 22 L186 52 L168 68 L154 57 L154 152 L76 152 L76 57 L62 68 L44 52 Z" stroke="#1A1A18" stroke-width="1.3" stroke-linejoin="round"/>
+    <line x1="76" y1="76" x2="154" y2="76" stroke="#B8A882" stroke-width="1.3"/>
+    <path d="M81 72 L76 76 L81 80 M149 72 L154 76 L149 80" stroke="#B8A882" stroke-width="1.3"/>
+    <text x="115" y="69" text-anchor="middle" font-family="Jost,sans-serif" font-size="9" letter-spacing="1" fill="#B8A882">${a}</text>
+    ${b?`<line x1="100" y1="30" x2="100" y2="152" stroke="#8A9B8E" stroke-width="1.3"/>
+    <path d="M96 36 L100 30 L104 36 M96 146 L100 152 L104 146" stroke="#8A9B8E" stroke-width="1.3"/>
+    <text x="108" y="118" font-family="Jost,sans-serif" font-size="9" letter-spacing="1" fill="#8A9B8E">${b}</text>`:''}
+  </svg></div>`;
+}
+
+function sgChartHTML(){
+  const p=sgProduct(), c=sgChart();
+  const fp=S.settings.footerPages.sizeGuide||{};
+  let out='';
+  if(!c){
+    out=`<div style="white-space:pre-wrap;font-size:13px;line-height:2;color:var(--black-s)">${escapeAttr(tf(fp.content,fp.contentAr))}</div>`;
+  } else {
+    let rows=c.rows;
+    if(p){
+      const set=new Set((p.sizes||[]).map(x=>String(x).trim().toUpperCase()));
+      const f=rows.filter(r=>set.has(String(r.size).trim().toUpperCase()));
+      if(f.length) rows=f;
+    }
+    const hl=sgState.result?String(sgState.result.size).trim().toUpperCase():null;
+    out=`<div class="sg-h">${escapeAttr(tf(c.title||'Measurements in cm',c.titleAr))}</div>`
+      +sgDiagram(c)
+      +`<div style="overflow-x:auto"><table class="sg-table"><thead><tr><th>${t('Size')}</th>${c.cols.map(col=>`<th>${escapeAttr(tf(col.en,col.ar))}</th>`).join('')}</tr></thead><tbody>`
+      +rows.map(r=>`<tr class="${hl&&String(r.size).trim().toUpperCase()===hl?'sg-hl':''}"><td>${escapeAttr(r.size)}</td>${c.cols.map((_,i)=>`<td>${escapeAttr((r.v&&r.v[i])||'—')}</td>`).join('')}</tr>`).join('')
+      +`</tbody></table></div>`;
+    const note=tf(c.note,c.noteAr);
+    if(note) out+=`<div class="sg-note">${escapeAttr(note)}</div>`;
+  }
+  const own=p&&p.sizeGuide&&p.sizeGuide.trim()?tf(p.sizeGuide,p.sizeGuideAr):'';
+  if(own) out+=`<div class="sg-note" style="white-space:pre-wrap;color:var(--black-s)">${escapeAttr(own)}</div>`;
+  return out;
+}
+
+/* Recommendation: height + weight → size level, nudged by fit preference,
+   then matched to the sizes this piece is actually sold in. */
+function sgRecommend(h,w,fit,sizes,p){
+  const adj=w-(h-165)*0.45;
+  const lims=[47,55,65,74,84,96]; // XS,S,M,L,XL,XXL upper bounds
+  let lvl=7; for(let i=0;i<lims.length;i++){ if(adj<lims[i]){ lvl=i+1; break; } }
+  if(fit==='snug') lvl-=1; else if(fit==='relaxed') lvl+=1;
+  lvl=Math.max(0,Math.min(7,lvl));
+  const std=sizes.map(sz=>({sz,rank:SG_ORDER.indexOf(String(sz).trim().toUpperCase())})).filter(x=>x.rank>=0);
+  if(!std.length) return null;
+  const nearest=(list)=>list.slice().sort((a,b)=>Math.abs(a.rank-lvl)-Math.abs(b.rank-lvl)||b.rank-a.rank)[0];
+  const best=nearest(std);
+  let pick=best, shifted=false;
+  if(p && sizeSoldOut(p,best.sz)){
+    const avail=std.filter(x=>!sizeSoldOut(p,x.sz));
+    if(avail.length){ pick=nearest(avail); shifted=true; }
+  }
+  return {size:pick.sz, shifted, outOfRange:Math.abs(best.rank-lvl)>=2};
+}
+function sgFind(){
+  const h=parseFloat(sgState.height), w=parseFloat(sgState.weight);
+  if(!(h>=130&&h<=210)||!(w>=30&&w<=200)){ sgState.error=t('Enter a valid height (130–210 cm) and weight (30–200 kg).'); sgState.result=null; renderSizeGuide(); return; }
+  sgState.error='';
+  sgState.result=sgRecommend(h,w,sgState.fit,sgSizes(),sgProduct());
+  if(!sgState.result) sgState.error=t('Enter a valid height (130–210 cm) and weight (30–200 kg).');
+  renderSizeGuide();
+}
+function sgApplySize(size){
+  closeSizeGuide();
+  const btn=[...document.querySelectorAll('#modalSizes .modal-sz')].find(b=>b.textContent.trim()===String(size).trim()&&!b.disabled);
+  if(btn) btn.click();
+}
+function sgRecoHTML(){
+  const r=sgState.result;
+  let res='';
+  if(r){
+    res=`<div class="sg-result">
+      <div class="sg-result-label">${t('Your recommended size')}</div>
+      <div class="sg-result-size">${escapeAttr(r.size)}</div>
+      ${r.shifted?`<div class="sg-note" style="margin-top:6px">${t('Your ideal size is currently sold out — this is the closest available.')}</div>`:''}
+      ${r.outOfRange?`<div class="sg-note" style="margin-top:6px">${t('Your measurements are outside this piece’s size range. Message us on WhatsApp and we’ll help you choose.')}</div>`:''}
+      ${(sgState.productIdx!=null&&!r.outOfRange)?`<button class="co-submit" style="margin-top:16px" onclick="sgApplySize('${escapeAttr(r.size)}')">${t('Select size')} ${escapeAttr(r.size)}</button>`:''}
+      <div class="sg-note">${t('A guide only — if you’re between sizes, check the size chart.')}</div>
+      <button class="sg-link" onclick="sgSetTab('chart')">${t('View size chart')}</button>
+    </div>`;
+  }
+  const fitBtn=(v,label)=>`<button class="${sgState.fit===v?'active':''}" onclick="sgSetFit('${v}')">${t(label)}</button>`;
+  return `<div class="sg-h">${t('Find Your Size')}</div>
+    <div class="sg-field-row">
+      <div><label class="co-field-label" style="margin-top:0">${t('Height')}</label><div class="sg-input-wrap"><input class="co-input" type="number" inputmode="numeric" value="${escapeAttr(sgState.height)}" oninput="sgState.height=this.value" placeholder="165"><span class="sg-unit">${t('cm')}</span></div></div>
+      <div><label class="co-field-label" style="margin-top:0">${t('Weight')}</label><div class="sg-input-wrap"><input class="co-input" type="number" inputmode="numeric" value="${escapeAttr(sgState.weight)}" oninput="sgState.weight=this.value" placeholder="60"><span class="sg-unit">${t('kg')}</span></div></div>
+    </div>
+    <label class="co-field-label">${t('How do you like it to fit?')}</label>
+    <div class="sg-fit">${fitBtn('snug','Snug')}${fitBtn('true','True to size')}${fitBtn('relaxed','Relaxed')}</div>
+    ${sgState.error?`<div class="sg-err">${sgState.error}</div>`:''}
+    <button class="co-submit" onclick="sgFind()">${t('Find My Size')}</button>
+    ${res}`;
+}
+function renderSizeGuide(){
+  const box=document.getElementById('sgContent'); if(!box)return;
+  const p=sgProduct();
+  box.innerHTML=`<div class="sg-title">${t('Size Guide')}</div>
+    ${p?`<div class="sg-sub">${escapeAttr(p.name)}</div>`:''}
+    <div class="sg-tabs">
+      <button class="sg-tab ${sgState.tab==='chart'?'active':''}" onclick="sgSetTab('chart')">${t('Size Chart')}</button>
+      <button class="sg-tab ${sgState.tab==='reco'?'active':''}" onclick="sgSetTab('reco')">${t('Size Recommendation')}</button>
+    </div>
+    ${sgState.tab==='chart'?sgChartHTML():sgRecoHTML()}`;
 }
 
 function openFaqPage(){
@@ -5496,6 +5699,7 @@ function loadAdminForms(){
   renderTabOrderList();
   renderPhilEditFields();
   renderFooterPageFields();
+  renderSizeChartEditor();
   renderFaqEditFields();
   renderSocialEditFields();
 }
@@ -5568,6 +5772,50 @@ async function savePhilosophy(btnId,pillId){
 }
 
 /* ── FOOTER PAGES ── */
+/* ── SIZE CHART EDITOR ── */
+let sgcDraft=null;
+function sgcDefault(){ return JSON.parse(JSON.stringify(S.settings.footerPages.sizeChart||{title:'Measurements in cm',titleAr:'',cols:[{en:'Bust',ar:''},{en:'Waist',ar:''}],rows:[{size:'S',v:['','']}],note:'',noteAr:''})); }
+function renderSizeChartEditor(){
+  sgcDraft=sgcDefault();
+  document.getElementById('sgc-title').value=sgcDraft.title||'';
+  document.getElementById('sgc-titleAr').value=sgcDraft.titleAr||'';
+  document.getElementById('sgc-note').value=sgcDraft.note||'';
+  document.getElementById('sgc-noteAr').value=sgcDraft.noteAr||'';
+  drawSizeChartEditor();
+}
+function drawSizeChartEditor(){
+  const d=sgcDraft; const el=document.getElementById('sgcEditor'); if(!el||!d)return;
+  el.innerHTML=`<table class="sgc-table"><thead>
+    <tr><td>Size</td>${d.cols.map((c,i)=>`<td><input class="af-input" id="sgc-colen-${i}" value="${escapeAttr(c.en)}" placeholder="Column (EN)"><input class="af-input" id="sgc-colar-${i}" dir="rtl" value="${escapeAttr(c.ar||'')}" placeholder="عمود (AR)" style="margin-top:4px"><button class="btn-danger" style="margin-top:4px;width:100%" onclick="sgcRemoveCol(${i})">Remove</button></td>`).join('')}<td></td></tr></thead><tbody>
+    ${d.rows.map((r,ri)=>`<tr><td><input class="af-input" id="sgc-size-${ri}" value="${escapeAttr(r.size)}" placeholder="M" style="min-width:64px;width:70px"></td>${d.cols.map((_,ci)=>`<td><input class="af-input" id="sgc-val-${ri}-${ci}" value="${escapeAttr((r.v&&r.v[ci])||'')}" placeholder="88–92"></td>`).join('')}<td><button class="btn-danger" onclick="sgcRemoveRow(${ri})">✕</button></td></tr>`).join('')}
+  </tbody></table>`;
+}
+function sgcSync(){
+  const d=sgcDraft; if(!d)return;
+  d.title=document.getElementById('sgc-title').value; d.titleAr=document.getElementById('sgc-titleAr').value;
+  d.note=document.getElementById('sgc-note').value; d.noteAr=document.getElementById('sgc-noteAr').value;
+  d.cols=d.cols.map((c,i)=>({en:document.getElementById('sgc-colen-'+i).value.trim(),ar:document.getElementById('sgc-colar-'+i).value.trim()}));
+  d.rows=d.rows.map((r,ri)=>({size:document.getElementById('sgc-size-'+ri).value.trim(),v:d.cols.map((_,ci)=>document.getElementById(`sgc-val-${ri}-${ci}`).value.trim())}));
+}
+function sgcAddCol(){ sgcSync(); sgcDraft.cols.push({en:'',ar:''}); sgcDraft.rows.forEach(r=>r.v.push('')); drawSizeChartEditor(); }
+function sgcRemoveCol(i){ sgcSync(); if(sgcDraft.cols.length<=1){ alert('Keep at least one column.'); return; } sgcDraft.cols.splice(i,1); sgcDraft.rows.forEach(r=>r.v.splice(i,1)); drawSizeChartEditor(); }
+function sgcAddRow(){ sgcSync(); sgcDraft.rows.push({size:'',v:sgcDraft.cols.map(()=>'')}); drawSizeChartEditor(); }
+function sgcRemoveRow(i){ sgcSync(); sgcDraft.rows.splice(i,1); drawSizeChartEditor(); }
+async function saveSizeChart(btnId,pillId){
+  sgcSync();
+  const d=sgcDraft;
+  d.cols=d.cols.filter(c=>c.en);
+  if(!d.cols.length){ alert('Add at least one column name (e.g. Bust).'); return; }
+  d.rows=d.rows.filter(r=>r.size).map(r=>({size:r.size,v:d.cols.map((_,i)=>r.v[i]||'')}));
+  S.settings.footerPages.sizeChart=d;
+  const btn=document.getElementById(btnId);
+  const orig=btn.textContent; btn.textContent='Saving…'; btn.disabled=true;
+  const ok=await persistSettings();
+  btn.textContent=orig; btn.disabled=false;
+  if(!ok){ alert("Couldn't save — check your connection and try again."); return; }
+  renderSizeChartEditor();
+  showSaved(pillId,btnId);
+}
 function renderFooterPageFields(){
   const fp=S.settings.footerPages;
   const map={sizeGuide:'fp-sizeGuide',careGuide:'fp-careGuide',shipping:'fp-shipping',returns:'fp-returns',exchange:'fp-exchange',contact:'fp-contact'};

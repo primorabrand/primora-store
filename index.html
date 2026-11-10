@@ -985,6 +985,7 @@ function trackEvent(name, params){
   ⚠ Can't reach the backend — check your internet connection. Changes won't be saved until reconnected.
 </div>
 <input type="file" id="imgFileInput" accept="image/*" style="display:none" onchange="handleImgUpload(event)">
+<input type="file" id="heroFileInput" accept="image/*" style="display:none" onchange="handleHeroUpload(event)">
 <input type="file" id="reviewFileInput" accept="image/*" style="display:none" onchange="handleReviewImgUpload(event)">
 <input type="file" id="notifFileInput" accept="image/*" style="display:none" onchange="handleNotifImgUpload(event)">
 <input type="file" id="designImageFileInput" accept="image/*" style="display:none" onchange="handleDesignImageUpload(event)">
@@ -1456,6 +1457,27 @@ function trackEvent(name, params){
             </div>
             <button class="btn-save" id="bsave2" onclick="saveSettings('bsave2','st2')">Save</button>
             <span class="saved-tag" id="st2">✓ Saved</span>
+          </div>
+        </div>
+        <div class="a-section">
+          <div class="a-section-head"><div class="a-section-title">Hero Image (top of the homepage)</div></div>
+          <div class="a-section-body">
+            <div style="font-size:11px;color:var(--warm-gray);margin-bottom:14px;line-height:1.7">The big image at the top of the store. Upload your own campaign photo (landscape or portrait both work — a wide image around 2000px looks best), or leave it automatic to use the first product's photo. The title and subtitle on top come from "Collection Header" above.</div>
+            <div id="heroAdminPreview" style="height:190px;background:#2C2C2A center 20%/cover no-repeat;border:1px solid rgba(0,0,0,.1);margin-bottom:12px"></div>
+            <div id="heroAdminStatus" style="font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--warm-gray);margin-bottom:14px"></div>
+            <div class="af-group" style="max-width:260px">
+              <label class="af-label">Focus (which part of the photo stays visible)</label>
+              <select class="af-input" id="hero-pos" onchange="saveHeroPos()">
+                <option value="0%">Top</option>
+                <option value="20%">Upper (default)</option>
+                <option value="50%">Center</option>
+                <option value="100%">Bottom</option>
+              </select>
+            </div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap">
+              <button class="btn-save" id="heroUploadBtn" onclick="triggerHeroUpload()">Upload Hero Image</button>
+              <button class="btn-outline" id="heroRemoveBtn" onclick="removeHeroImage()">Use Automatic</button>
+            </div>
           </div>
         </div>
         <div class="a-section">
@@ -3234,16 +3256,25 @@ async function uploadReviewImage(blob){
 /* ════════════════════════════════
    STORE RENDER
 ════════════════════════════════ */
+function heroCfg(){
+  const h=S.settings.footerPages&&S.settings.footerPages.heroImage;
+  return (h&&typeof h==='object')?h:{};
+}
+function autoHeroImage(){
+  // fallback = first visible product's first photo
+  const p=S.products.find(x=>x.vis && x.colors && x.colors.some(c=>c.images&&c.images[0]));
+  return p?((p.colors.find(c=>c.images&&c.images[0])||{}).images||[])[0]:null;
+}
 function renderHero(){
   const st=S.settings;
   const t1=document.getElementById('heroTitle'), t2=document.getElementById('heroSub'), bg=document.getElementById('heroBg');
   if(t1) t1.textContent=tf(st.colTitle,st.colTitleAr);
   if(t2) t2.textContent=tf(st.colSub,st.colSubAr);
   if(bg){
-    // background = first visible product's first photo (changes automatically when you reorder products)
-    const p=S.products.find(x=>x.vis && x.colors && x.colors.some(c=>c.images&&c.images[0]));
-    const img=p?((p.colors.find(c=>c.images&&c.images[0])||{}).images||[])[0]:null;
+    const h=heroCfg();
+    const img=safeUrl(h.url)||autoHeroImage();
     bg.style.backgroundImage=img?`url("${String(img).replace(/"/g,'%22')}")`:'none';
+    bg.style.backgroundPosition=`center ${/^\d{1,3}%$/.test(h.pos||'')?h.pos:'20%'}`;
   }
 }
 function renderStore(){
@@ -5763,6 +5794,54 @@ function orderItemLabel(it, escape){
   }
   return `${esc(it.name)} (${it.color?esc(it.color)+', ':''}${esc(it.size)})`;
 }
+/* ── HERO IMAGE (admin) — stored inside the existing footer_pages settings, no migration needed ── */
+const HERO_POS_VALUES=['0%','20%','50%','100%'];
+function renderHeroAdmin(){
+  const h=heroCfg();
+  const prev=document.getElementById('heroAdminPreview'); if(!prev)return;
+  const url=safeUrl(h.url)||autoHeroImage()||'';
+  prev.style.backgroundImage=url?`url("${String(url).replace(/"/g,'%22')}")`:'none';
+  const pos=HERO_POS_VALUES.includes(h.pos)?h.pos:'20%';
+  prev.style.backgroundPosition=`center ${pos}`;
+  document.getElementById('hero-pos').value=pos;
+  document.getElementById('heroAdminStatus').textContent = safeUrl(h.url) ? 'Custom image' : 'Automatic — using the first product photo';
+  document.getElementById('heroRemoveBtn').style.display = safeUrl(h.url) ? '' : 'none';
+}
+function triggerHeroUpload(){ document.getElementById('heroFileInput').click(); }
+async function handleHeroUpload(e){
+  const file=e.target.files[0]; if(!file)return; e.target.value='';
+  const btn=document.getElementById('heroUploadBtn'); const orig=btn.textContent;
+  btn.textContent='Uploading…'; btn.disabled=true;
+  try{
+    const blob=await compressImage(file,2200,0.85);
+    const path=`hero/${Date.now()}.jpg`;
+    const {error}=await sbClient.storage.from(IMAGE_BUCKET).upload(path,blob,{upsert:true,contentType:'image/jpeg'});
+    if(error) throw error;
+    const {data}=sbClient.storage.from(IMAGE_BUCKET).getPublicUrl(path);
+    S.settings.footerPages.heroImage={...heroCfg(),url:data.publicUrl};
+    const ok=await persistSettings();
+    if(!ok) throw new Error('save failed');
+  }catch(err){
+    console.warn('Hero upload error',err);
+    alert("Couldn't upload the hero image. Check your connection and try again.");
+  }
+  btn.textContent=orig; btn.disabled=false;
+  renderHeroAdmin(); renderHero();
+}
+async function removeHeroImage(){
+  if(!confirm('Go back to the automatic hero image (first product photo)?'))return;
+  S.settings.footerPages.heroImage={pos:heroCfg().pos||'20%'};
+  const ok=await persistSettings();
+  if(!ok) alert("Couldn't save — check your connection and try again.");
+  renderHeroAdmin(); renderHero();
+}
+async function saveHeroPos(){
+  const v=document.getElementById('hero-pos').value;
+  S.settings.footerPages.heroImage={...heroCfg(),pos:HERO_POS_VALUES.includes(v)?v:'20%'};
+  const ok=await persistSettings();
+  if(!ok) alert("Couldn't save — check your connection and try again.");
+  renderHeroAdmin(); renderHero();
+}
 function loadAdminForms(){
   const st=S.settings;
   ['annText','annCta','colTitle','colSub','wa','deliv'].forEach(k=>{
@@ -5791,6 +5870,7 @@ function loadAdminForms(){
   renderPhilEditFields();
   renderFooterPageFields();
   renderSizeChartEditor();
+  renderHeroAdmin();
   renderFaqEditFields();
   renderSocialEditFields();
 }
